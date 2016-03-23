@@ -23,7 +23,11 @@
 
 3/10
    Danny - .7 hours continuing on AI code
-
+   Billy - 1 hour planning AI and beginning move class
+   
+3/11
+   Billy - 0.75 hours planning AI and continuing move class code
+   
 3/14
    Everyone - .75 hours working in lab
    Alex - 2 Hours creating manager class, implementation
@@ -39,3 +43,6 @@
 3/20
     Everyone - .75 hours meeting to get synced up
     Michael - 3 hours validMove() per class 
+    
+3/22
+	Billy - 0.5 hours working on AI function for openers
