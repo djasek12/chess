@@ -5,3 +5,5 @@ Killed 2Pac!
 player 1: human, caps
 player 0: AI, lowercase
 board(0,0) is top left
+
+give chessBoard access to pieces

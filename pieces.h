@@ -20,6 +20,7 @@ class Piece{ //abstract base class for chess pieces
 class Null: public Piece{
 	public:
 		Null(int); //should always be 2
+        int validMove(int, int, int, int);
 	private:
 
 };
@@ -27,43 +28,44 @@ class Null: public Piece{
 class Pawn: public Piece{
 	public:
 		Pawn( int );
-		void validMove();
+		int validMove(int, int, int, int);
 	private:
+        
 
 };
 
 class Bishop: public Piece{
 	public:
 		Bishop(int);
-		void validMove();
+		int validMove(int, int, int, int);
 	private:
 };
 
 class Knight: public Piece{
 	public:
 		Knight(int);
-		void validMove();
+		int validMove(int, int, int, int);
 	private:
 };
 
 class Castle: public Piece{
 	public:
 		Castle(int);
-		void validMove();
+		int validMove(int, int, int, int);
 	private:
 };
 
 class Queen: public Piece{
 	public:
 		Queen(int);
-		void validMove();
+		int validMove(int, int, int, int);
 	private:
 };
 
 class King: public Piece{
 	public:
 		King(int);
-		void validMove();
+		int validMove(int, int, int, int);
 	private:
 
 };
