@@ -19,3 +19,8 @@ void Move::Display()
 	cout << "The ending row and column are: " << endRow << "x" << endCol << endl;
 	cout << "The value of the move is: " << value << endl;
 }
+
+void Move::setMoveValue(double val)
+{
+    value = val;
+}

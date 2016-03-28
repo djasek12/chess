@@ -36,4 +36,6 @@
 
 3/20
     Everyone - .75 hours meeting to get synced up
+3/21
+    Danny and Billy - .6 hours setting up prototypes or AI functions
 

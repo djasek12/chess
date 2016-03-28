@@ -11,6 +11,7 @@ class Move
 	
 		Move(Piece piece, int startRow, int startCol, int endRow, int endCol);
                 void Display();
+                void setMoveValue(double val);
 	
 	private: 
 		Piece piece;

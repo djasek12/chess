@@ -19,7 +19,7 @@ void AI::overallAlgorithm()
    if(!makeObviousMove())
    {
       int movesAhead = 1;
-      makeMove(movesAhead);
+      decideMove(movesAhead);
    }
 }
 
@@ -140,57 +140,51 @@ void AI::dispValidMoves()
         moves[i].Display();
 }
 
-int AI::makeMove(int movesAhead)
+void AI::assignMoveValues()
 {
     //if(movesAhead > 4)
     //return 0; 
-    
+    //
+    double moveValue;
+    int turnsAhead = 1; // hardcoded for now
+
     for(int i=0; i<moves.size(); i++)
     {
-        //attack = (gains + opponent's loss - loss - opponent’s gain) + ((1/turns ahead) * (gains - losses) <- account for probability decay - from recursive return)
+        
+        moveValue = (1/turnsAhead) * (findGains(0) - findLosses(0)); //+ (findGains(1) - findLosses(1)) 
+        moves[i].setMoveValue(moveValue);
     }
-
 
     //cout << "moves ahead: " << movesAhead << endl;
 
     //makeMove(movesAhead+1);
 }
 
-/*void AI::findNextPiece()
-  {
-//currentRow = 0;
-//currentCol = 0; // get rid of these eventually
+double AI::getCaptureValue()
+{
+    //look at move destination on board and find value of piece there
+}
 
-int row = currentRow;
-int col = currentCol;
-   //col++;
+double AI::getDefendingValue()
+{
+    double youDefend; // sum of values of pieces you are defending
+    double defendYou; // sum of values of pieces defending you
 
-   while(col < 7)
-   {
-      cout << "col: " << col << endl;
-      int player = boardOriginal[row][col].getPlayer(); 
-      cout << "player: " << player << endl;
-      if(player == 0 | player == 2)
-         col++;
-      else
-         break;
+    // each of these have their own weights and then are summed together
+}
 
-      while(row < 7)
-      {
-         cout << "row: " << row << endl;
-         player = boardOriginal[row][col].getPlayer(); 
-         if(player == 0 | player == 2)
-            row++;
-         else
-            break;
+int AI::findMoveableSpaces()
+{
+}
 
-      }
-   }
+double AI::getAttackingValue()
+{
+}
 
-   currentRow = row;
-   currentCol = col;
+int AI::numAttackers()
+{
+}
 
-   cout << "Out of while loop" << endl;
-   currentPiece = boardOriginal[row][col];
-   cout << "Next Piece: " << currentPiece.getChar() << endl;
-}*/
+double AI::pieceValueAbandoned()
+{
+}
