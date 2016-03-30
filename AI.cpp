@@ -9,7 +9,7 @@ AI::AI(Board B)
    boardOriginal = B.chessBoard;  
 }
 
-void AI::overallAlgorithm()
+/*void AI::overallAlgorithm()
 {
    //if(kingInCheck)
    //{
@@ -21,7 +21,7 @@ void AI::overallAlgorithm()
       int movesAhead = 1;
       decideMove(movesAhead);
    }
-}
+}*/
 
 void AI::getOutOfCheck()
 {  
@@ -140,7 +140,7 @@ void AI::dispValidMoves()
         moves[i].Display();
 }
 
-void AI::assignMoveValues()
+/*void AI::assignMoveValues()
 {
     //if(movesAhead > 4)
     //return 0; 
@@ -158,7 +158,7 @@ void AI::assignMoveValues()
     //cout << "moves ahead: " << movesAhead << endl;
 
     //makeMove(movesAhead+1);
-}
+}*/
 
 double AI::getCaptureValue()
 {

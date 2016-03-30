@@ -1,7 +1,7 @@
 #include "board.h"
 
 Piece::Piece(){
-	
+    //do not remove
 }
 
 void Piece::validMove() const{ //checks if move is valid

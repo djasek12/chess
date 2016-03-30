@@ -9,11 +9,17 @@ class Manager{
 	public:
 		Manager();
 		void move( int, int, int, int );
+        int checkMove( int, int, int, int, int);
 		void play();
 		void saveBoard();
 		void loadBoard();
 		void collectValues();	
-		//public data members
+        //functions for move checks
+        int checkBounds(int, int, int, int);
+		int checkPlayer( int, int, int, int, int);
+        int checkSpecific( int, int, int, int, int);
+        int checkPawn( int, int, int, int, int);
+        //public data members
 		Board board;
 		Game game;
                 //AI AI_1(Board);
