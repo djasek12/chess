@@ -238,7 +238,26 @@ int Manager::checkKing( int sourceRow, int sourceColumn, int targetRow, int targ
     return 1;
 }
 
+// get rid of curPlayer parameter?
 int Manager::checkKnight( int sourceRow, int sourceColumn, int targetRow, int targetColumn, int curPlayer){
+    bool isEmpty = 1;
+    //determine if moving to empty or enemy
+    if ( board.chessBoard[targetColumn].at(targetRow).getPlayer() != 2){
+        isEmpty = 0;
+    }
+    
+    // determine if moving only left or right one space
+    if (targetColumn != (sourceColumn + 1) || targetColumn != (sourceColumn - 1)) {
+        return 0;
+    }
+    
+    // determine if moving only up or down two spaces
+    if (targetRow != (sourceRow + 2) || targetRow != (sourceRow - 2)) {
+        return 0;
+    }
+    // if reached, valid
+    return 1;
+    
 }
 
 void Manager::play(){
