@@ -52,3 +52,6 @@
 
 3/30
     Alex - 3.5 hours woking on implementing moves: implemented pawn, castle, bishop, and queen
+
+3/31
+    Alex - 1.5 hours working on finishing implementing moves
