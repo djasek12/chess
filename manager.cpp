@@ -248,6 +248,9 @@ void Manager::play(){
         currentPlayer = 1 - currentPlayer; //flip between 0 and 1
 		board.display();
         while( 1){
+            //print which player
+            if (currentPlayer == 1 ) cout << "Player: UPPERCASE" << endl;
+            if (currentPlayer == 0 ) cout << "Player: lowercase" << endl; 
             game.getCoordinates();
             if( checkMove( game.getFromX(), game.getFromY(), game.getToX(), game.getToY(), currentPlayer) == 0){
                 break;
