@@ -96,7 +96,9 @@ int Manager::checkSpecific( int sourceRow, int sourceColumn, int targetRow, int 
         case 'p': return checkPawn(sourceRow, sourceColumn, targetRow, targetColumn, curPlayer);
         case 'c': return checkCastle(sourceRow, sourceColumn, targetRow, targetColumn, curPlayer);
         case 'b': return checkBishop(sourceRow, sourceColumn, targetRow, targetColumn, curPlayer);
-        case 'q': return checkQueen( sourceRow, sourceColumn, targetRow, targetColumn, curPlayer); 
+        case 'q': return checkQueen( sourceRow, sourceColumn, targetRow, targetColumn, curPlayer);
+        case 'k': return checkKing( sourceRow, sourceColumn, targetRow, targetColumn, curPlayer);
+        case 'n': return checkKnight( sourceRow, sourceColumn, targetRow, targetColumn, curPlayer);
         default:  return 0;
     }
 }
@@ -224,7 +226,19 @@ int Manager::checkBishop( int sourceRow, int sourceColumn, int targetRow, int ta
 }
 
 int Manager::checkQueen( int sourceRow, int sourceColumn, int targetRow, int targetColumn, int curPlayer){
-    return (checkBishop(sourceRow, sourceColumn, targetRow, targetColumn, curPlayer) || checkCastle( sourceRow, sourceColumn, targetRow, targetColumn, curPlayer));
+    return (checkBishop(sourceRow, sourceColumn, targetRow, targetColumn, curPlayer) ||  
+            checkCastle( sourceRow, sourceColumn, targetRow, targetColumn, curPlayer));
+}
+
+int Manager::checkKing( int sourceRow, int sourceColumn, int targetRow, int targetColumn, int curPlayer){
+    if( abs(targetRow-sourceRow) > 1 || abs(targetColumn - sourceColumn) > 1 ){ //if move is longer than 1 space
+        return 0;
+    }
+    //if prog. reaches this point, then move is valid
+    return 1;
+}
+
+int Manager::checkKnight( int sourceRow, int sourceColumn, int targetRow, int targetColumn, int curPlayer){
 }
 
 void Manager::play(){

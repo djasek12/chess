@@ -22,6 +22,8 @@ class Manager{
         int checkCastle( int, int, int, int, int);
         int checkBishop( int, int, int, int, int);
         int checkQueen( int, int, int, int, int);
+        int checkKnight( int, int, int, int, int);
+        int checkKing( int, int, int, int, int);
         //public data members
 		Board board;
 		Game game;
