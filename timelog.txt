@@ -51,4 +51,4 @@
 	Billy - 0.5 hours working on AI function for openers
 
 3/30
-    Alex - 1.5 hours woking on implementing moves
+    Alex - 3.5 hours woking on implementing moves: implemented pawn, castle, bishop, and queen

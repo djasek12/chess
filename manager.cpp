@@ -79,6 +79,8 @@ int Manager::checkPlayer( int sourceRow, int sourceColumn, int targetRow, int ta
     //check if curPlayer matches source piece 
     if( board.chessBoard[sourceColumn].at(sourceRow).getPlayer() != curPlayer){
         return 0;
+    }else if( board.chessBoard[sourceColumn].at(sourceRow).getPlayer() == board.chessBoard[targetColumn].at(targetRow).getPlayer()){
+        return 0;
     }    
     //if prog reaches this point, move is valid
     return 1;
@@ -88,10 +90,13 @@ int Manager::checkPlayer( int sourceRow, int sourceColumn, int targetRow, int ta
 int Manager::checkSpecific( int sourceRow, int sourceColumn, int targetRow, int targetColumn, int curPlayer){
     //determine which piece it is
     char curChar = tolower(board.chessBoard[sourceColumn].at(sourceRow).getChar());
-
+    
     //call function appropriatte for that piece
     switch (curChar){
         case 'p': return checkPawn(sourceRow, sourceColumn, targetRow, targetColumn, curPlayer);
+        case 'c': return checkCastle(sourceRow, sourceColumn, targetRow, targetColumn, curPlayer);
+        case 'b': return checkBishop(sourceRow, sourceColumn, targetRow, targetColumn, curPlayer);
+        case 'q': return checkQueen( sourceRow, sourceColumn, targetRow, targetColumn, curPlayer); 
         default:  return 0;
     }
 }
@@ -114,31 +119,26 @@ int Manager::checkPawn( int sourceRow, int sourceColumn, int targetRow, int targ
         }
     }
     
-    //THIS IS A HACK, NEEDS FIXED
-    swap(sourceRow, sourceColumn);
-    swap(targetRow, targetColumn); 
-
     if (isEmpty){ //moving to empty
         //make sure not moving horizontally
-        if( sourceRow - targetRow != 0){
+        if( sourceColumn - targetColumn != 0){
             return 0; //moving horizontaly
         }
         int originalSpot = 0; //check if in original spot
-        if (board.chessBoard[sourceColumn].at(sourceRow).getPlayer() == 1 && sourceColumn == 6){
+        if (board.chessBoard[sourceColumn].at(sourceRow).getPlayer() == 1 && sourceRow == 6){
             originalSpot = 1;
-        }else if(board.chessBoard[sourceColumn].at(sourceRow).getPlayer() == 0 && sourceColumn == 1){
+        }else if(board.chessBoard[sourceColumn].at(sourceRow).getPlayer() == 0 && sourceRow == 1){
             originalSpot = 1;
         }
 
         //check if move is proper length
         if( originalSpot){
-            int moveDiff = abs(sourceColumn - targetColumn);
+            int moveDiff = abs(sourceRow - targetRow);
             if( moveDiff >= 3) {
                 return 0; //move too long
             }
         }
     }else{ //moving to enemy
-        cout << "Reached" << endl;
         //make sure both vert and hor move are 1
         if( abs(sourceRow - targetRow) != 1 || abs(sourceColumn - targetColumn) != 1){
             return 0;
@@ -146,6 +146,85 @@ int Manager::checkPawn( int sourceRow, int sourceColumn, int targetRow, int targ
     }
     //if reached, valid
     return 1;
+}
+
+int Manager::checkCastle( int sourceRow, int sourceColumn, int targetRow, int targetColumn, int curPlayer){
+    //make sure that move is either entirely vertical or entirely horizontal
+    int rowDif = targetRow - sourceRow;
+    int colDif = targetColumn - sourceColumn;
+
+    if( rowDif != 0 && colDif != 0){
+        return 0; //cannot move both horizontally and vertically
+    }
+    //check to make sure that no pieces are in between
+    if( rowDif == 0){
+        int constant = 0;
+        if( colDif > 0){
+            constant = 1;
+        }else{
+            constant = -1;
+        }
+        for(int i = 1; i < abs(colDif); i++){
+            if(  board.chessBoard[sourceColumn+constant*i].at(sourceRow).getPlayer() != 2){
+                return 0;
+            }
+        }  
+    }else{
+        int constant = 0;
+        if( rowDif >0 ){
+            constant = 1;
+        }else{
+            constant = -1;
+        }
+        for( int i = 1; i < abs(rowDif); i++){
+            if( board.chessBoard[sourceColumn].at(sourceRow+constant*i).getPlayer() != 2){
+                return 0;
+            }
+        }
+    }
+    //if prog. reaches this point, then move is valid
+    return 1;
+}
+
+int Manager::checkBishop( int sourceRow, int sourceColumn, int targetRow, int targetColumn, int curPlayer){
+    int rowDif = targetRow - sourceRow;
+    int colDif = targetColumn - sourceColumn;
+
+    //check that move is diagonal
+    if( abs(rowDif) != abs(colDif )){
+        return 0;
+    }
+    //check that move is in both directions
+    if( rowDif == 0 || colDif == 0 ){
+        return 0;
+    }
+    
+    //make sure that there is not a piece in the middle of a move
+    int rowConst = 0;
+    int colConst = 0;
+    if(  rowDif > 0 ){
+        rowConst = 1;
+    }else{
+        rowConst = -1;
+    }
+    if( colDif > 0 ){
+        colConst = 1;
+    }else{
+        colConst = -1;
+    }
+    
+    for( int i = 1; i < abs(rowDif) ; i++){
+        if( board.chessBoard[sourceColumn+i*colConst].at(sourceRow+i*rowConst).getPlayer() != 2){
+            return 0;
+        }
+    }
+
+    //if prog. reaches this point, then move is valid
+    return 1;
+}
+
+int Manager::checkQueen( int sourceRow, int sourceColumn, int targetRow, int targetColumn, int curPlayer){
+    return (checkBishop(sourceRow, sourceColumn, targetRow, targetColumn, curPlayer) || checkCastle( sourceRow, sourceColumn, targetRow, targetColumn, curPlayer));
 }
 
 void Manager::play(){
