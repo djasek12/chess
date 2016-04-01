@@ -6,6 +6,9 @@
 //#include "game.h"
 
 class Manager{
+
+        friend class AI;
+        
 	public:
 		Manager();
 		void move( int, int, int, int );

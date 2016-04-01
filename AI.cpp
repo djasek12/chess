@@ -4,9 +4,10 @@
 
 using namespace std;
 
-AI::AI(Board B)
+AI::AI(Board B/*, Manager gmMnger*/)
 {
-   boardOriginal = B.chessBoard;  
+   boardOriginal = B.chessBoard;
+   //gameManager = gmMnger; 
 }
 
 /*void AI::overallAlgorithm()
@@ -107,38 +108,48 @@ int AI::makeObviousMove() // returns 1 if move is made
 
 void AI::findMoves(Board B)
 {
-   // loop through each space in board vector
-   for(int row=0; row<8; row++)
-   {
-      for(int col=0; col<8; col++)
-      {
-         if(B.chessBoard[row][col].getChar() != 32) // piece isn't null
-         {
-            if(B.chessBoard[row][col].getPlayer() == 1) // is our piece
+    Manager mnger;
+
+    // loop through each space in board vector
+    for(int row=0; row<8; row++)
+    {
+        for(int col=0; col<8; col++)
+        {
+
+            if(B.chessBoard[col][row].getChar() != 32) // piece isn't null // WHY DO COL AND ROW HAVE TO BE SWITHCED
             {
-               for(int r=0; r<8; r++) // loop through all of spaces on board again to check for valid moves
-               {
-                  for(int c=0; c<8; c++)
-                  {
-                     //if(isValidMove(chessBoard[row][col], r, c)
-                     //{
-                            Move testMove(B.chessBoard[row][col], row, col, r, c);
-                            moves.push_back(testMove); 
-                     //}
-                  }
-               }
+                if(B.chessBoard[col][row].getPlayer() == 0) // is our piece
+                {
+                    cout << "row: " << row << " col: " << col << endl;
+
+                    for(int r=0; r<8; r++) // loop through all of spaces on board again to check for valid moves
+                    {
+                        for(int c=0; c<8; c++)
+                        {
+                            if(mnger.checkMove(row, col, r, c, 0) == 0)
+                            {
+                                Move testMove(B.chessBoard[col][row], row, col, r, c);
+                                moves.push_back(testMove); 
+                            }
+                        }
+                    }
+                }
             }
-         }
-      }
-   }
+        }
+    }
 }
 
 void AI::dispValidMoves()
 {
     cout << "number of moves: " << moves.size() << endl;
     for(int i=0; i<moves.size(); i++)
+    {
         moves[i].Display();
-}
+        //cout << "capture value: " << getCaptureValue(moves[i]) << endl;
+    }
+
+
+   }
 
 /*void AI::assignMoveValues()
 {
@@ -160,9 +171,16 @@ void AI::dispValidMoves()
     //makeMove(movesAhead+1);
 }*/
 
-double AI::getCaptureValue()
+//look at move destination on board and find value of piece there
+double AI::getCaptureValue(Move move)
 {
-    //look at move destination on board and find value of piece there
+    Piece piece = boardOriginal[move.endCol][move.endRow];
+    if(piece.getChar() != 32)
+    {
+        return piece.getValue();
+    }
+    else
+        return 0; 
 }
 
 double AI::getDefendingValue()

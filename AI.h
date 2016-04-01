@@ -3,11 +3,15 @@
 
 #include <vector>
 #include "board.h"
+#include "manager.h"
 using namespace std;
 
 class AI {
+
+    friend class Manager;
+
     public:
-        AI(Board);
+        AI(Board b /*,Manager m*/);
         void overallAlgorithm(); // skeleton
         void findMoves(Board B); // find valid moves
         void dispValidMoves();
@@ -24,12 +28,13 @@ class AI {
         vector<Move> moves;
         vector<vector<Piece> > boardOriginal; 
         vector<vector<Piece> > boardCopy;  
+        //Manager gameManager;
 
         double findGains(int player); // 0 is AI, 1 is player
         double findLosses(int player);
 
         // findGains functions
-        double getCaptureValue();
+        double getCaptureValue(Move move);
         double getAttackingValue(); // sum of values of pieces you can attack
         double getDefendingValue();
         int findMoveableSpaces(); // sum of spaces you can move

@@ -39,7 +39,7 @@ void Manager::move( int sourceRow, int sourceColumn, int targetRow, int targetCo
 /*Returns the following:
     0: Valid Move, 1: Move coordinates out of bounds 
     2: Source piece player different from player with turn, attacked same team
-    3: Move not valid  
+    3: Move not valid
 */
 int Manager::checkMove( int sourceRow, int sourceColumn, int targetRow, int targetColumn, int curPlayer){
     if( checkBounds( sourceRow, sourceColumn, targetRow, targetColumn) == 0){
@@ -243,10 +243,11 @@ int Manager::checkKnight( int sourceRow, int sourceColumn, int targetRow, int ta
     int rowDif = abs(targetRow-sourceRow);
     int colDif = abs(targetColumn-sourceColumn);
    
-    if( (rowDif !=1 && colDif!= 2 ) && ( rowDif != 2 && colDif != 1)){
+    if( (rowDif !=1 || colDif!= 2 ) && ( rowDif != 2 || colDif != 1)){
         return 0;
     } 
-    /*  
+     
+     /* 
     // determine if moving only left or right one space
     if (targetColumn != (sourceColumn + 1) || targetColumn != (sourceColumn - 1)) {
         return 0;
@@ -257,6 +258,7 @@ int Manager::checkKnight( int sourceRow, int sourceColumn, int targetRow, int ta
         return 0;
     }*/
     // if reached, valid
+    //cout << "row diff: " << rowDif << " col diff: " << colDif << endl;
     return 1;
     
 }
@@ -264,7 +266,7 @@ int Manager::checkKnight( int sourceRow, int sourceColumn, int targetRow, int ta
 void Manager::play(){
 	//loadBoard();
     int currentPlayer = 0;
-	while( 1){
+	/*while( 1){
         currentPlayer = 1 - currentPlayer; //flip between 0 and 1
 		board.display();
         while( 1){
@@ -280,11 +282,11 @@ void Manager::play(){
         }
 		move( game.getFromX(), game.getFromY(), game.getToX(), game.getToY() );
 		saveBoard();
-	}
+	}*/
 
-        //AI AI_1(board);
-       //AI_1.findMoves(board);
-       // AI_1.dispValidMoves();
+        AI AI_1(board);
+       AI_1.findMoves(board);
+        AI_1.dispValidMoves();
 }
 
 void Manager::saveBoard(){

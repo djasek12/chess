@@ -55,3 +55,6 @@
 
 3/31
     Alex - 1.5 hours working on finishing implementing moves
+
+3/31
+    Danny - 1.5 hours implementing checkMove in AI class, displaying valid moves, fix checkKnightMove()
