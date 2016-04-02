@@ -297,30 +297,54 @@ int Manager::kingInCheck() {
     
 }
 
-void Manager::play(){
-	//loadBoard();
+void Manager::play()
+{
+    //loadBoard();
     int currentPlayer = 0;
-	/*while( 1){
+    while(1)
+    {
         currentPlayer = 1 - currentPlayer; //flip between 0 and 1
-		board.display();
-        while( 1){
+        board.display();
+
+        Move AI_move;
+
+        while(1)
+        {
             //print which player
-            if (currentPlayer == 1 ) cout << "Player: UPPERCASE" << endl;
-            if (currentPlayer == 0 ) cout << "Player: lowercase" << endl; 
-            game.getCoordinates();
-            if( checkMove( game.getFromX(), game.getFromY(), game.getToX(), game.getToY(), currentPlayer) == 0){
+            if(currentPlayer == 1 ) cout << "Player: UPPERCASE" << endl;
+            if(currentPlayer == 0 ) cout << "Player: lowercase" << endl; 
+
+            if(currentPlayer == 1)
+            {
+                game.getCoordinates();
+
+                if(checkMove( game.getFromX(), game.getFromY(), game.getToX(), game.getToY(), currentPlayer) == 0)
+                    break;
+
+                else
+                    cout << "Move is not valid!" << endl;
+            }
+            else // AI
+            {
+                cout << "AI turn" << endl;
+
+                AI AI_1(board);
+                //AI_1.findMoves(board);
+                //AI_1.dispValidMoves();
+                AI_move = AI_1.playMove();
+
                 break;
-            }else{
-                cout << "Move is not valid!" << endl;
             }
         }
-		move( game.getFromX(), game.getFromY(), game.getToX(), game.getToY() );
-		saveBoard();
-	}*/
 
-        AI AI_1(board);
-       AI_1.findMoves(board);
-        AI_1.dispValidMoves();
+        if(currentPlayer == 1)
+            move( game.getFromX(), game.getFromY(), game.getToX(), game.getToY() );
+        else
+            move(AI_move.startRow, AI_move.startCol, AI_move.endRow, AI_move.endCol);
+
+        saveBoard();
+    }
+
 }
 
 void Manager::saveBoard(){

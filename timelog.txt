@@ -58,3 +58,6 @@
 
 3/31
     Danny - 1.5 hours implementing checkMove in AI class, displaying valid moves, fix checkKnightMove()
+4/2
+    Danny and Billy - 1.5 hours implemented random AI move into gameflow
+

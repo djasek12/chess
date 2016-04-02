@@ -1,6 +1,7 @@
 #include "AI.h"
 #include "Move.h"
 #include <iostream>
+#include "stdlib.h"
 
 using namespace std;
 
@@ -106,7 +107,7 @@ int AI::makeObviousMove() // returns 1 if move is made
    return 0;
 }
 
-void AI::findMoves(Board B)
+void AI::findMoves()
 {
     Manager mnger;
 
@@ -116,11 +117,11 @@ void AI::findMoves(Board B)
         for(int col=0; col<8; col++)
         {
 
-            if(B.chessBoard[col][row].getChar() != 32) // piece isn't null // WHY DO COL AND ROW HAVE TO BE SWITHCED
+            if(boardOriginal[col][row].getChar() != 32) // piece isn't null 
             {
-                if(B.chessBoard[col][row].getPlayer() == 0) // is our piece
+                if(boardOriginal[col][row].getPlayer() == 0) // is our piece
                 {
-                    cout << "row: " << row << " col: " << col << endl;
+                    //cout << "row: " << row << " col: " << col << endl;
 
                     for(int r=0; r<8; r++) // loop through all of spaces on board again to check for valid moves
                     {
@@ -128,7 +129,7 @@ void AI::findMoves(Board B)
                         {
                             if(mnger.checkMove(row, col, r, c, 0) == 0)
                             {
-                                Move testMove(B.chessBoard[col][row], row, col, r, c);
+                                Move testMove(boardOriginal[col][row], row, col, r, c);
                                 moves.push_back(testMove); 
                             }
                         }
@@ -142,14 +143,16 @@ void AI::findMoves(Board B)
 void AI::dispValidMoves()
 {
     cout << "number of moves: " << moves.size() << endl;
-    for(int i=0; i<moves.size(); i++)
+    /*for(int i=0; i<moves.size(); i++)
     {
         moves[i].Display();
-        //cout << "capture value: " << getCaptureValue(moves[i]) << endl;
-    }
+        cout << "capture value: " << getCaptureValue(moves[i]) << endl;
+        cout << "moveable spaces: " << findMoveableSpaces(moves[i]) << endl;
+
+    }*/
 
 
-   }
+}
 
 /*void AI::assignMoveValues()
 {
@@ -174,16 +177,16 @@ void AI::dispValidMoves()
 //look at move destination on board and find value of piece there
 double AI::getCaptureValue(Move move)
 {
-    Piece piece = boardOriginal[move.endCol][move.endRow];
-    if(piece.getChar() != 32)
+    Piece capturedPiece = boardOriginal[move.endCol][move.endRow];
+    if(capturedPiece.getChar() != 32) // not null
     {
-        return piece.getValue();
+        return capturedPiece.getValue();
     }
     else
         return 0; 
 }
 
-double AI::getDefendingValue()
+double AI::getDefendingValue(Move move)
 {
     double youDefend; // sum of values of pieces you are defending
     double defendYou; // sum of values of pieces defending you
@@ -191,11 +194,26 @@ double AI::getDefendingValue()
     // each of these have their own weights and then are summed together
 }
 
-int AI::findMoveableSpaces()
+int AI::findMoveableSpaces(Move move)
 {
+    int moveableSpaces = 0;
+    Manager mnger;  // would like to be able to get rid of this
+
+    for(int r = 0; r < 8; r++)
+    {
+        for(int c = 0; c < 8; c++)
+        {
+            if(mnger.checkMove(move.endRow, move.endCol, r, c, 0) == 0)
+            {
+                moveableSpaces++;
+            }
+        }
+    }
+
+    return moveableSpaces;
 }
 
-double AI::getAttackingValue()
+double AI::getAttackingValue(Move move)
 {
 }
 
@@ -205,4 +223,19 @@ int AI::numAttackers()
 
 double AI::pieceValueAbandoned()
 {
+}
+
+int AI::randomMove()
+{
+    srand(time(NULL));
+    int moveIndex = rand()%moves.size();
+    cout << "moveIndex: " << moveIndex << endl;
+    return moveIndex;
+}
+
+Move AI::playMove()
+{
+    findMoves();
+    dispValidMoves();
+    return moves[randomMove()];
 }

@@ -3,6 +3,7 @@
 
 #include "board.h"
 #include "AI.h"
+//#include "Move.h"
 //#include "game.h"
 
 class Manager{
