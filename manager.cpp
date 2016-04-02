@@ -247,19 +247,53 @@ int Manager::checkKnight( int sourceRow, int sourceColumn, int targetRow, int ta
         return 0;
     } 
      
-     /* 
-    // determine if moving only left or right one space
-    if (targetColumn != (sourceColumn + 1) || targetColumn != (sourceColumn - 1)) {
-        return 0;
+
+    return 1;
+    
+}
+
+int Manager::kingInCheck() {
+    // returns 1 if player's king in check. returns 2 if AI's king
+    
+    
+    int krow, kcol;
+    int i, j;
+    
+    for (krow = 0; krow < 8; krow++) { // find location of player's king
+        for (kcol = 0; kcol < 8; kcol++) {
+            if (board.chessBoard[krow].at(kcol).getChar() == 'k') {
+                break;
+            }
+        }
     }
     
-    // determine if moving only up or down two spaces
-    if (targetRow != (sourceRow + 2) || targetRow != (sourceRow - 2)) {
-        return 0;
-    }*/
-    // if reached, valid
-    //cout << "row diff: " << rowDif << " col diff: " << colDif << endl;
-    return 1;
+    for (i = 0; i < 8; i++) { // check if player's king is in check
+        for (j = 0; j < 8; j++) {
+            if (board.chessBoard[i].at(j).getPlayer() == 1) {
+                if (checkMove(i, j, krow, kcol, 1) == 0)
+                    return 1;
+            }
+        }
+    }
+    
+    for (krow = 0; krow < 8; krow++) { // find location of AI's king
+        for (kcol = 0; kcol < 8; kcol++) {
+            if (board.chessBoard[krow].at(kcol).getChar() == 'K') {
+                break;
+            }
+        }
+    }
+    
+    for (i = 0; i < 8; i++) { // check if AI's king is in check
+        for (j = 0; j < 8; j++) {
+            if (board.chessBoard[i].at(j).getPlayer() == 0) {
+                if (checkMove(i, j, krow, kcol, 0) == 0)
+                    return 2;
+            }
+        }
+    }
+    
+    return 0;
     
 }
 

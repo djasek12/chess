@@ -27,6 +27,7 @@ class Manager{
         int checkQueen( int, int, int, int, int);
         int checkKnight( int, int, int, int, int);
         int checkKing( int, int, int, int, int);
+        int kingInCheck();
         //public data members
 		Board board;
 		Game game;
