@@ -1,5 +1,6 @@
 #include "board.h"
 #include "stdlib.h"
+#include <locale>
 
 Board::Board(){	
 	dim = 8;
@@ -152,7 +153,12 @@ void Board::display(){
 		cout << 8 - i << "  ";
 		for( int j = 0; j < dim; j++){
 			cout << "|";
-			cout << chessBoard[j].at(i).getChar();	
+			if (isupper(chessBoard[j].at(i).getChar()))
+				cout << "\033[1;31m" << chessBoard[j].at(i).getChar() << "\033[0m";
+			else if (islower(chessBoard[j].at(i).getChar()))
+				cout << "\033[0;36m" << chessBoard[j].at(i).getChar() << "\033[0m";
+			else
+				cout << chessBoard[j].at(i).getChar();	
 			cout << "|";
 		}
 		cout << endl;
