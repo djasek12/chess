@@ -58,6 +58,9 @@
 
 3/31
     Danny - 1.5 hours implementing checkMove in AI class, displaying valid moves, fix checkKnightMove()
+    
 4/2
     Danny and Billy - 1.5 hours implemented random AI move into gameflow
 
+4/3
+	Billy - 0.5 hours modifying the board.display to give the players unique colors for enhanced readability - I couldn't tell between 'p' and 'P'
