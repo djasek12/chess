@@ -154,9 +154,9 @@ void Board::display(){
 		for( int j = 0; j < dim; j++){
 			cout << "|";
 			if (isupper(chessBoard[j].at(i).getChar()))
-				cout << "\033[1;31m" << chessBoard[j].at(i).getChar() << "\033[0m";
-			else if (islower(chessBoard[j].at(i).getChar()))
 				cout << "\033[0;36m" << chessBoard[j].at(i).getChar() << "\033[0m";
+			else if (islower(chessBoard[j].at(i).getChar()))
+				cout << "\033[1;31m" << chessBoard[j].at(i).getChar() << "\033[0m";
 			else
 				cout << chessBoard[j].at(i).getChar();	
 			cout << "|";
