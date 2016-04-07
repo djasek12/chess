@@ -311,8 +311,8 @@ void Manager::play()
         while(1)
         {
             //print which player
-            if(currentPlayer == 1 ) cout << "Player: UPPERCASE" << endl;
-            if(currentPlayer == 0 ) cout << "Player: lowercase" << endl; 
+            if(currentPlayer == 1 ) cout << "Player: BLUE" << endl;
+            if(currentPlayer == 0 ) cout << "Player: red" << endl; 
 
             if(currentPlayer == 1)
             {
