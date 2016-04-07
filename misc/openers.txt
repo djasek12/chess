@@ -1,0 +1,53 @@
+Standard Openers - A1 upper right of board
+
+Slavic Defense - Black
+	1.) Pd4
+	2.) Pc6
+	3.) 
+	
+London System - White
+	1.) Pd4
+	2.) Bf4
+	3.) Nf3
+	
+Caro Kann - Black
+	1.) Pc6
+	2.) Pd5
+	3.) 
+	
+Fried Liver Attack - White
+	1.) Pe4
+	2.) Nf3
+	3.) Bc4
+	4.) Ng5
+	
+French Defense - Black
+	1.) Pe6
+	2.) Pd5
+	3.) 
+	
+Ruy Lopez - White
+	1.) Pe4
+	2.) Nf3
+	3.) Bb5
+	
+Nimzo-Indian Defense - Black
+	1.) Nf6
+	2.) Pe6
+	3.) Bb4
+	
+King's Gambit - White
+	1.) Pe4
+	2.) Pf4
+	3.) Nf3
+	
+Sicilian Defense - Black
+	1.) Pc5
+	2.) 
+	
+Queen's Gambit - White
+	1.) Pd4
+	2.) Pc4
+	3.) 
+	
+Reference - https://www.youtube.com/watch?v=Txvz97tzDfM
