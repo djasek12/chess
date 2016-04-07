@@ -5,6 +5,7 @@
 #include <ctype.h>
 #include <stdlib.h>
 #include <algorithm>
+#include <fstream>
 
 Manager::Manager(){
 
@@ -301,8 +302,21 @@ int Manager::kingInCheck() {
 }
 
 void Manager::play()
-{
-    //loadBoard();
+{ 
+    string filename;
+    int status = startGame();
+    if (status == 0){
+        //load game
+        cout << "Please enter the name of the file to load from: ";
+        cin >> filename;
+    }else if( status == 1){
+        //new game
+        cout << "Please enter a name of the file to save to: ";
+        cin >> filename;
+    }else{
+        //eror 
+    }
+
     int currentPlayer = 0;
     while(1)
     {
@@ -320,12 +334,13 @@ void Manager::play()
             if(currentPlayer == 1)
             {
                 game.getCoordinates();
-
-                if(checkMove( game.getFromX(), game.getFromY(), game.getToX(), game.getToY(), currentPlayer) == 0)
+                
+                if(checkMove( game.getFromX(), game.getFromY(), game.getToX(), game.getToY(), currentPlayer) == 0){
                     break;
 
-                else
+                }else{
                     cout << "Move is not valid!" << endl;
+                }   
             }
             else // AI
             {
@@ -339,30 +354,55 @@ void Manager::play()
                 break;
             }
         }
-
-        if(currentPlayer == 1)
+        if(currentPlayer == 1){
             move( game.getFromX(), game.getFromY(), game.getToX(), game.getToY() );
-        else
+            string encoded = translateMove( game.getFromX(), game.getFromY(), game.getToX(), game.getToY() );
+            saveLog( filename, encoded);
+        }else{
             move(AI_move.startRow, AI_move.startCol, AI_move.endRow, AI_move.endCol);
-
+            string encoded = translateMove(AI_move.startRow, AI_move.startCol, AI_move.endRow, AI_move.endCol);
+            saveLog( filename, encoded);
+        }   
     }
 
 }
 
+string Manager::translateMove( int fromX, int fromY, int toX, int toY ){
+    fromX += '0';
+    fromY += '0';
+    toX += '0';
+    toY += '0';
+    string translate = "";
+    translate += fromX;
+    translate += fromY;
+    translate += toX;
+    translate += toY;
+    cout << translate << endl;
+    return translate; 
+}
 
-void Manager::collectValues(){
-	player0Val = 0;
-	player1Val = 0;	
-	
-	for( int i = 0; i < 8; i++){
-		for( int j = 0; j < 8; j++){
-			if( board.chessBoard[j].at(i).getPlayer() == 0){
-				player0Val += board.chessBoard[j].at(i).getValue();		
-			}else if( board.chessBoard[j].at(i).getPlayer() == 1 ){
-				player1Val += board.chessBoard[j].at(i).getValue();
-			}
-		}
-	}	
+/*Return 0 for load game, 1 for new game, 2 for failed */
+int Manager::startGame(){
+    //determine if new game or load game
+    string type;
+    cout << "Load: Load from file --- New: New Game: ";
+    cin >> type; 
+
+    if(  type[0] == 'L' || type[0] == 'l' ){
+        return 0;
+    }else if( type[0] == 'N' || type[0] == 'n' ){
+        return 1; 
+    }else{
+        return 2;
+    }
+}
+
+void Manager::saveLog(string filename, string move){
+    ofstream savefile;
+    savefile.open(filename.c_str(), ios_base::app);    
+    savefile << move << endl;
+    savefile.close();
+
 }
 
 

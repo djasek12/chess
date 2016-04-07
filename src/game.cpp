@@ -1,5 +1,6 @@
 /*Includes*/
 #include "../include/board.h"
+#include <string>
 
 Game::Game(){
 	//default constructor
@@ -120,9 +121,7 @@ int Game::getToY(){
 	return moveToY;
 }
 
-void Game::play(){
-	getCoordinates();
-}
+
 
 void Game::makeMove( int fromX, int fromY, int toX, int toY){
 	//if( chessBoard[fromY].at(fromX).getPlayer() == 2) {

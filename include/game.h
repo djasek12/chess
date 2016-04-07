@@ -2,6 +2,8 @@
 #define _GAME_H_INCLUDED
 #include <string>
 
+using namespace std;
+
 class Game{
 	public:
 		Game();
@@ -20,10 +22,9 @@ class Game{
 		int getFromY();
 		int getToX();
 		int getToY();
-		void play();
 		void makeMove( int, int, int, int);
 	private:
-		int moveFromX, moveFromY;
+        int moveFromX, moveFromY;
 		int moveToX, moveToY;
 };
 

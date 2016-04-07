@@ -27,6 +27,11 @@ class Manager{
         int checkKnight( int, int, int, int, int);
         int checkKing( int, int, int, int, int);
         int kingInCheck();
+        //save and load for log
+        int startGame();
+        string translateMove(int, int, int, int);
+        void saveLog(string, string); //filename and move made
+        void loadLog(string);
         //public data members
 		Board board;
 		Game game;
