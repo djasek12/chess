@@ -1,3 +1,4 @@
+/*Includes*/
 #include "../include/board.h"
 
 Game::Game(){

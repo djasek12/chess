@@ -1,4 +1,7 @@
+/*Includes*/
 #include "../include/manager.h"
+
+/*Macros*/
 #include <ctype.h>
 #include <stdlib.h>
 #include <algorithm>
@@ -342,64 +345,10 @@ void Manager::play()
         else
             move(AI_move.startRow, AI_move.startCol, AI_move.endRow, AI_move.endCol);
 
-        saveBoard();
     }
 
 }
 
-void Manager::saveBoard(){
-	ofstream gamestate; 
-	gamestate.open("gamestate");
-	for( int i = 0; i < 8; i++){
-		for( int j = 0; j < 8; j++){
-			gamestate << board.chessBoard[j].at(i).getChar();	
-		}
-		gamestate << "\n";
-	}
-	gamestate.close();
-}
-
-void Manager::loadBoard(){
-	ifstream gamefile; 
-	string filename;
-	cout << "Please enter the name of file to load from: ";
-	cin >> filename;
-	gamefile.open(filename.c_str());
-	//read char from file into 2d array
-	char boardArr[8][8];
-	string currentString;
-	string fileContents;
-	while (getline( gamefile, currentString)){
-		fileContents += currentString;
-	}
-	int count = 0;
-	for( int i = 0; i < 8; i++){
-		for( int j = 0; j < 8; j++){
-			boardArr[i][j] = fileContents[count];
-			count++;	
-		}
-	}
-	//boardArr now holds the chars from file
-	//now transform board to match boardArr
-	for( int i = 0; i < 8; i++){
-		for( int j = 0; j < 8; j++){
-			char targetChar = boardArr[i][j]; 
-			//find an appropriatte piece from the board
-			int found = 0;
-			for( int a = 0; a < 8; a++){
-				for( int b = 0; b < 8; b++){
-					if (board.chessBoard[b].at(a).getChar() == targetChar){
-						move(  i, j, a, b);
-						found = 1;
-						break;		
-					}
-					if (found)
-						break;
-				}
-			}
-		}
-	}	
-}
 
 void Manager::collectValues(){
 	player0Val = 0;

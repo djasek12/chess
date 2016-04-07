@@ -1,6 +1,10 @@
-#include <iostream>
+/*Includes*/
 #include "../include/Move.h"
 #include "../include/pieces.h"
+
+/*Macros*/
+#include <iostream>
+
 using namespace std;
 
 Move::Move()

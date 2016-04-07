@@ -1,4 +1,7 @@
+/*Includes*/
 #include "../include/board.h"
+
+/*Macros*/
 #include "stdlib.h"
 #include <locale>
 

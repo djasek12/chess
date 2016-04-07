@@ -1,5 +1,9 @@
+
+/*Header files from include*/ 
 #include "../include/AI.h"
 #include "../include/Move.h"
+
+/*Macros*/
 #include <iostream>
 #include "stdlib.h"
 

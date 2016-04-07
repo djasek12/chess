@@ -20,5 +20,5 @@ $(OBJECTS): $(BUILDDIR)/%.o : $(SOURCEDIR)/%.cpp
 	$(CC) $(FLAGS) $< -o $@
 
 clean:
-	rm -f $(BUILDDIR)/*o $(BUILDDIR)/$(EXECUTABLE)
+	rm -r $(BUILDDIR)
 

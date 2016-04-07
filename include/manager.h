@@ -15,8 +15,6 @@ class Manager{
 		void move( int, int, int, int );
         int checkMove( int, int, int, int, int);
 		void play();
-		void saveBoard();
-		void loadBoard();
 		void collectValues();	
         //functions for move checks
         int checkBounds(int, int, int, int);

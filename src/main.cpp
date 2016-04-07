@@ -1,11 +1,6 @@
-//chess_dual
-//main.cpp
-
-//#include "pieces.h"
-//#include "board.h"
-//#include "game.h"
-//#include "AI.h"
+/*Includes*/
 #include "../include/manager.h"
+
 using namespace std;
 
 int main(){
