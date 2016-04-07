@@ -1,4 +1,4 @@
-Move AI::Opener(int seed)
+/*Move AI::Opener(int seed)
 {
 	vector<Move> one;
 	vector<Move> two;
@@ -33,4 +33,4 @@ Move AI::Opener(int seed)
 		default:
 			cout << "Error invalid seed" << endl;
 	}
-}
+}*/
