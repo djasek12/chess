@@ -64,3 +64,8 @@
 
 4/3
 	Billy - 0.5 hours modifying the board.display to give the players unique colors for enhanced readability - I couldn't tell between 'p' and 'P'
+
+4/7
+    Alex- 2.5  hours reworking file structure and adding logs
+
+
