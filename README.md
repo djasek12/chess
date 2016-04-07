@@ -7,7 +7,11 @@ BUILDING
 
 RUNNING
 =======
-'% bin/chess_engine'
+`% bin/chess_engine`
+
+CLEANING
+=======
+`% make clean`
 
 
 
