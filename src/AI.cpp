@@ -12,7 +12,10 @@ using namespace std;
 AI::AI(Board B/*, Manager gmMnger*/)
 {
    boardOriginal = B.chessBoard;
-   //gameManager = gmMnger; 
+   Brd = B;
+   //gameManager = gmMnger;
+   //cout << "board that AI sees" << endl;
+   //B.display(); 
 }
 
 /*void AI::overallAlgorithm()
@@ -113,7 +116,7 @@ int AI::makeObviousMove() // returns 1 if move is made
 
 void AI::findMoves()
 {
-    Manager mnger;
+    //Manager mnger;
 
     // loop through each space in board vector
     for(int row=0; row<8; row++)
@@ -126,14 +129,25 @@ void AI::findMoves()
                 if(boardOriginal[col][row].getPlayer() == 0) // is our piece
                 {
                     //cout << "row: " << row << " col: " << col << endl;
+                    //cout << "piece character: " << boardOriginal[col][row].getChar() << endl;
+                    //cout << "player: " << boardOriginal[col][row].getPlayer() << endl;
 
                     for(int r=0; r<8; r++) // loop through all of spaces on board again to check for valid moves
                     {
                         for(int c=0; c<8; c++)
                         {
+                            Manager mnger;
+                            mnger.setBoard(Brd);
+                            if(row >= 2 && r == row + 1)
+                            {
+                                //cout << "row " << r << "col: " << c << endl;
+                                //cout << "----------checkMove for piece that has been moved: " << mnger.checkMove(row, col, r, c, 0) << endl;
+                            }
                             if(mnger.checkMove(row, col, r, c, 0) == 0)
                             {
+                                cout << "starting row/col: " << row << " " << col << " ending row/col: " << r << " " << c << endl;
                                 Move testMove(boardOriginal[col][row], row, col, r, c);
+                                //cout << "pushing new move: " << endl;
                                 moves.push_back(testMove); 
                             }
                         }
@@ -233,13 +247,16 @@ int AI::randomMove()
 {
     srand(time(NULL));
     int moveIndex = rand()%moves.size();
-    cout << "moveIndex: " << moveIndex << endl;
+    //cout << "moveIndex: " << moveIndex << endl;
     return moveIndex;
 }
 
 Move AI::playMove()
 {
+    //cout << "Inside playMove()" << endl;
     findMoves();
+    //cout << "Calling dispValidMoves()" << endl;
     dispValidMoves();
+    //cout << "calling randomMove()" << endl;
     return moves[randomMove()];
 }

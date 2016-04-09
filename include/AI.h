@@ -44,6 +44,9 @@ class AI {
         // findLosses functions
         int numAttackers(); // pieces that can attack you
         double pieceValueAbandoned(); // value of pieces you are no longer defending
+
+        //board data member for passing AI board to Manager class
+        Board Brd;
 };
 
 #endif

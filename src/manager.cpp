@@ -46,6 +46,7 @@ void Manager::move( int sourceRow, int sourceColumn, int targetRow, int targetCo
     3: Move not valid
 */
 int Manager::checkMove( int sourceRow, int sourceColumn, int targetRow, int targetColumn, int curPlayer){
+    //cout << "current player" << curPlayer << endl;
     if( checkBounds( sourceRow, sourceColumn, targetRow, targetColumn) == 0){
         return 1; //not in bounds
     }else if( checkPlayer( sourceRow, sourceColumn, targetRow, targetColumn, curPlayer) == 0){
@@ -82,8 +83,12 @@ int Manager::checkBounds( int sourceRow, int sourceColumn, int targetRow, int ta
 int Manager::checkPlayer( int sourceRow, int sourceColumn, int targetRow, int targetColumn, int curPlayer){
     //check if curPlayer matches source piece 
     if( board.chessBoard[sourceColumn].at(sourceRow).getPlayer() != curPlayer){
+        //cout << "not moving own player!: current player is " << curPlayer << " and your player is " << board.chessBoard[sourceColumn].at(sourceRow).getPlayer() << endl;
+        //cout << "character of the piece is: " << board.chessBoard[sourceColumn].at(sourceRow).getChar() << endl;
+        //board.display(); 
         return 0;
     }else if( board.chessBoard[sourceColumn].at(sourceRow).getPlayer() == board.chessBoard[targetColumn].at(targetRow).getPlayer()){
+        //cout << "attacking own player!" << endl;
         return 0;
     }    
     //if prog reaches this point, move is valid
@@ -144,7 +149,7 @@ int Manager::checkPawn( int sourceRow, int sourceColumn, int targetRow, int targ
                 return 0; //move too long
             }
         }
-    }else{ //moving to enemy
+    }else{//moving to enemy
         //make sure both vert and hor move are 1
         if( abs(sourceRow - targetRow) != 1 || abs(sourceColumn - targetColumn) != 1){
             return 0;
@@ -344,9 +349,10 @@ void Manager::play()
             }
             else // AI
             {
-                cout << "AI turn" << endl;
+                //cout << "AI about to be constructed" << endl;
 
                 AI AI_1(board);
+                //cout << "AI has been constructed, play move function being called" << endl;
                 //AI_1.findMoves(board);
                 //AI_1.dispValidMoves();
                 AI_move = AI_1.playMove();
@@ -405,4 +411,7 @@ void Manager::saveLog(string filename, string move){
 
 }
 
-
+void Manager::setBoard(Board B)
+{
+    board = B;
+}

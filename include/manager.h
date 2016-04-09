@@ -32,6 +32,8 @@ class Manager{
         string translateMove(int, int, int, int);
         void saveLog(string, string); //filename and move made
         void loadLog(string);
+
+        void setBoard(Board);
         //public data members
 		Board board;
 		Game game;
