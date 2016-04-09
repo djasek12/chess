@@ -70,3 +70,5 @@
 
 4/9
     Billy and Danny - 2.33 hours fixing large bug that was caused by the Manager class not getting an updated board from AI, fixed pawn move function
+4/9
+    Danny - .2 hours testing validMove function
