@@ -142,14 +142,24 @@ int Manager::checkPawn( int sourceRow, int sourceColumn, int targetRow, int targ
             originalSpot = 1;
         }
 
+
         //check if move is proper length
-        if( originalSpot){
-            int moveDiff = abs(sourceRow - targetRow);
-            if( moveDiff >= 3) {
+        int moveDiff = abs(sourceRow - targetRow);
+        if(originalSpot)
+        {
+            if(moveDiff >= 3)
+            {
                 return 0; //move too long
             }
         }
-    }else{//moving to enemy
+        else
+        {
+            if(moveDiff >=2)
+                return 0;
+        }
+    }
+        
+    else{//moving to enemy
         //make sure both vert and hor move are 1
         if( abs(sourceRow - targetRow) != 1 || abs(sourceColumn - targetColumn) != 1){
             return 0;
