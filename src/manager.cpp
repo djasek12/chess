@@ -151,6 +151,15 @@ int Manager::checkPawn( int sourceRow, int sourceColumn, int targetRow, int targ
             {
                 return 0; //move too long
             }
+            
+            if (moveDiff == 2 && sourceRow == 6 && board.chessBoard[sourceColumn].at(5).getPlayer() == curPlayer) {
+                return 0; // prevents jumping piece on first move
+            }
+            
+            if (moveDiff == 2 && sourceRow == 1 && board.chessBoard[sourceColumn].at(2).getPlayer() == curPlayer) {
+                return 0; // prevents jumping piece on first move
+            }
+            
         }
         else
         {
