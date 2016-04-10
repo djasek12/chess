@@ -365,7 +365,9 @@ void Manager::play()
                 //cout << "AI has been constructed, play move function being called" << endl;
                 //AI_1.findMoves(board);
                 //AI_1.dispValidMoves();
-                AI_move = AI_1.playMove();
+                AI_move = AI_1.overallAlgorithm();
+                cout << "move passed to manager correctly" << endl;
+                //AI_move = AI_1.playMove();
 
                 //cout << "capture value of move: " << AI_1.getCaptureValue(AI_move) << endl;;
 
@@ -426,4 +428,21 @@ void Manager::saveLog(string filename, string move){
 void Manager::setBoard(Board B)
 {
     board = B;
+}
+
+// function Danny and Billy made to switch the order checkMove was checking conditions
+int Manager::checkMove2( int sourceRow, int sourceColumn, int targetRow, int targetColumn, int curPlayer){
+    //cout << "current player" << curPlayer << endl;
+    if( checkBounds( sourceRow, sourceColumn, targetRow, targetColumn) == 0)
+    {
+        return 1; //not in bounds
+    }
+    else if( checkSpecific( sourceRow, sourceColumn, targetRow, targetColumn, curPlayer) == 0)
+    {
+        return 3;
+    }
+    else if( checkPlayer( sourceRow, sourceColumn, targetRow, targetColumn, curPlayer) == 0)
+    {
+        return 2; //player not valid
+    }
 }

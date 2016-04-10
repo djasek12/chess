@@ -12,10 +12,10 @@ class AI {
 
     public:
         AI(Board b /*,Manager m*/);
-        void overallAlgorithm(); // skeleton
-        void findMoves(); // find valid moves
+        Move overallAlgorithm(); // skeleton
+        void findMoves(int player); // find valid moves
         void dispValidMoves();
-        void getOutOfCheck();
+        Move getOutOfCheck();
         int makeObviousMove();
         void assignMoveValues();
         int decideMove(int movesAhead);
@@ -29,7 +29,8 @@ class AI {
     private:
         vector<Move> moves;
         vector<vector<Piece> > boardOriginal; 
-        vector<vector<Piece> > boardCopy;  
+        vector<vector<Piece> > boardCopy; 
+        vector<Move> humanMoves;
         //Manager mnger;
 
         double findGains(int player); // 0 is AI, 1 is player

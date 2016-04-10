@@ -14,6 +14,7 @@ class Manager{
 		Manager();
 		void move( int, int, int, int );
         int checkMove( int, int, int, int, int);
+        int checkMove2( int, int, int, int, int);
 		void play();
 		void collectValues();	
         //functions for move checks
