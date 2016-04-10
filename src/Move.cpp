@@ -32,3 +32,13 @@ void Move::setMoveValue(double val)
 {
     value = val;
 }
+
+double Move::getMoveValue()
+{
+    return value;
+}
+
+Piece Move::getPiece()
+{
+    return piece;
+}

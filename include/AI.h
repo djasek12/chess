@@ -38,12 +38,12 @@ class AI {
         // findGains functions
         double getCaptureValue(Move move);
         double getAttackingValue(Move move); // sum of values of pieces you can attack
-        double getDefendingValue(Move move);
+        double getDefendingValue(Move move); // sum of values of pieces you can defend
         int findMoveableSpaces(Move move); // sum of spaces you can move
 
         // findLosses functions
-        int numAttackers(); // pieces that can attack you
-        double pieceValueAbandoned(); // value of pieces you are no longer defending
+        double numAttackers(Move move); // pieces that can attack you
+        double pieceValueAbandoned(Move move); // value of pieces you are no longer defending
 
         //board data member for passing AI board to Manager class
         Board Brd;
