@@ -367,6 +367,8 @@ void Manager::play()
                 //AI_1.dispValidMoves();
                 AI_move = AI_1.playMove();
 
+                //cout << "capture value of move: " << AI_1.getCaptureValue(AI_move) << endl;;
+
                 break;
             }
         }

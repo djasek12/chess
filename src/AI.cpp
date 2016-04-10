@@ -137,7 +137,7 @@ void AI::findMoves()
                         for(int c=0; c<8; c++)
                         {
                             Manager mnger;
-                            mnger.setBoard(Brd);
+                            mnger.setBoard(Brd); // need to pass AI board to Manager
                             if(row >= 2 && r == row + 1)
                             {
                                 //cout << "row " << r << "col: " << c << endl;
@@ -145,8 +145,11 @@ void AI::findMoves()
                             }
                             if(mnger.checkMove(row, col, r, c, 0) == 0)
                             {
-                                cout << "starting row/col: " << row << " " << col << " ending row/col: " << r << " " << c << endl;
+                                cout << "\nstarting row/col: " << row << " " << col << " ending row/col: " << r << " " << c << endl;
                                 Move testMove(boardOriginal[col][row], row, col, r, c);
+                                cout << "capture value of move: " << getCaptureValue(testMove) << endl;
+                                cout << "moveable spaces: " << findMoveableSpaces(testMove) << endl;
+                                cout << "attack value: " << getAttackingValue(testMove) << endl;
                                 //cout << "pushing new move: " << endl;
                                 moves.push_back(testMove); 
                             }
@@ -216,6 +219,8 @@ int AI::findMoveableSpaces(Move move)
 {
     int moveableSpaces = 0;
     Manager mnger;  // would like to be able to get rid of this
+    mnger.setBoard(Brd);
+    mnger.move(move.startRow, move.startCol, move.endRow, move.endCol); // need to execute move on board so manager can parse it
 
     for(int r = 0; r < 8; r++)
     {
@@ -233,6 +238,32 @@ int AI::findMoveableSpaces(Move move)
 
 double AI::getAttackingValue(Move move)
 {
+    int attackValue = 0;
+    Manager mnger;  // would like to be able to get rid of this
+    mnger.setBoard(Brd);
+    mnger.move(move.startRow, move.startCol, move.endRow, move.endCol); // need to execute move on board so manager can parse it
+
+    for(int r = 0; r < 8; r++)
+    {
+        for(int c = 0; c < 8; c++)
+        {
+            if(move.startRow != r | move.startCol != c) // can't go back and capture itself
+            {
+                if(mnger.checkMove(move.endRow, move.endCol, r, c, 0) == 0)
+                {
+                    int value = mnger.board.chessBoard[c][r].getValue();
+                    if(value > 0)
+                    {
+                        cout << "Possible attacking move: row, column, value: "  << r << c << value << endl;
+                    }
+                    //if(Brd[c][r].getValue() > 0)
+                    attackValue += value;
+                }
+            }
+        }
+    }
+
+    return attackValue;
 }
 
 int AI::numAttackers()
