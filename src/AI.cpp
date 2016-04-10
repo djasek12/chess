@@ -221,6 +221,20 @@ double AI::getCaptureValue(Move move)
         return 0; 
 }
 
+int AI::getDevelopmentValue(Move move)
+{
+    int develop = 0;
+
+    Manager mnger;  // would like to be able to get rid of this
+    mnger.setBoard(Brd);
+
+    if(move.startCol < 3 & move.endCol >= 3)
+        develop = 1;
+
+    return develop;
+}
+
+
 double AI::getDefendingValue(Move move)
 {
     double youDefend = 0; // sum of values of pieces you are defending
@@ -389,6 +403,17 @@ Move AI::playMove()
     Move bestMove = moves[0];
     for(int i=1; i<moves.size(); i++)
     {
+            cout << "\nstarting row/col: " << moves[i].startRow << " " << moves[i].startCol << " ending row/col: " << moves[i].endRow << " " << moves[i].endCol << endl;
+            cout << "capture value of move: " << getCaptureValue(moves[i]) << endl;
+            cout << "moveable spaces: " << 0.05*findMoveableSpaces(moves[i]) << endl;
+            cout << "attack value: " << 0.2*getAttackingValue(moves[i]) << endl;
+            cout << "numAttackers: " << numAttackers(moves[i]) << endl;
+            cout << "defending value: " << 0.2*getDefendingValue(moves[i]) << endl;
+            cout << "development value: " << getDevelopmentValue(moves[i]) << endl;
+
+            cout << "overall value: " << moves[i].getMoveValue() << endl << endl;
+
+
         if(bestMove.getMoveValue() < moves[i].getMoveValue())
             bestMove = moves[i];
     }
@@ -404,16 +429,7 @@ double AI::findGains(int player)
 
         for(int i=0; i<moves.size(); i++)
         {
-            moves[i].setMoveValue(getCaptureValue(moves[i]) + 0.2*findMoveableSpaces(moves[i]) + 0.2*getAttackingValue(moves[i]) - 3*numAttackers(moves[i]) + 0.1*getDefendingValue(moves[i]));
-            cout << "\nstarting row/col: " << moves[i].startRow << " " << moves[i].startCol << " ending row/col: " << moves[i].endRow << " " << moves[i].endCol << endl;
-            cout << "capture value of move: " << getCaptureValue(moves[i]) << endl;
-            cout << "moveable spaces: " << 0.05*findMoveableSpaces(moves[i]) << endl;
-            cout << "attack value: " << 0.2*getAttackingValue(moves[i]) << endl;
-            cout << "numAttackers: " << numAttackers(moves[i]) << endl;
-            cout << "defending value: " << 0.2*getDefendingValue(moves[i]) << endl;
-
-
-            cout << "overall value: " << moves[i].getMoveValue() << endl << endl;
+            moves[i].setMoveValue(getCaptureValue(moves[i]) + 0.2*findMoveableSpaces(moves[i]) + 0.2*getAttackingValue(moves[i]) - 3*numAttackers(moves[i]) + 0.1*getDefendingValue(moves[i]) + 1*getDevelopmentValue(moves[i]));
 
         }   
 
@@ -429,6 +445,13 @@ double AI::findGains(int player)
             
             findMoves(1);
 
+            for(int j=0; j<humanMoves.size(); j++)
+            {
+                humanMoves[j].setMoveValue(getCaptureValue(humanMoves[j]) + 0.2*findMoveableSpaces(humanMoves[j]) + 0.2*getAttackingValue(humanMoves[j]) - 3*numAttackers(humanMoves[j]) + 0.1*getDefendingValue(humanMoves[j]) + 1*getDevelopmentValue(humanMoves[j]));
+
+            }   
+
+
             double maxValue = humanMoves[0].getMoveValue();
 
             for(int j=1; j<humanMoves.size(); j++)
@@ -437,6 +460,7 @@ double AI::findGains(int player)
                     maxValue = humanMoves[j].getMoveValue();
             }
 
+            cout << "max human move value: " << maxValue << endl;
             moves[i].setMoveValue(moves[i].getMoveValue() - maxValue);
         }
     }

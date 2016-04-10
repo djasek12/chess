@@ -41,6 +41,7 @@ class AI {
         double getAttackingValue(Move move); // sum of values of pieces you can attack
         double getDefendingValue(Move move); // sum of values of pieces you can defend
         int findMoveableSpaces(Move move); // sum of spaces you can move
+        int getDevelopmentValue(Move move);
 
         // findLosses functions
         double numAttackers(Move move); // pieces that can attack you
