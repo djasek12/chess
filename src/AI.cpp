@@ -428,7 +428,7 @@ double AI::findGains(int player)
 
         for(int i=0; i<moves.size(); i++)
         {
-            moves[i].setMoveValue(getCaptureValue(moves[i]) + 0.2*findMoveableSpaces(moves[i]) + 0.2*getAttackingValue(moves[i]) - 3*numAttackers(moves[i]) + 0.1*getDefendingValue(moves[i]) + 1*getDevelopmentValue(moves[i]));
+            moves[i].setMoveValue(getCaptureValue(moves[i]) + 0.2*findMoveableSpaces(moves[i]) + 0.2*getAttackingValue(moves[i]) - 5*numAttackers(moves[i]) + 0.1*getDefendingValue(moves[i]) + 1*getDevelopmentValue(moves[i]));
 
         }   
 
@@ -446,7 +446,7 @@ double AI::findGains(int player)
 
             for(int j=0; j<humanMoves.size(); j++)
             {
-                humanMoves[j].setMoveValue(getCaptureValue(humanMoves[j]) + 0.2*findMoveableSpaces(humanMoves[j]) + 0.2*getAttackingValue(humanMoves[j]) - 3*numAttackers(humanMoves[j]) + 0.1*getDefendingValue(humanMoves[j]) + 1*getDevelopmentValue(humanMoves[j]));
+                humanMoves[j].setMoveValue(getCaptureValue(humanMoves[j]) + 0.2*findMoveableSpaces(humanMoves[j]) + 0.2*getAttackingValue(humanMoves[j]) - 5*numAttackers(humanMoves[j]) + 0.1*getDefendingValue(humanMoves[j]) + 1*getDevelopmentValue(humanMoves[j]));
 
             }   
 
