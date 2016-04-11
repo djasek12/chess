@@ -74,3 +74,5 @@
     Danny - 1.1 hours working on smaller AI functions
 4/10
     Billy and Danny - 3.7 hours working on AI
+4/11
+    Danny - 0.5 working on AI in lab
