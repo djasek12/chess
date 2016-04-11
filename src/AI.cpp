@@ -1,4 +1,3 @@
-
 /*Header files from include*/ 
 #include "../include/AI.h"
 #include "../include/Move.h"
@@ -9,36 +8,36 @@
 
 using namespace std;
 
+// constructor that takes in a board
 AI::AI(Board B/*, Manager gmMnger*/)
 {
-   boardOriginal = B.chessBoard;
-   Brd = B;
-   //gameManager = gmMnger;
-   //cout << "board that AI sees" << endl;
-   //B.display(); 
+    boardOriginal = B.chessBoard;
+    Brd = B;
+    //gameManager = gmMnger;
 }
 
 Move AI::overallAlgorithm()
 {
+    // instantiate a manager and pass it the correct board
     Manager mnger;
     mnger.setBoard(Brd);
 
-   if(mnger.kingInCheck() == 2)
-   {
-       //cout << "king in check" << endl;
-      return getOutOfCheck();
-   }
+    if(mnger.kingInCheck() == 2)
+    {
+        cout << "king in check" << endl;
+        return getOutOfCheck();
+    }
     else
     {
         //cout << "play move" << endl;
         return playMove();
     }
-   
-   /*if(!makeObviousMove())
-   {
+
+    /*if(!makeObviousMove())
+      {
       int movesAhead = 1;
       decideMove(movesAhead);
-   }*/
+      }*/
 }
 
 Move AI::getOutOfCheck()
@@ -452,16 +451,18 @@ double AI::findGains(int player)
             }   
 
 
-            double maxValue = humanMoves[0].getMoveValue();
+            Move maxValue = humanMoves[0];
 
             for(int j=1; j<humanMoves.size(); j++)
             {
-                if(humanMoves[j].getMoveValue() > maxValue)
-                    maxValue = humanMoves[j].getMoveValue();
+                if(humanMoves[j].getMoveValue() > maxValue.getMoveValue())
+                    maxValue = humanMoves[j];
             }
 
-            cout << "max human move value: " << maxValue << endl;
-            moves[i].setMoveValue(moves[i].getMoveValue() - maxValue);
+            cout << "max human move value: " << maxValue.getMoveValue() << endl;
+            cout << "start: " << maxValue.startRow << maxValue.startCol << endl;
+            cout << "end: " << maxValue.endRow << maxValue.endCol << endl;
+            moves[i].setMoveValue(moves[i].getMoveValue() - maxValue.getMoveValue());
         }
     }
 
