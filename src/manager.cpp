@@ -329,10 +329,15 @@ void Manager::play()
 { 
     string filename;
     int status = startGame();
+    int currentPlayer = 0;
     if (status == 0){
         //load game
         cout << "Please enter the name of the file to load from: ";
         cin >> filename;
+        int numLines = loadLog( filename);
+        if ( numLines % 2 == 1){
+            currentPlayer = 1;
+        }
     }else if( status == 1){
         //new game
         cout << "Please enter a name of the file to save to: ";
@@ -341,7 +346,6 @@ void Manager::play()
         //eror 
     }
 
-    int currentPlayer = 0;
     while(1)
     {
         currentPlayer = 1 - currentPlayer; //flip between 0 and 1
@@ -428,10 +432,28 @@ int Manager::startGame(){
 
 void Manager::saveLog(string filename, string move){
     ofstream savefile;
+    filename.insert(0, "logs/");
     savefile.open(filename.c_str(), ios_base::app);    
     savefile << move << endl;
     savefile.close();
 
+}
+
+int Manager::loadLog(string filename){
+    ifstream loadfile;
+    string line;
+    filename.insert(0, "logs/");
+    loadfile.open(filename.c_str(), ios_base::in);
+    int count = 0;
+    while( getline( loadfile, line )){
+        int fromX = int(line[0]) - '0';
+        int fromY = int(line[1]) - '0';
+        int toX = int(line[2]) - '0';
+        int toY = int(line[3]) - '0';
+        move(fromX, fromY, toX, toY);
+        count++;
+    }  
+    return count;
 }
 
 void Manager::setBoard(Board B)

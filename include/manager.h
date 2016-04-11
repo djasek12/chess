@@ -32,8 +32,7 @@ class Manager{
         int startGame();
         string translateMove(int, int, int, int);
         void saveLog(string, string); //filename and move made
-        void loadLog(string);
-
+        int loadLog(string); //return the number of lines
         void setBoard(Board);
         //public data members
 		Board board;
