@@ -58,15 +58,17 @@ Move AI::getOutOfCheck()
 
     for(int i=0; i<escapeMoves.size(); i++)
     {
-        escapeMoves[i].setMoveValue(getCaptureValue(moves[i]) + 0.05*findMoveableSpaces(escapeMoves[i]) + 0.2*getAttackingValue(escapeMoves[i]) - 3*numAttackers(escapeMoves[i]) + 0.2*getDefendingValue(escapeMoves[i]));
-        cout << "\nstarting row/col: " << escapeMoves[i].startRow << " " << escapeMoves[i].startCol << " ending row/col: " << escapeMoves[i].endRow << " " << escapeMoves[i].endCol << endl;
-        cout << "capture value of move: " << getCaptureValue(escapeMoves[i]) << endl;
-        cout << "moveable spaces: " << 0.05*findMoveableSpaces(escapeMoves[i]) << endl;
-        cout << "attack value: " << 0.2*getAttackingValue(escapeMoves[i]) << endl;
-        cout << "numAttackers: " << numAttackers(escapeMoves[i]) << endl;
-        cout << "defending value: " << 0.2*getDefendingValue(escapeMoves[i]) << endl;
+        escapeMoves[i].setMoveValue(getCaptureValue(moves[i], 0) + 0.05*findMoveableSpaces(escapeMoves[i], 0) + 
+        0.2*getAttackingValue(escapeMoves[i], 0) - 3*numAttackers(escapeMoves[i], 0) + 
+        0.2*getDefendingValue(escapeMoves[i], 0));
+        //cout << "\nstarting row/col: " << escapeMoves[i].startRow << " " << escapeMoves[i].startCol << " ending row/col: " << escapeMoves[i].endRow << " " << escapeMoves[i].endCol << endl;
+        //cout << "capture value of move: " << getCaptureValue(escapeMoves[i]) << endl;
+        //cout << "moveable spaces: " << 0.05*findMoveableSpaces(escapeMoves[i]) << endl;
+        //cout << "attack value: " << 0.2*getAttackingValue(escapeMoves[i], 0) << endl;
+        //cout << "numAttackers: " << numAttackers(escapeMoves[i]) << endl;
+        //cout << "defending value: " << 0.2*getDefendingValue(escapeMoves[i]) << endl;
 
-        cout << "overall value: " << moves[i].getMoveValue() << endl << endl;
+        //cout << "overall value: " << moves[i].getMoveValue() << endl << endl;
     }
 
     Move bestMove = escapeMoves[0];
@@ -147,29 +149,50 @@ void AI::findMoves(int player)
     {
         for(int col=0; col<8; col++)
         {
-
-            if(boardOriginal[col][row].getChar() != 32) // piece isn't null 
-            {
-                if(boardOriginal[col][row].getPlayer() == player) // is on correct team
-                {
-                    for(int r=0; r<8; r++) // loop through all of spaces on board again to check for valid moves
-                    {
-                        for(int c=0; c<8; c++)
-                        {
-                            Manager mnger;
-                            mnger.setBoard(Brd); // need to pass AI board to Manager
-                            if(mnger.checkMove(row, col, r, c, player) == 0)
-                            {
-                                Move testMove(boardOriginal[col][row], row, col, r, c);
-                                if(player == 0)
-                                    moves.push_back(testMove);
-                                else
-                                    humanMoves.push_back(testMove); 
-                            }
-                        }
-                    }
-                }
-            }
+        	if (player == 0)
+        	{
+            	if(boardOriginal[col][row].getChar() != 32) // piece isn't null 
+            	{
+                	if(boardOriginal[col][row].getPlayer() == player) // is on correct team
+                	{
+                    	for(int r=0; r<8; r++) // loop through all of spaces on board again to check for valid moves
+                    	{
+                        	for(int c=0; c<8; c++)
+                        	{
+                            	Manager mnger;
+                            	mnger.setBoard(Brd); // need to pass AI board to Manager
+                            	if(mnger.checkMove(row, col, r, c, player) == 0)
+                            	{
+                                		Move testMove(boardOriginal[col][row], row, col, r, c);
+                                   		moves.push_back(testMove);
+                            	}
+                        	}
+                    	}
+                	}
+           		}
+           	}
+           	else
+           	{
+           		if(temp.chessBoard[col][row].getChar() != 32)
+           		{
+           			if (temp.chessBoard[col][row].getPlayer() == player)
+           			{
+           				for (int r = 0; r < 8; r++)
+           				{
+           					for (int c = 0; c < 8; c++)
+           					{
+           						Manager mnger;
+           						mnger.setBoard(temp);
+           						if (mnger.checkMove(row, col, r, c, player) == 0)
+           						{
+           							Move testMove(temp.chessBoard[col][row], row, col, r, c);
+           							humanMoves.push_back(testMove);
+           						}
+           					}
+           				}
+           			}
+           		}
+           	}
         }
     }
 }
@@ -209,9 +232,15 @@ void AI::assignMoveValues()
 }
 
 //look at move destination on board and find value of piece there
-double AI::getCaptureValue(Move move)
+double AI::getCaptureValue(Move move, int player)
 {
-    Piece capturedPiece = boardOriginal[move.endCol][move.endRow];
+	Piece capturedPiece;
+	
+	if (player == 0)
+    	capturedPiece = boardOriginal[move.endCol][move.endRow];
+    else
+    	capturedPiece = temp.chessBoard[move.endCol][move.endRow];
+    	
     if(capturedPiece.getChar() != 32) // not null
     {
         return capturedPiece.getValue();
@@ -220,21 +249,34 @@ double AI::getCaptureValue(Move move)
         return 0; 
 }
 
-int AI::getDevelopmentValue(Move move)
+int AI::getDevelopmentValue(Move move, int player) //needs to be fixed for human
 {
     int develop = 0;
 
     Manager mnger;  // would like to be able to get rid of this
-    mnger.setBoard(Brd);
-
-    if(move.startCol < 3 & move.endCol >= 3)
-        develop = 1;
+    if (player == 0)
+    	mnger.setBoard(Brd);
+    else
+    	mnger.setBoard(temp);
+	
+	if (player == 0)
+	{
+    	if(move.startRow < 2 & move.endRow >= 2)
+        	develop = 1;
+    }
+    else
+    {
+    	if (move.startRow > 5 & move.endRow <= 5)
+    	{
+    		develop = 1;
+    	}
+    }
 
     return develop;
 }
 
 
-double AI::getDefendingValue(Move move)
+double AI::getDefendingValue(Move move, int player) //needs to be fixed for human
 {
     double youDefend = 0; // sum of values of pieces you are defending
     double defendYou = 0; // sum of values of pieces defending you
@@ -242,18 +284,21 @@ double AI::getDefendingValue(Move move)
     // each of these have their own weights and then are summed together
 
     Manager mnger;  // would like to be able to get rid of this
-    mnger.setBoard(Brd);
+    if (player == 0)
+    	mnger.setBoard(Brd);
+    else
+    	mnger.setBoard(temp);
     mnger.move(move.startRow, move.startCol, move.endRow, move.endCol); // need to execute move on board so manager can parse it
 
     for(int r = 0; r < 8; r++)
     {
         for(int c = 0; c < 8; c++)
         {
-            if(mnger.board.chessBoard[c][r].getPlayer() == 0 & mnger.board.chessBoard[c][r].getValue() != 1000)
+            if(mnger.board.chessBoard[c][r].getPlayer() == player & mnger.board.chessBoard[c][r].getValue() != 1000)
             {
                 if(r != move.endRow | c != move.endCol)
                 {
-                    if(mnger.checkMove2(move.endRow, move.endCol, r, c, 0) == 2)
+                    if(mnger.checkMove2(move.endRow, move.endCol, r, c, player) == 2)
                     {
                         youDefend += mnger.board.chessBoard[c][r].getValue(); 
                     }
@@ -268,11 +313,11 @@ double AI::getDefendingValue(Move move)
     {
         for(int c = 0; c < 8; c++)
         {
-            if(mnger.board.chessBoard[c][r].getPlayer() == 0)
+            if(mnger.board.chessBoard[c][r].getPlayer() == player)
             {
                 if(r != move.endRow | c != move.endCol)
                 {
-                    if(mnger.checkMove2(r, c, move.endRow, move.endCol, 0) == 2)
+                    if(mnger.checkMove2(r, c, move.endRow, move.endCol, player) == 2)
                     {
                         defendYou++;
                     }
@@ -286,11 +331,14 @@ double AI::getDefendingValue(Move move)
     return youDefend + defendYou; 
 }
 
-int AI::findMoveableSpaces(Move move)
+int AI::findMoveableSpaces(Move move, int player) //needs to be fixed for human
 {
     int moveableSpaces = 0;
     Manager mnger;  // would like to be able to get rid of this
-    mnger.setBoard(Brd);
+    if (player == 0)
+    	mnger.setBoard(Brd);
+    else
+    	mnger.setBoard(temp);
 
     mnger.move(move.startRow, move.startCol, move.endRow, move.endCol); // need to execute move on board so manager can parse it
 
@@ -300,13 +348,13 @@ int AI::findMoveableSpaces(Move move)
         for(int col=0; col<8; col++)
         {
 
-            if(mnger.board.chessBoard[col][row].getPlayer() == 0)
+            if(mnger.board.chessBoard[col][row].getPlayer() == player)
             {
                 for(int r=0; r<8; r++)
                 {
                     for(int c=0; c<8; c++)
                     {
-                        if(mnger.checkMove(row, col, r, c, 0) == 0)
+                        if(mnger.checkMove(row, col, r, c, player) == 0)
                         {
                             moveableSpaces++;
                         }
@@ -322,11 +370,15 @@ int AI::findMoveableSpaces(Move move)
 
 }
 
-double AI::getAttackingValue(Move move)
+double AI::getAttackingValue(Move move, int player) //needs to be fixed for human
 {
     int attackValue = 0;
     Manager mnger;  // would like to be able to get rid of this
-    mnger.setBoard(Brd);
+    if (player == 0)
+    	mnger.setBoard(Brd);
+    else
+    	mnger.setBoard(temp);
+    	
     mnger.move(move.startRow, move.startCol, move.endRow, move.endCol); // need to execute move on board so manager can parse it
 
     for(int r = 0; r < 8; r++)
@@ -335,7 +387,7 @@ double AI::getAttackingValue(Move move)
         {
             if(move.startRow != r | move.startCol != c) // can't go back and capture itself
             {
-                if(mnger.checkMove(move.endRow, move.endCol, r, c, 0) == 0)
+                if(mnger.checkMove(move.endRow, move.endCol, r, c, player) == 0)
                 {
                     int value = mnger.board.chessBoard[c][r].getValue();
                     if(value > 0 & value != 1000)
@@ -351,23 +403,40 @@ double AI::getAttackingValue(Move move)
     return attackValue;
 }
 
-double AI::numAttackers(Move move)
+double AI::numAttackers(Move move, int player)
 {
     double numAttackers = 0;
     Manager mnger;  // would like to be able to get rid of this
-    mnger.setBoard(Brd);
+    if (player == 0)
+    	mnger.setBoard(Brd);
+    else
+    	mnger.setBoard(temp);
+    	
     mnger.move(move.startRow, move.startCol, move.endRow, move.endCol); // need to execute move on board so manager can parse it
    
     for(int r = 0; r < 8; r++)
     {
         for(int c = 0; c < 8; c++)
         {
-            if(mnger.board.chessBoard[c][r].getPlayer() == 1)
+        	if (player == 0)
+        	{
+            	if(mnger.board.chessBoard[c][r].getPlayer() == 1)
+            	{
+                	if(mnger.checkMove(r, c, move.endRow, move.endCol, 1) == 0)
+                	{
+                    	numAttackers++;
+                	}
+            	}
+            }
+            else
             {
-                if(mnger.checkMove(r, c, move.endRow, move.endCol, 1) == 0)
-                {
-                    numAttackers++;
-                }
+            	if (mnger.board.chessBoard[c][r].getPlayer() == 0)
+            	{
+            		if (mnger.checkMove(r, c, move.endRow, move.endCol, 0) == 0)
+            		{
+            			numAttackers++;
+            		}
+            	}
             }
         }
     }
@@ -402,13 +471,13 @@ Move AI::playMove()
     Move bestMove = moves[0];
     for(int i=1; i<moves.size(); i++)
     {
-            cout << "\nstarting row/col: " << moves[i].startRow << " " << moves[i].startCol << " ending row/col: " << moves[i].endRow << " " << moves[i].endCol << endl;
-            cout << "capture value of move: " << getCaptureValue(moves[i]) << endl;
-            cout << "moveable spaces: " << 0.05*findMoveableSpaces(moves[i]) << endl;
-            cout << "attack value: " << 0.2*getAttackingValue(moves[i]) << endl;
-            cout << "numAttackers: " << numAttackers(moves[i]) << endl;
-            cout << "defending value: " << 0.2*getDefendingValue(moves[i]) << endl;
-            cout << "development value: " << getDevelopmentValue(moves[i]) << endl;
+            //cout << "\nstarting row/col: " << moves[i].startRow << " " << moves[i].startCol << " ending row/col: " << moves[i].endRow << " " << moves[i].endCol << endl;
+            //cout << "capture value of move: " << getCaptureValue(moves[i]) << endl;
+            //cout << "moveable spaces: " << 0.05*findMoveableSpaces(moves[i]) << endl;
+            //cout << "attack value: " << 0.2*getAttackingValue(moves[i], 0) << endl;
+            //cout << "numAttackers: " << numAttackers(moves[i]) << endl;
+            //cout << "defending value: " << 0.2*getDefendingValue(moves[i]) << endl;
+            //cout << "development value: " << getDevelopmentValue(moves[i]) << endl;
 
             cout << "overall value: " << moves[i].getMoveValue() << endl << endl;
 
@@ -428,7 +497,14 @@ double AI::findGains(int player)
 
         for(int i=0; i<moves.size(); i++)
         {
-            moves[i].setMoveValue(getCaptureValue(moves[i]) + 0.2*findMoveableSpaces(moves[i]) + 0.2*getAttackingValue(moves[i]) - 5*numAttackers(moves[i]) + 0.1*getDefendingValue(moves[i]) + 5*getDevelopmentValue(moves[i]));
+            moves[i].setMoveValue(
+            1.0 * getCaptureValue(moves[i], player) + 
+            0.1 * findMoveableSpaces(moves[i], player) + 
+            0.4 * getAttackingValue(moves[i], player) - 
+            0.5 * numAttackers(moves[i], player) + 
+            0.1 * getDefendingValue(moves[i], player) + 
+            1.0 * getDevelopmentValue(moves[i], player));
+
 
         }   
 
@@ -441,13 +517,20 @@ double AI::findGains(int player)
             Manager mnger;
             mnger.setBoard(Brd);
             mnger.move(moves[i].startRow, moves[i].startCol, moves[i].endRow, moves[i].endCol);
+            temp = mnger.board;
             
+            humanMoves.clear();
             findMoves(1);
 
             for(int j=0; j<humanMoves.size(); j++)
             {
-                humanMoves[j].setMoveValue(getCaptureValue(humanMoves[j]) + 0.2*findMoveableSpaces(humanMoves[j]) + 0.2*getAttackingValue(humanMoves[j]) - 5*numAttackers(humanMoves[j]) + 0.1*getDefendingValue(humanMoves[j]) + 5*getDevelopmentValue(humanMoves[j]));
-
+                humanMoves[j].setMoveValue(
+                1.0 * getCaptureValue(humanMoves[j], player) + 
+                0.1 * findMoveableSpaces(humanMoves[j], player) + 
+                0.4 * getAttackingValue(humanMoves[j], player) - 
+                0.5 * numAttackers(humanMoves[j], player) + 
+                0.1 * getDefendingValue(humanMoves[j], player) + 
+                1.0 * getDevelopmentValue(humanMoves[j], player));
             }   
 
 
