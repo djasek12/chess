@@ -37,18 +37,19 @@ class AI {
         double findLosses(int player);
 
         // findGains functions
-        double getCaptureValue(Move move);
-        double getAttackingValue(Move move); // sum of values of pieces you can attack
-        double getDefendingValue(Move move); // sum of values of pieces you can defend
-        int findMoveableSpaces(Move move); // sum of spaces you can move
-        int getDevelopmentValue(Move move);
+        double getCaptureValue(Move move, int player);
+        double getAttackingValue(Move move, int player); // sum of values of pieces you can attack
+        double getDefendingValue(Move move, int player); // sum of values of pieces you can defend
+        int findMoveableSpaces(Move move, int player); // sum of spaces you can move
+        int getDevelopmentValue(Move move, int player);
 
         // findLosses functions
-        double numAttackers(Move move); // pieces that can attack you
+        double numAttackers(Move move, int player); // pieces that can attack you
         double pieceValueAbandoned(Move move); // value of pieces you are no longer defending
 
         //board data member for passing AI board to Manager class
         Board Brd;
+        Board temp;
 };
 
 #endif
