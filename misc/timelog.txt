@@ -78,3 +78,5 @@
     Danny - 0.5 working on AI in lab
 4/14
     Danny - 1.6 hours fixing up code, starting on recursion
+4/15
+    Danny - 0.85 hours working on recursion
