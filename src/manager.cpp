@@ -378,7 +378,8 @@ void Manager::play()
                 //cout << "AI has been constructed, play move function being called" << endl;
                 //AI_1.findMoves(board);
                 //AI_1.dispValidMoves();
-                AI_move = AI_1.overallAlgorithm();
+                AI_move = AI_1.recursiveCaller();
+                //AI_move = AI_1.overallAlgorithm();
                 cout << "move passed to manager correctly" << endl;
                 //AI_move = AI_1.playMove();
 

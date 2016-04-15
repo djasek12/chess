@@ -554,14 +554,22 @@ Move AI::recursiveCaller()
     int turnsAhead = 1;
 
     //Move bestMove = moves[0];
-    //for(int i=1; i<firstLevelMoves.size(); i++)
-    //{
-        recursiveAlgorithm(turnsAhead, 0,  firstLevelMoves);
+    for(int i=0; i<firstLevelMoves.size(); i++)
+    {
+        recursiveAlgorithm(turnsAhead, i,  firstLevelMoves);
         //if(bestMove.getMoveValue() < moves[i].getMoveValue())
             //bestMove = moves[i];
-    //}
+    }
 
-    //return bestMove;
+    Move bestMove = firstLevelMoves[0];
+    for(int i=0; i<firstLevelMoves.size(); i++)
+    {
+        if(bestMove.getMoveValue() < firstLevelMoves[i].getMoveValue())
+            bestMove = firstLevelMoves[i];
+    }
+
+
+    return bestMove;
 
 }
 
@@ -570,16 +578,103 @@ void AI::recursiveAlgorithm(int turnsAhead, int index, vector<Move> moves)
     if(turnsAhead > 2)
         return;
 
-    cout << "one run of recursive function" << endl;
+    cout << "recursive function running for " << turnsAhead << " turns ahead." << endl;
 
-    for(int i=0; i<moves.size(); i++)
+    for(int i=0; i<moves.size(); i++) // sets and adjusts values for AI move based on human response
     {
+        moves[i].setMoveValue(
+                CAPTURE_VALUE * getCaptureValue(moves[i], 0) + 
+                MOVEABLE_SPACES * findMoveableSpaces(moves[i], 0) + 
+                ATTACKING_VALUE * getAttackingValue(moves[i], 0) - 
+                NUM_ATTACKERS * numAttackers(moves[i], 0) + 
+                DEFENDING_VALUE * getDefendingValue(moves[i], 0) + 
+                DEVELOPMENT_VALUE * getDevelopmentValue(moves[i], 0)
+        );
+
         Manager mnger;
         mnger.setBoard(Brd);
         mnger.move(moves[i].startRow, moves[i].startCol, moves[i].endRow, moves[i].endCol);
         temp = mnger.board;
 
-    recursiveAlgorithm(++turnsAhead, 0, moves);
+        humanMoves.clear();
+        findMoves(1); // find moves for human
+
+        for(int j=0; j<humanMoves.size(); j++) // assign values and assign to new vector
+        {
+            humanMoves[j].setMoveValue(
+                    CAPTURE_VALUE * getCaptureValue(humanMoves[j], 1) + 
+                    MOVEABLE_SPACES * findMoveableSpaces(humanMoves[j], 1) + 
+                    ATTACKING_VALUE * getAttackingValue(humanMoves[j], 1) - 
+                    NUM_ATTACKERS * numAttackers(humanMoves[j], 1) + 
+                    DEFENDING_VALUE * getDefendingValue(humanMoves[j], 1) + 
+                    DEVELOPMENT_VALUE * getDevelopmentValue(humanMoves[j], 1));
+        }   
+
+        // find best human move for this AI move
+        Move maxValue = humanMoves[0];
+
+        for(int j=1; j<humanMoves.size(); j++)
+        {
+            if(humanMoves[j].getMoveValue() > maxValue.getMoveValue())
+                maxValue = humanMoves[j];
+        }
+
+        //cout << "max human move value: " << maxValue.getMoveValue() << endl;
+        //cout << "start: " << maxValue.startRow << maxValue.startCol << endl;
+        //cout << "end: " << maxValue.endRow << maxValue.endCol << endl;
+        //
+
+        moves[i].setMoveValue(moves[i].getMoveValue() - maxValue.getMoveValue()); // set overall value equal to the AI value - the best human move value
 
     }
+
+    // get best move
+    Move bestMove = moves[0];
+    for(int j=1; j<moves.size(); j++)
+    {
+        if(bestMove.getMoveValue() < moves[j].getMoveValue())
+            bestMove = moves[j];
+    } 
+
+    cout << "best move value is: " << bestMove.getMoveValue() << endl;
+
+    firstLevelMoves[index].value += (1/turnsAhead) * bestMove.getMoveValue(); 
+
+    // actually make AI move
+    Manager mnger;
+    mnger.setBoard(Brd);
+    mnger.move(bestMove.startRow, bestMove.startCol, bestMove.endRow, bestMove.endCol);
+
+    // find best human move again
+    findMoves(1); // find moves for human
+
+        for(int j=0; j<humanMoves.size(); j++) // assign values and assign to new vector
+        {
+            humanMoves[j].setMoveValue(
+                    CAPTURE_VALUE * getCaptureValue(humanMoves[j], 1) + 
+                    MOVEABLE_SPACES * findMoveableSpaces(humanMoves[j], 1) + 
+                    ATTACKING_VALUE * getAttackingValue(humanMoves[j], 1) - 
+                    NUM_ATTACKERS * numAttackers(humanMoves[j], 1) + 
+                    DEFENDING_VALUE * getDefendingValue(humanMoves[j], 1) + 
+                    DEVELOPMENT_VALUE * getDevelopmentValue(humanMoves[j], 1));
+        }   
+
+        // find best human move for this AI move
+        Move maxValue = humanMoves[0];
+
+        for(int j=1; j<humanMoves.size(); j++)
+        {
+            if(humanMoves[j].getMoveValue() > maxValue.getMoveValue())
+                maxValue = humanMoves[j];
+        }
+
+    // actually make best human move
+    mnger.move(maxValue.startRow, maxValue.startCol, maxValue.endRow, maxValue.endCol);
+
+    // find AI moves
+    findMoves(0);
+
+    // call recursive function
+    recursiveAlgorithm(++turnsAhead, index, moves);
+
 }
