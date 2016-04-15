@@ -1,17 +1,22 @@
+// Header file for AI class - Danny Jasek and Billy Theisen
+
 #ifndef _AI_H_INCLUDED
 #define _AI_H_INCLUDED
 
 #include <vector>
 #include "board.h"
 #include "manager.h"
+
 using namespace std;
 
-class AI {
+class AI
+{
 
-    friend class Manager;
+    //friend class Manager;
 
     public:
-        AI(Board b /*,Manager m*/);
+        AI(Board b /*,Manager m*/); // constructor
+
         Move overallAlgorithm(); // skeleton
         void findMoves(int player); // find valid moves
         void dispMoveValues(vector<Move>, int player);
@@ -19,21 +24,23 @@ class AI {
         int makeObviousMove();
         void assignMoveValues();
         int decideMove(int movesAhead);
-        Move playMove();
+        Move playMove(int movesAhead);
         void findNextPiece();
         int currentRow; // row of current piece
         int currentCol; // column of current piece
-
         int randomMove(); // really simple AI
+        void recursiveAlgorithm(int turnsAhead, int i, vector<Move>);
+        Move recursiveCaller();
 
     private:
         vector<Move> moves;
         vector<vector<Piece> > boardOriginal; 
         vector<vector<Piece> > boardCopy; 
         vector<Move> humanMoves;
+        vector<Move> firstLevelMoves; // for recursive function
         //Manager mnger;
 
-        double findGains(int player); // 0 is AI, 1 is player
+        double findGains();
         double findLosses(int player);
 
         // findGains functions

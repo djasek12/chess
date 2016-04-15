@@ -9,12 +9,12 @@
 #include "stdlib.h"
 
 // Move Value constants
-#define CAPTURE_VALUE 1.0
+#define CAPTURE_VALUE 2.0
 #define MOVEABLE_SPACES 0.1
 #define ATTACKING_VALUE 0.4
-#define NUM_ATTACKERS 0.5
+#define NUM_ATTACKERS 1.0
 #define DEFENDING_VALUE 0.1
-#define DEVELOPMENT_VALUE 1.0
+#define DEVELOPMENT_VALUE 1.5
 
 using namespace std;
 
@@ -40,8 +40,9 @@ Move AI::overallAlgorithm()
     }
     else
     {
+        int movesAhead = 1;
         //cout << "play move" << endl;
-        return playMove();
+        return playMove(movesAhead);
     }
 
     /*if(!makeObviousMove())
@@ -477,12 +478,9 @@ int AI::randomMove()
 }
 
 // executes logic needed to weigh and execute a move - taking into account 1 AI and 1 human move
-Move AI::playMove()
+Move AI::playMove(int movesAhead)
 {
-    findGains(0);
-    //cout << "found moves of 0" << endl;
-    findGains(1);
-    //cout << "found moves of 1" << endl;
+    findGains(); // find both AI moves and best human moves in response - combines these into a value for each AI move
 
     Move bestMove = moves[0];
     for(int i=1; i<moves.size(); i++)
@@ -495,55 +493,49 @@ Move AI::playMove()
 }
 
 // should be called find value - finds values of possible moves for a player
-double AI::findGains(int player)
+double AI::findGains()
 {
-    if(player == 0) // AI
-    {
-        findMoves(0); // find moves
+    findMoves(0); // find moves for AI
 
-        for(int i=0; i<moves.size(); i++) // assign values
+    for(int i=0; i<moves.size(); i++) // assign values for AI
+    {
+        moves[i].setMoveValue(
+                CAPTURE_VALUE * getCaptureValue(moves[i], 0) + 
+                MOVEABLE_SPACES * findMoveableSpaces(moves[i], 0) + 
+                ATTACKING_VALUE * getAttackingValue(moves[i], 0) - 
+                NUM_ATTACKERS * numAttackers(moves[i], 0) + 
+                DEFENDING_VALUE * getDefendingValue(moves[i], 0) + 
+                DEVELOPMENT_VALUE * getDevelopmentValue(moves[i], 0));
+    }   
+
+    for(int i=0; i<moves.size(); i++) // for each AI move
+    {
+        Manager mnger;
+        mnger.setBoard(Brd);
+        mnger.move(moves[i].startRow, moves[i].startCol, moves[i].endRow, moves[i].endCol);
+        temp = mnger.board;
+
+        humanMoves.clear();
+        findMoves(1); // find moves for human
+
+        for(int j=0; j<humanMoves.size(); j++) // assign values and assign to new vector
         {
-            moves[i].setMoveValue(
-            CAPTURE_VALUE * getCaptureValue(moves[i], player) + 
-            MOVEABLE_SPACES * findMoveableSpaces(moves[i], player) + 
-            ATTACKING_VALUE * getAttackingValue(moves[i], player) - 
-            NUM_ATTACKERS * numAttackers(moves[i], player) + 
-            DEFENDING_VALUE * getDefendingValue(moves[i], player) + 
-            DEVELOPMENT_VALUE * getDevelopmentValue(moves[i], player));
+            humanMoves[j].setMoveValue(
+                    CAPTURE_VALUE * getCaptureValue(humanMoves[j], 1) + 
+                    MOVEABLE_SPACES * findMoveableSpaces(humanMoves[j], 1) + 
+                    ATTACKING_VALUE * getAttackingValue(humanMoves[j], 1) - 
+                    NUM_ATTACKERS * numAttackers(humanMoves[j], 1) + 
+                    DEFENDING_VALUE * getDefendingValue(humanMoves[j], 1) + 
+                    DEVELOPMENT_VALUE * getDevelopmentValue(humanMoves[j], 1));
         }   
 
-    }
+        // find best human move for this AI move
+        Move maxValue = humanMoves[0];
 
-    else // human
-    {
-        for(int i=0; i<moves.size(); i++) // for each AI move
+        for(int j=1; j<humanMoves.size(); j++)
         {
-            Manager mnger;
-            mnger.setBoard(Brd);
-            mnger.move(moves[i].startRow, moves[i].startCol, moves[i].endRow, moves[i].endCol);
-            temp = mnger.board;
-            
-            humanMoves.clear();
-            findMoves(1); // find moves for human
-
-            for(int j=0; j<humanMoves.size(); j++) // assign values and assign to new vector
-            {
-                humanMoves[j].setMoveValue(
-                CAPTURE_VALUE * getCaptureValue(humanMoves[j], player) + 
-                MOVEABLE_SPACES * findMoveableSpaces(humanMoves[j], player) + 
-                ATTACKING_VALUE * getAttackingValue(humanMoves[j], player) - 
-                NUM_ATTACKERS * numAttackers(humanMoves[j], player) + 
-                DEFENDING_VALUE * getDefendingValue(humanMoves[j], player) + 
-                DEVELOPMENT_VALUE * getDevelopmentValue(humanMoves[j], player));
-            }   
-
-            // find best human move for this AI move
-            Move maxValue = humanMoves[0];
-
-            for(int j=1; j<humanMoves.size(); j++)
-            {
-                if(humanMoves[j].getMoveValue() > maxValue.getMoveValue())
-                    maxValue = humanMoves[j];
+            if(humanMoves[j].getMoveValue() > maxValue.getMoveValue())
+                maxValue = humanMoves[j];
             }
 
             cout << "max human move value: " << maxValue.getMoveValue() << endl;
@@ -552,6 +544,42 @@ double AI::findGains(int player)
 
             moves[i].setMoveValue(moves[i].getMoveValue() - maxValue.getMoveValue()); // set overall value equal to the AI value - the best human move value
         }
-    }
 
+}
+
+Move AI::recursiveCaller()
+{
+    findGains();
+    firstLevelMoves = moves;
+    int turnsAhead = 1;
+
+    //Move bestMove = moves[0];
+    //for(int i=1; i<firstLevelMoves.size(); i++)
+    //{
+        recursiveAlgorithm(turnsAhead, 0,  firstLevelMoves);
+        //if(bestMove.getMoveValue() < moves[i].getMoveValue())
+            //bestMove = moves[i];
+    //}
+
+    //return bestMove;
+
+}
+
+void AI::recursiveAlgorithm(int turnsAhead, int index, vector<Move> moves)
+{
+    if(turnsAhead > 2)
+        return;
+
+    cout << "one run of recursive function" << endl;
+
+    for(int i=0; i<moves.size(); i++)
+    {
+        Manager mnger;
+        mnger.setBoard(Brd);
+        mnger.move(moves[i].startRow, moves[i].startCol, moves[i].endRow, moves[i].endCol);
+        temp = mnger.board;
+
+    recursiveAlgorithm(++turnsAhead, 0, moves);
+
+    }
 }
