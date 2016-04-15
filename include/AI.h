@@ -14,7 +14,7 @@ class AI {
         AI(Board b /*,Manager m*/);
         Move overallAlgorithm(); // skeleton
         void findMoves(int player); // find valid moves
-        void dispValidMoves();
+        void dispMoveValues(vector<Move>, int player);
         Move getOutOfCheck();
         int makeObviousMove();
         void assignMoveValues();
