@@ -11,7 +11,7 @@ class AI {
     friend class Manager;
 
     public:
-        AI(Board b /*,Manager m*/);
+        AI(Board b, int turn);
         Move overallAlgorithm(); // skeleton
         void findMoves(int player); // find valid moves
         void dispValidMoves();
@@ -50,6 +50,17 @@ class AI {
         //board data member for passing AI board to Manager class
         Board Brd;
         Board temp;
+        
+        double CAPTUREVALUE;
+        double ATTACKINGVALUE;
+        double DEFENDINGVALUE;
+        double MOVEABLEVALUE;
+        double DEVELOPMENTVALUE;
+        
+        double ATTACKERSVALUE;
+        double ABANDONVALUE; 
+        
+        int turnsAhead;
 };
 
 #endif
