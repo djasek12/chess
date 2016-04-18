@@ -17,16 +17,16 @@ AI::AI(Board B, int turn, int pmrPlyr, int look)
     turnsAhead = turn;
     lookAhead = look;
     
-    CAPTUREVALUE_0 = 2;
-    ATTACKINGVALUE_0 = 1.7;
+    CAPTUREVALUE_0 = 2.6;
+    ATTACKINGVALUE_0 = 1.6;
     DEFENDINGVALUE_0 = 0.1;
     MOVEABLEVALUE_0 = 0.1;
-    DEVELOPMENTVALUE_0 = 1.5;
+    DEVELOPMENTVALUE_0 = 1.2;
     
     ATTACKERSVALUE_0 = 0.8;
     ABANDONVALUE_0 = 0.0;
 	
-	CAPTUREVALUE_1 = 3;
+	CAPTUREVALUE_1 = 3.9;
     ATTACKINGVALUE_1 = 1.4;
     DEFENDINGVALUE_1 = 0.1;
     MOVEABLEVALUE_1 = 0.1;
@@ -288,14 +288,18 @@ int AI::getDevelopmentValue(Move move, int player) //needs to be fixed for human
 	if (primaryPlayer == 0) //?
 	{
     	if(move.startRow < 2 & move.endRow >= 2)
-        	develop = 1;
+    		if (move.piece.getChar() == 'p')
+        		develop = 1.5;
+        	else
+        		develop = 1;
     }
     else
     {
     	if (move.startRow > 5 & move.endRow <= 5)
-    	{
-    		develop = 1;
-    	}
+    		if (move.piece.getChar() == 'P')
+    			develop = 1.5;
+    		else 
+    			develop = 1;
     }
 
     return develop;
