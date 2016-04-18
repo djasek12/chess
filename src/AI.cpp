@@ -55,6 +55,7 @@ Move AI::overallAlgorithm()
 Move AI::getOutOfCheck()
 {  
     vector<Move> escapeMoves;
+    Move dummyMove;
 
     for(int i=0; i<moves.size(); i++)
     {
@@ -67,6 +68,9 @@ Move AI::getOutOfCheck()
             escapeMoves.push_back(moves[i]);
         }
     }
+
+    //if(escapeMoves.size() == 0)
+        //return
 
     for(int i=0; i<escapeMoves.size(); i++)
     {
@@ -514,12 +518,12 @@ Move AI::playMove()
 
 double AI::findGains(int player)
 {
-    cout << "before first if" << endl;
+    //cout << "before first if" << endl;
     if(player == primaryPlayer)
     {
-        cout << "inside first if" << endl;
+        //cout << "inside first if" << endl;
         findMoves(primaryPlayer);
-        cout << "after find moves" << endl;
+        //cout << "after find moves" << endl;
 
         for(int i=0; i<moves.size(); i++)
         {
@@ -539,7 +543,7 @@ double AI::findGains(int player)
 
     else
     {
-        cout << "inside else" << endl;
+        //cout << "inside else" << endl;
         for(int i=0; i<moves.size(); i++)
         {
             Manager mnger;
