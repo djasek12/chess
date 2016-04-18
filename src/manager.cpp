@@ -350,7 +350,7 @@ void Manager::play()
     {
         currentPlayer = 1 - currentPlayer; //flip between 0 and 1
         board.display();
-
+		
         Move AI_move;
 
         while(1)
@@ -374,7 +374,7 @@ void Manager::play()
             {
                 //cout << "AI about to be constructed" << endl;
 
-                AI AI_1(board, 1, 0);
+                AI AI_1(board, 1, 0, 1);
                 //cout << "AI has been constructed, play move function being called" << endl;
                 //AI_1.findMoves(board);
                 //AI_1.dispValidMoves();
@@ -425,8 +425,26 @@ void Manager::AIplay()
     {
         currentPlayer = 1 - currentPlayer; //flip between 0 and 1
         board.display();
-        int blah;
-        cin >> blah;
+        
+        int kings = 0;
+		
+		for (int i = 0; i < 8; i++)
+		{
+			for (int j = 0; j < 8; j++)
+			{
+				if (board.chessBoard[i][j].getChar() == 'k' || board.chessBoard[i][j].getChar() == 'K')
+					kings++;
+			}
+		}
+		
+		if (kings != 2)
+		{
+			cout << "we have a winner!" << endl;
+			break;
+		}
+		
+        //int blah;
+        //cin >> blah;
 
         Move AI_move;
 
@@ -440,7 +458,7 @@ void Manager::AIplay()
             {
                 //cout << "AI about to be constructed" << endl;
 
-                AI AI_1(board, 1, 1);
+                AI AI_1(board, 1, 1, 1);
                 //cout << "AI has been constructed, play move function being called" << endl;
                 //AI_1.findMoves(board);
                 //AI_1.dispValidMoves();
@@ -457,7 +475,7 @@ void Manager::AIplay()
             {
                 //cout << "AI about to be constructed" << endl;
 
-                AI AI_1(board, 1, 0);
+                AI AI_1(board, 1, 0, 1);
                 //cout << "AI has been constructed, play move function being called" << endl;
                 //AI_1.findMoves(board);
                 //AI_1.dispValidMoves();

@@ -150,6 +150,7 @@ void Board::initPieces(){
 
 
 void Board::display(){
+	cout << "\033[2J\033[1;1H";
 	cout << "    a  b  c  d  e  f  g  h" << endl << endl;
 	for( int i = 0; i < dim; i++){
 		cout << 8 - i << "  ";
