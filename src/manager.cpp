@@ -425,6 +425,8 @@ void Manager::AIplay()
     {
         currentPlayer = 1 - currentPlayer; //flip between 0 and 1
         board.display();
+        int blah;
+        cin >> blah;
 
         Move AI_move;
 

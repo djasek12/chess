@@ -16,13 +16,13 @@ AI::AI(Board B, int turn, int pmrPlyr)
     
     turnsAhead = turn;
     
-    CAPTUREVALUE = 1.0;
-    ATTACKINGVALUE = 0.4;
+    CAPTUREVALUE = 3;
+    ATTACKINGVALUE = 1;
     DEFENDINGVALUE = 0.1;
     MOVEABLEVALUE = 0.1;
     DEVELOPMENTVALUE = 1.5;
     
-    ATTACKERSVALUE = 0.5;
+    ATTACKERSVALUE = 1.5;
     ABANDONVALUE = 0.0;
 
     primaryPlayer = pmrPlyr;
@@ -164,7 +164,7 @@ void AI::findMoves(int player)
     {
         for(int col=0; col<8; col++)
         {
-        	if (player == 0)
+        	if (player == primaryPlayer)
         	{
             	if(boardOriginal[col][row].getChar() != 32) // piece isn't null 
             	{
@@ -251,7 +251,7 @@ double AI::getCaptureValue(Move move, int player)
 {
 	Piece capturedPiece;
 	
-	if (player == 0)
+    if(player == primaryPlayer)
     	capturedPiece = boardOriginal[move.endCol][move.endRow];
     else
     	capturedPiece = temp.chessBoard[move.endCol][move.endRow];
@@ -269,12 +269,12 @@ int AI::getDevelopmentValue(Move move, int player) //needs to be fixed for human
     int develop = 0;
 
     Manager mnger;  // would like to be able to get rid of this
-    if (player == 0)
+    if (player == primaryPlayer)
     	mnger.setBoard(Brd);
     else
     	mnger.setBoard(temp);
 	
-	if (player == 0)
+	if (primaryPlayer == 0) //?
 	{
     	if(move.startRow < 2 & move.endRow >= 2)
         	develop = 1;
@@ -299,7 +299,7 @@ double AI::getDefendingValue(Move move, int player) //needs to be fixed for huma
     // each of these have their own weights and then are summed together
 
     Manager mnger;  // would like to be able to get rid of this
-    if (player == 0)
+    if (player == primaryPlayer)
     	mnger.setBoard(Brd);
     else
     	mnger.setBoard(temp);
@@ -350,7 +350,7 @@ int AI::findMoveableSpaces(Move move, int player) //needs to be fixed for human
 {
     int moveableSpaces = 0;
     Manager mnger;  // would like to be able to get rid of this
-    if (player == 0)
+    if (player == primaryPlayer)
     	mnger.setBoard(Brd);
     else
     	mnger.setBoard(temp);
@@ -389,7 +389,7 @@ double AI::getAttackingValue(Move move, int player) //needs to be fixed for huma
 {
     int attackValue = 0;
     Manager mnger;  // would like to be able to get rid of this
-    if (player == 0)
+    if (player == primaryPlayer)
     	mnger.setBoard(Brd);
     else
     	mnger.setBoard(temp);
@@ -422,7 +422,7 @@ double AI::numAttackers(Move move, int player)
 {
     double numAttackers = 0;
     Manager mnger;  // would like to be able to get rid of this
-    if (player == 0)
+    if (player == primaryPlayer)
     	mnger.setBoard(Brd);
     else
     	mnger.setBoard(temp);
@@ -514,9 +514,12 @@ Move AI::playMove()
 
 double AI::findGains(int player)
 {
+    cout << "before first if" << endl;
     if(player == primaryPlayer)
     {
+        cout << "inside first if" << endl;
         findMoves(primaryPlayer);
+        cout << "after find moves" << endl;
 
         for(int i=0; i<moves.size(); i++)
         {
@@ -536,6 +539,7 @@ double AI::findGains(int player)
 
     else
     {
+        cout << "inside else" << endl;
         for(int i=0; i<moves.size(); i++)
         {
             Manager mnger;
@@ -548,6 +552,7 @@ double AI::findGains(int player)
                 findMoves(1);
             else
                 findMoves(0);
+
 
             for(int j=0; j<humanMoves.size(); j++)
             {
