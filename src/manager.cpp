@@ -287,35 +287,36 @@ int Manager::kingInCheck() {
     int krow, kcol;
     int i, j;
     
-    for (krow = 0; krow < 8; krow++) { // find location of player's king
-        for (kcol = 0; kcol < 8; kcol++) {
-            if (board.chessBoard[krow].at(kcol).getChar() == 'k') {
+    for (i = 0; i < 8; i++) { // find location of player's king
+        for (j = 0; j < 8; j++) {            
+            if (board.chessBoard[j].at(i).getChar() == 'K') {
+                krow = i; kcol = j;
+                i = 8;
                 break;
             }
         }
     }
-    
+
     for (i = 0; i < 8; i++) { // check if player's king is in check
         for (j = 0; j < 8; j++) {
-            if (board.chessBoard[i].at(j).getPlayer() == 1) {
-                if (checkMove(i, j, krow, kcol, 1) == 0)
+            if (board.chessBoard[j].at(i).getPlayer() == 0) {
+                if (checkMove(i, j, krow, kcol, 0) == 0)
                     return 1;
             }
         }
     }
-    
-    for (krow = 0; krow < 8; krow++) { // find location of AI's king
-        for (kcol = 0; kcol < 8; kcol++) {
-            if (board.chessBoard[krow].at(kcol).getChar() == 'K') {
-                break;
+    for (i = 0; i < 8; i++) { // find location of AI's king
+        for (j = 0; j < 8; j++) {
+            if (board.chessBoard[j].at(i).getChar() == 'k') {
+                krow = i; kcol = j;
             }
         }
     }
     
     for (i = 0; i < 8; i++) { // check if AI's king is in check
         for (j = 0; j < 8; j++) {
-            if (board.chessBoard[i].at(j).getPlayer() == 0) {
-                if (checkMove(i, j, krow, kcol, 0) == 0)
+            if (board.chessBoard[j].at(i).getPlayer() == 1) {
+                if (checkMove(i, j, krow, kcol, 1) == 0)
                     return 2;
             }
         }
