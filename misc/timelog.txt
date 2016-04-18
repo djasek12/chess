@@ -82,3 +82,5 @@
     Danny - 1.6 hours fixing up code, starting on recursion
 4/15
     Danny - 0.85 hours working on recursion
+4/17
+    Danny and Billy - 2 hours getting recursion working - trying to get AIs to play eachother (not working - need to look more at findGains() function, especially where primaryPlayer is mentioned. 

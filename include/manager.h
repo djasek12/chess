@@ -16,6 +16,7 @@ class Manager{
         int checkMove( int, int, int, int, int);
         int checkMove2( int, int, int, int, int);
 		void play();
+                void AIplay();
 		void collectValues();	
         //functions for move checks
         int checkBounds(int, int, int, int);

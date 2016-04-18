@@ -9,7 +9,7 @@
 using namespace std;
 
 // constructor that takes in a board
-AI::AI(Board B, int turn)
+AI::AI(Board B, int turn, int pmrPlyr)
 {
     boardOriginal = B.chessBoard;
     Brd = B;
@@ -20,10 +20,12 @@ AI::AI(Board B, int turn)
     ATTACKINGVALUE = 0.4;
     DEFENDINGVALUE = 0.1;
     MOVEABLEVALUE = 0.1;
-    DEVELOPMENTVALUE = 1.0;
+    DEVELOPMENTVALUE = 1.5;
     
     ATTACKERSVALUE = 0.5;
     ABANDONVALUE = 0.0;
+
+    primaryPlayer = pmrPlyr;
 }
 
 Move AI::overallAlgorithm()
@@ -476,9 +478,17 @@ Move AI::playMove()
     //dispValidMoves();
     //cout << "calling randomMove()" << endl;
     //return moves[randomMove()];
-    findGains(0);
+    if(primaryPlayer == 0)
+    {
+        findGains(0);
     //cout << "found moves of 0" << endl;
-    findGains(1);
+        findGains(1);
+    }
+    else
+    {
+        findGains(1);
+        findGains(0);
+    }
     //cout << "found moves of 1" << endl;
 
     Move bestMove = moves[0];
@@ -504,9 +514,9 @@ Move AI::playMove()
 
 double AI::findGains(int player)
 {
-    if(player == 0)
+    if(player == primaryPlayer)
     {
-        findMoves(0);
+        findMoves(primaryPlayer);
 
         for(int i=0; i<moves.size(); i++)
         {
@@ -534,7 +544,10 @@ double AI::findGains(int player)
             temp = mnger.board;
             
             humanMoves.clear();
-            findMoves(1);
+            if(primaryPlayer == 0)
+                findMoves(1);
+            else
+                findMoves(0);
 
             for(int j=0; j<humanMoves.size(); j++)
             {
@@ -557,22 +570,21 @@ double AI::findGains(int player)
             	{
             		Manager forwardManager;
             		forwardManager.setBoard(temp);
-            		forwardManager.move(humanMoves[j].startRow, humanMoves[j].startCol, humanMoves[j].endRow, humanMoves[j].endCol);
+            		forwardManager.move(humanMoves[i].startRow, humanMoves[i].startCol, humanMoves[i].endRow, humanMoves[i].endCol);
             		forwardBoard = forwardManager.board;
             		
-            		AI forwardAI(forwardBoard, ++turnsAhead);
+            		AI forwardAI(forwardBoard, ++turnsAhead, primaryPlayer);
             		
-            		cout << "looking " << turnsAhead << " ahead" << endl;
-            		cout << "currently at AI move #" << i << endl;
-            		cout << "currently at human move #" << j << endl;
+            		//cout << "looking " << turnsAhead << " ahead" << endl;
+            		//cout << "currently at AI move #" << i << endl;
+            		//cout << "currently at human move #" << j << endl;
             		
             		Move forwardMove;
             		forwardMove = forwardAI.overallAlgorithm();
             		
-            		humanMoves[j].setMoveValue(humanMoves[j].getMoveValue() - (1/turnsAhead)*forwardMove.getMoveValue());
+            		humanMoves[i].setMoveValue(humanMoves[i].getMoveValue() - (1/turnsAhead)*forwardMove.getMoveValue());
             	}
             }
-
 
             Move maxValue = humanMoves[0];
 

@@ -11,7 +11,7 @@ class AI {
     friend class Manager;
 
     public:
-        AI(Board b, int turn);
+        AI(Board b, int turn, int primaryPlayer);
         Move overallAlgorithm(); // skeleton
         void findMoves(int player); // find valid moves
         void dispValidMoves();
@@ -61,6 +61,7 @@ class AI {
         double ABANDONVALUE; 
         
         int turnsAhead;
+        int primaryPlayer;
 };
 
 #endif

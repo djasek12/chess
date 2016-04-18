@@ -374,7 +374,7 @@ void Manager::play()
             {
                 //cout << "AI about to be constructed" << endl;
 
-                AI AI_1(board, 1);
+                AI AI_1(board, 1, 0);
                 //cout << "AI has been constructed, play move function being called" << endl;
                 //AI_1.findMoves(board);
                 //AI_1.dispValidMoves();
@@ -399,6 +399,82 @@ void Manager::play()
     }
 
 }
+
+void Manager::AIplay()
+{ 
+    string filename;
+    int status = startGame();
+    int currentPlayer = 0;
+    if (status == 0){
+        //load game
+        cout << "Please enter the name of the file to load from: ";
+        cin >> filename;
+        int numLines = loadLog( filename);
+        if ( numLines % 2 == 1){
+            currentPlayer = 1;
+        }
+    }else if( status == 1){
+        //new game
+        cout << "Please enter a name of the file to save to: ";
+        cin >> filename;
+    }else{
+        //eror 
+    }
+
+    while(1)
+    {
+        currentPlayer = 1 - currentPlayer; //flip between 0 and 1
+        board.display();
+
+        Move AI_move;
+
+        while(1)
+        {
+            //print which player
+            if(currentPlayer == 1 ) cout << "Player: BLUE" << endl;
+            if(currentPlayer == 0 ) cout << "Player: red" << endl; 
+
+            if(currentPlayer == 1)
+            {
+                //cout << "AI about to be constructed" << endl;
+
+                AI AI_1(board, 1, 1);
+                //cout << "AI has been constructed, play move function being called" << endl;
+                //AI_1.findMoves(board);
+                //AI_1.dispValidMoves();
+                AI_move = AI_1.overallAlgorithm();
+                cout << "move passed to manager correctly" << endl;
+                //AI_move = AI_1.playMove();
+
+                //cout << "capture value of move: " << AI_1.getCaptureValue(AI_move) << endl;;
+
+                break;
+
+            }
+            else // AI
+            {
+                //cout << "AI about to be constructed" << endl;
+
+                AI AI_1(board, 1, 0);
+                //cout << "AI has been constructed, play move function being called" << endl;
+                //AI_1.findMoves(board);
+                //AI_1.dispValidMoves();
+                AI_move = AI_1.overallAlgorithm();
+                cout << "move passed to manager correctly" << endl;
+                //AI_move = AI_1.playMove();
+
+                //cout << "capture value of move: " << AI_1.getCaptureValue(AI_move) << endl;;
+
+                break;
+            }
+        }
+            move(AI_move.startRow, AI_move.startCol, AI_move.endRow, AI_move.endCol);
+            string encoded = translateMove(AI_move.startRow, AI_move.startCol, AI_move.endRow, AI_move.endCol);
+            saveLog( filename, encoded); 
+    }
+
+}
+
 
 string Manager::translateMove( int fromX, int fromY, int toX, int toY ){
     fromX += '0';
