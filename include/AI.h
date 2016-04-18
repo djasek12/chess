@@ -11,7 +11,7 @@ class AI {
     friend class Manager;
 
     public:
-        AI(Board b, int turn, int primaryPlayer);
+        AI(Board b, int turn, int primaryPlayer, int look);
         Move overallAlgorithm(); // skeleton
         void findMoves(int player); // find valid moves
         void dispValidMoves();
@@ -51,17 +51,27 @@ class AI {
         Board Brd;
         Board temp;
         
-        double CAPTUREVALUE;
-        double ATTACKINGVALUE;
-        double DEFENDINGVALUE;
-        double MOVEABLEVALUE;
-        double DEVELOPMENTVALUE;
+        double CAPTUREVALUE_0;
+        double ATTACKINGVALUE_0;
+        double DEFENDINGVALUE_0;
+        double MOVEABLEVALUE_0;
+        double DEVELOPMENTVALUE_0;
         
-        double ATTACKERSVALUE;
-        double ABANDONVALUE; 
+        double ATTACKERSVALUE_0;
+        double ABANDONVALUE_0; 
+        
+        double CAPTUREVALUE_1;
+        double ATTACKINGVALUE_1;
+        double DEFENDINGVALUE_1;
+        double MOVEABLEVALUE_1;
+        double DEVELOPMENTVALUE_1;
+        
+        double ATTACKERSVALUE_1;
+        double ABANDONVALUE_1; 
         
         int turnsAhead;
         int primaryPlayer;
+        int lookAhead;
 };
 
 #endif
