@@ -11,7 +11,7 @@ class AI {
     friend class Manager;
 
     public:
-        AI(Board b, int turn, int primaryPlayer, int look);
+        AI(Board b, int turnFuture, int primaryPlayer, int look, int turn);
         Move overallAlgorithm(); // skeleton
         void findMoves(int player); // find valid moves
         void dispValidMoves();
@@ -41,7 +41,8 @@ class AI {
         double getAttackingValue(Move move, int player); // sum of values of pieces you can attack
         double getDefendingValue(Move move, int player); // sum of values of pieces you can defend
         int findMoveableSpaces(Move move, int player); // sum of spaces you can move
-        int getDevelopmentValue(Move move, int player);
+        int getDevelopmentValue(Move move, int player); //rewards for developing pieces, specifically pawns
+        int getPressureValue(Move move, int player); //rewards for removing possible moves away from the king
 
         // findLosses functions
         double numAttackers(Move move, int player); // pieces that can attack you
@@ -56,6 +57,7 @@ class AI {
         double DEFENDINGVALUE_0;
         double MOVEABLEVALUE_0;
         double DEVELOPMENTVALUE_0;
+        double PRESSUREVALUE_0;
         
         double ATTACKERSVALUE_0;
         double ABANDONVALUE_0; 
@@ -65,6 +67,7 @@ class AI {
         double DEFENDINGVALUE_1;
         double MOVEABLEVALUE_1;
         double DEVELOPMENTVALUE_1;
+        double PRESSUREVALUE_1;
         
         double ATTACKERSVALUE_1;
         double ABANDONVALUE_1; 
@@ -72,6 +75,7 @@ class AI {
         int turnsAhead;
         int primaryPlayer;
         int lookAhead;
+        int turn;
 };
 
 #endif

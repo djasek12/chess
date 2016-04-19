@@ -9,28 +9,34 @@
 using namespace std;
 
 // constructor that takes in a board
-AI::AI(Board B, int turn, int pmrPlyr, int look)
+AI::AI(Board B, int turnFuture, int pmrPlyr, int look, int turns)
 {
     boardOriginal = B.chessBoard;
     Brd = B;
     
-    turnsAhead = turn;
+    turnsAhead = turnFuture;
     lookAhead = look;
+    
+    turn = turns;
     
     CAPTUREVALUE_0 = 2.6;
     ATTACKINGVALUE_0 = 1.6;
     DEFENDINGVALUE_0 = 0.1;
     MOVEABLEVALUE_0 = 0.1;
     DEVELOPMENTVALUE_0 = 1.2;
+    PRESSUREVALUE_0 = (0.07 * turn);
     
     ATTACKERSVALUE_0 = 0.8;
     ABANDONVALUE_0 = 0.0;
+	
+	////////////////////////
 	
 	CAPTUREVALUE_1 = 3.9;
     ATTACKINGVALUE_1 = 1.4;
     DEFENDINGVALUE_1 = 0.1;
     MOVEABLEVALUE_1 = 0.1;
     DEVELOPMENTVALUE_1 = 1;
+    PRESSUREVALUE_1 = 0.1;
     
     ATTACKERSVALUE_1 = 1.2;
     ABANDONVALUE_1 = 0.0;
@@ -477,6 +483,75 @@ double AI::pieceValueAbandoned(Move move)
 {
 }
 
+int AI::getPressureValue(Move move, int player)
+{
+	int kingMovesOld = 0;
+	int kingMovesNew = 0;
+	Manager mnger;
+	
+	if (player == primaryPlayer)
+    	mnger.setBoard(Brd);
+    else
+    	mnger.setBoard(temp);
+    
+	
+	for (int i = 0; i < 8; i++)
+	{
+		for (int j = 0; j < 8; j++)
+		{
+			if ((mnger.board.chessBoard[i][j].getChar() == 'K' && player == 0) || (mnger.board.chessBoard[i][j].getChar() == 'k' && player == 1))
+			{
+				for (int row = 0; row < 8; row++)
+				{
+					for (int col = 0; col < 8; col++)
+					{
+						if (player == 0)
+							if (mnger.checkMove(i, j, row, col, 1) == 0)
+							{
+								kingMovesOld++;
+							}
+						else
+							if (mnger.checkMove(i, j, row, col, 0) == 0)
+							{
+								kingMovesOld++;
+							}
+					}
+				}
+			}
+		}
+	}
+	
+	mnger.move(move.startRow, move.startCol, move.endRow, move.endCol);
+	
+	for (int i = 0; i < 8; i++)
+	{
+		for (int j = 0; j < 8; j++)
+		{
+			if ((mnger.board.chessBoard[i][j].getChar() == 'K' && player == 0) || (mnger.board.chessBoard[i][j].getChar() == 'k' && player == 1))
+			{
+				for (int row = 0; row < 8; row++)
+				{
+					for (int col = 0; col < 8; col++)
+					{
+						if (player == 0)
+							if (mnger.checkMove(i, j, row, col, 1) == 0)
+							{
+								kingMovesNew++;
+							}
+						else
+							if (mnger.checkMove(i, j, row, col, 0) == 0)
+							{
+								kingMovesNew++;
+							}
+					}
+				}
+			}
+		}
+	}
+	
+	return (kingMovesOld - kingMovesNew);
+}
+
 int AI::randomMove()
 {
     srand(time(NULL));
@@ -544,7 +619,8 @@ double AI::findGains(int player)
             ATTACKINGVALUE_0 * getAttackingValue(moves[i], player) - 
             ATTACKERSVALUE_0 * numAttackers(moves[i], player) + 
             DEFENDINGVALUE_0 * getDefendingValue(moves[i], player) + 
-            DEVELOPMENTVALUE_0 * getDevelopmentValue(moves[i], player));
+            DEVELOPMENTVALUE_0 * getDevelopmentValue(moves[i], player) +
+            PRESSUREVALUE_0 * getPressureValue(moves[i], player));
             
             //cout << "calculating AI move #" << i << endl;
 
@@ -577,7 +653,8 @@ double AI::findGains(int player)
                 ATTACKINGVALUE_1 * getAttackingValue(humanMoves[j], player) - 
                 ATTACKERSVALUE_1 * numAttackers(humanMoves[j], player) + 
                 DEFENDINGVALUE_1 * getDefendingValue(humanMoves[j], player) + 
-                DEVELOPMENTVALUE_1 * getDevelopmentValue(humanMoves[j], player));
+                DEVELOPMENTVALUE_1 * getDevelopmentValue(humanMoves[j], player) +
+                PRESSUREVALUE_1 * getPressureValue(humanMoves[j], player));
                 
                 //cout << "calculating human move #" << j << endl;
             }   
@@ -593,7 +670,7 @@ double AI::findGains(int player)
             		forwardManager.move(humanMoves[i].startRow, humanMoves[i].startCol, humanMoves[i].endRow, humanMoves[i].endCol);
             		forwardBoard = forwardManager.board;
             		
-            		AI forwardAI(forwardBoard, ++turnsAhead, primaryPlayer, lookAhead);
+            		AI forwardAI(forwardBoard, ++turnsAhead, primaryPlayer, lookAhead, turn);
             		
             		//cout << "looking " << turnsAhead << " ahead" << endl;
             		//cout << "currently at AI move #" << i << endl;

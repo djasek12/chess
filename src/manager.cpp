@@ -346,11 +346,13 @@ void Manager::play()
     }else{
         //eror 
     }
-
+    
+	int turn = 0;
     while(1)
     {
         currentPlayer = 1 - currentPlayer; //flip between 0 and 1
         board.display();
+		turn++;
 		
         Move AI_move;
 
@@ -375,7 +377,7 @@ void Manager::play()
             {
                 //cout << "AI about to be constructed" << endl;
 
-                AI AI_1(board, 1, 0, 1);
+                AI AI_1(board, 1, 0, 1, turn);
                 //cout << "AI has been constructed, play move function being called" << endl;
                 //AI_1.findMoves(board);
                 //AI_1.dispValidMoves();
@@ -421,11 +423,13 @@ void Manager::AIplay()
     }else{
         //eror 
     }
-
+    
+	int turn = 0;
     while(1)
     {
         currentPlayer = 1 - currentPlayer; //flip between 0 and 1
         board.display();
+        turn++;
         
         int kings = 0;
 		
@@ -459,7 +463,7 @@ void Manager::AIplay()
             {
                 //cout << "AI about to be constructed" << endl;
 
-                AI AI_1(board, 1, 1, 1);
+                AI AI_1(board, 1, 1, 1, turn);
                 //cout << "AI has been constructed, play move function being called" << endl;
                 //AI_1.findMoves(board);
                 //AI_1.dispValidMoves();
@@ -476,7 +480,7 @@ void Manager::AIplay()
             {
                 //cout << "AI about to be constructed" << endl;
 
-                AI AI_1(board, 1, 0, 1);
+                AI AI_1(board, 1, 0, 1, turn);
                 //cout << "AI has been constructed, play move function being called" << endl;
                 //AI_1.findMoves(board);
                 //AI_1.dispValidMoves();
