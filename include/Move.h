@@ -20,9 +20,9 @@ class Move
 		int endRow;
 		int endCol;
 		double value;	
+		Piece piece;
 	
 	private: 
-		Piece piece;
 	
 };
 

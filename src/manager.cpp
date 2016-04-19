@@ -282,11 +282,11 @@ int Manager::checkKnight( int sourceRow, int sourceColumn, int targetRow, int ta
 
 int Manager::kingInCheck() {
     // returns 1 if player's king in check. returns 2 if AI's king
-    
-    
+
+
     int krow, kcol;
     int i, j;
-    
+
     for (krow = 0; krow < 8; krow++) { // find location of player's king
         for (kcol = 0; kcol < 8; kcol++) {
             if (board.chessBoard[krow].at(kcol).getChar() == 'k') {
@@ -294,7 +294,7 @@ int Manager::kingInCheck() {
             }
         }
     }
-    
+
     for (i = 0; i < 8; i++) { // check if player's king is in check
         for (j = 0; j < 8; j++) {
             if (board.chessBoard[i].at(j).getPlayer() == 1) {
@@ -303,7 +303,7 @@ int Manager::kingInCheck() {
             }
         }
     }
-    
+
     for (krow = 0; krow < 8; krow++) { // find location of AI's king
         for (kcol = 0; kcol < 8; kcol++) {
             if (board.chessBoard[krow].at(kcol).getChar() == 'K') {
@@ -311,7 +311,7 @@ int Manager::kingInCheck() {
             }
         }
     }
-    
+
     for (i = 0; i < 8; i++) { // check if AI's king is in check
         for (j = 0; j < 8; j++) {
             if (board.chessBoard[i].at(j).getPlayer() == 0) {
@@ -320,9 +320,9 @@ int Manager::kingInCheck() {
             }
         }
     }
-    
+
     return 0;
-    
+
 }
 
 void Manager::play()
@@ -345,11 +345,13 @@ void Manager::play()
     }else{
         //eror 
     }
-
+    
+	int turn = 0;
     while(1)
     {
         currentPlayer = 1 - currentPlayer; //flip between 0 and 1
         board.display();
+		turn++;
 		
         Move AI_move;
 
@@ -374,7 +376,7 @@ void Manager::play()
             {
                 //cout << "AI about to be constructed" << endl;
 
-                AI AI_1(board, 1, 0, 1);
+                AI AI_1(board, 1, 0, 1, turn);
                 //cout << "AI has been constructed, play move function being called" << endl;
                 //AI_1.findMoves(board);
                 //AI_1.dispValidMoves();
@@ -420,11 +422,13 @@ void Manager::AIplay()
     }else{
         //eror 
     }
-
+    
+	int turn = 0;
     while(1)
     {
         currentPlayer = 1 - currentPlayer; //flip between 0 and 1
         board.display();
+        turn++;
         
         int kings = 0;
 		
@@ -458,7 +462,7 @@ void Manager::AIplay()
             {
                 //cout << "AI about to be constructed" << endl;
 
-                AI AI_1(board, 1, 1, 1);
+                AI AI_1(board, 1, 1, 1, turn);
                 //cout << "AI has been constructed, play move function being called" << endl;
                 //AI_1.findMoves(board);
                 //AI_1.dispValidMoves();
@@ -475,7 +479,7 @@ void Manager::AIplay()
             {
                 //cout << "AI about to be constructed" << endl;
 
-                AI AI_1(board, 1, 0, 1);
+                AI AI_1(board, 1, 0, 1, turn);
                 //cout << "AI has been constructed, play move function being called" << endl;
                 //AI_1.findMoves(board);
                 //AI_1.dispValidMoves();
