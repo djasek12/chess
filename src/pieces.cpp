@@ -64,7 +64,7 @@ Bishop::Bishop(int num){
 King::King(int num){
 	setPlayer(num);
 	setChar('k' - num * 32);
-	setValue(11);
+	setValue(2);
 }
 
 Queen::Queen(int num){
