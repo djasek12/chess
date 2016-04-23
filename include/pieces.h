@@ -6,14 +6,14 @@ class Piece{ //base class for chess pieces
 		Piece();
 		void setChar( char);
 		void setPlayer( int);
-		void setValue(int);
+		void setValue(double);
 		char getChar();
 		int getPlayer();
-		int getValue();
+		double getValue();
 	protected:
 		int player; //0 is caps, 1 is lower-case	
 		char repChar; //p for pawn, etc...
-		int value;
+		double value;
 };
 
 class Null: public Piece{

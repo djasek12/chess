@@ -13,16 +13,16 @@ AI::AI(Board B, int turnFuture, int pmrPlyr, int look, int turns)
 {
     boardOriginal = B.chessBoard;
     Brd = B;
-
-    /*if(pmrPlyr == 0)
-        updateKingValue(1);
-    else
-        updateKingValue(0);*/
     
     turnsAhead = turnFuture;
     lookAhead = look;
     
     turn = turns;
+
+    if(pmrPlyr == 0)
+        updateKingValue(1);
+    else
+        updateKingValue(0);
     
     CAPTUREVALUE_0 = 2.6;
     ATTACKINGVALUE_0 = .5;
@@ -747,16 +747,19 @@ double AI::findGains(int player)
         //cout << "inside else" << endl;
         for(int i=0; i<moves.size(); i++) // each AI move
         {
-            cout << "AI move" << endl;
-            cout << "\nstarting row/col: " << moves[i].startRow << " " << moves[i].startCol << " ending row/col: " << moves[i].endRow << " " << moves[i].endCol << endl;
-            cout << "capture value of move: " << CAPTUREVALUE_0 * getCaptureValue(moves[i], 1) << endl;
-            cout << "moveable spaces: " << MOVEABLEVALUE_0 * findMoveableSpaces(moves[i], 1) << endl;
-            cout << "attack value: " << ATTACKINGVALUE_0*  getAttackingValue(moves[i], 1) << endl;
-            cout << "numAttackers: " << ATTACKERSVALUE_0 * numAttackers(moves[i], 1) << endl;
-            cout << "defending value: " << DEFENDINGVALUE_0 * getDefendingValue(moves[i], 1) << endl;
-            cout << "development value: " << DEVELOPMENTVALUE_0 * getDevelopmentValue(moves[i], 1) << endl;
+            if(turnsAhead == 1)
+            {
+                cout << "AI move" << endl;
+                cout << "\nstarting row/col: " << moves[i].startRow << " " << moves[i].startCol << " ending row/col: " << moves[i].endRow << " " << moves[i].endCol << endl;
+                cout << "capture value of move: " << CAPTUREVALUE_0 * getCaptureValue(moves[i], 1) << endl;
+                cout << "moveable spaces: " << MOVEABLEVALUE_0 * findMoveableSpaces(moves[i], 1) << endl;
+                cout << "attack value: " << ATTACKINGVALUE_0*  getAttackingValue(moves[i], 1) << endl;
+                cout << "numAttackers: " << ATTACKERSVALUE_0 * numAttackers(moves[i], 1) << endl;
+                cout << "defending value: " << DEFENDINGVALUE_0 * getDefendingValue(moves[i], 1) << endl;
+                cout << "development value: " << DEVELOPMENTVALUE_0 * getDevelopmentValue(moves[i], 1) << endl;
 
-            cout << "overall value: " << moves[i].getMoveValue() << endl << endl;
+                cout << "overall value: " << moves[i].getMoveValue() << endl << endl;
+            }
 
 
 
@@ -797,19 +800,19 @@ double AI::findGains(int player)
                     maxValue = humanMoves[j];
             }
 
-            cout << "Max human move" << endl;
-            cout << "\nstarting row/col: " << maxValue.startRow << " " << maxValue.startCol << " ending row/col: " << maxValue.endRow << " " << maxValue.endCol << endl;
-            cout << "capture value of move: " << CAPTUREVALUE_0 * getCaptureValue(maxValue, 1) << endl;
-            cout << "moveable spaces: " << MOVEABLEVALUE_0 * findMoveableSpaces(maxValue, 1) << endl;
-            cout << "attack value: " << ATTACKINGVALUE_0*  getAttackingValue(maxValue, 1) << endl;
-            cout << "numAttackers: " << ATTACKERSVALUE_0 * numAttackers(maxValue, 1) << endl;
-            cout << "defending value: " << DEFENDINGVALUE_0 * getDefendingValue(maxValue, 1) << endl;
-            cout << "development value: " << DEVELOPMENTVALUE_0 * getDevelopmentValue(maxValue, 1) << endl;
+            if(turnsAhead == 1)
+            {
+                cout << "Max human move" << endl;
+                cout << "\nstarting row/col: " << maxValue.startRow << " " << maxValue.startCol << " ending row/col: " << maxValue.endRow << " " << maxValue.endCol << endl;
+                cout << "capture value of move: " << CAPTUREVALUE_0 * getCaptureValue(maxValue, 1) << endl;
+                cout << "moveable spaces: " << MOVEABLEVALUE_0 * findMoveableSpaces(maxValue, 1) << endl;
+                cout << "attack value: " << ATTACKINGVALUE_0*  getAttackingValue(maxValue, 1) << endl;
+                cout << "numAttackers: " << ATTACKERSVALUE_0 * numAttackers(maxValue, 1) << endl;
+                cout << "defending value: " << DEFENDINGVALUE_0 * getDefendingValue(maxValue, 1) << endl;
+                cout << "development value: " << DEVELOPMENTVALUE_0 * getDevelopmentValue(maxValue, 1) << endl;
 
-            cout << "overall value: " << maxValue.getMoveValue() << endl << endl;
-
-
-
+                cout << "overall value: " << maxValue.getMoveValue() << endl << endl;
+            }
 
             if (turnsAhead < lookAhead)
             {
@@ -848,7 +851,9 @@ double AI::findGains(int player)
 
 void AI::updateKingValue(int player)
 {
-    double val = turn * .07;
+    double val = double(turn) * .5;
+
+    cout << "turn: " << turn << endl;
 
     for(int r = 0; r < 8; r++)
     {
@@ -856,7 +861,7 @@ void AI::updateKingValue(int player)
         {
              if(Brd.chessBoard[c][r].getChar() == 'K' & player == 1 | Brd.chessBoard[c][r].getChar() == 'k' & player == 0 ) 
              {
-                 Brd.chessBoard[c][r].setValue(int(val));
+                 Brd.chessBoard[c][r].setValue(3+val);
                  cout << "king at position: " << r << c << " and has value: " << Brd.chessBoard[c][r].getValue() << endl;
                  break;
              }

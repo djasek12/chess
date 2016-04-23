@@ -88,3 +88,5 @@
     Danny and Billy - .5 hours getting AI's to play eachother 
 4/22
     Danny - 1.7 hours debugging AI
+4/23
+    Danny and Billy - 2.75 hours fixing inCheck functions, working on AI endgame

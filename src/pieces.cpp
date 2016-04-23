@@ -15,7 +15,7 @@ void Piece::setPlayer( int num){
 	player = num;	
 }
 
-void Piece::setValue(int val){
+void Piece::setValue(double val){
 	value = val;
 }
 
@@ -27,7 +27,7 @@ int Piece::getPlayer(){
 	return player;
 }
 
-int Piece::getValue(){
+double Piece::getValue(){
 	return value;
 }
 
@@ -64,7 +64,7 @@ Bishop::Bishop(int num){
 King::King(int num){
 	setPlayer(num);
 	setChar('k' - num * 32);
-	setValue(2);
+	setValue(3);
 }
 
 Queen::Queen(int num){
