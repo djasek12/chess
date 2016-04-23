@@ -86,3 +86,5 @@
     Danny and Billy - 2 hours getting recursion working - trying to get AIs to play eachother
 4/18
     Danny and Billy - .5 hours getting AI's to play eachother 
+4/22
+    Danny - 1.7 hours debugging AI
