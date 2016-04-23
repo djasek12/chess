@@ -12,10 +12,10 @@ class AI {
 
     public:
         AI(Board b, int turnFuture, int primaryPlayer, int look, int turn);
-        Move overallAlgorithm(); // skeleton
+        Move overallAlgorithm(int player); // skeleton
         void findMoves(int player); // find valid moves
         void dispValidMoves();
-        Move getOutOfCheck();
+        Move getOutOfCheck(int player);
         int makeObviousMove();
         void assignMoveValues();
         int decideMove(int movesAhead);
@@ -47,6 +47,8 @@ class AI {
         // findLosses functions
         double numAttackers(Move move, int player); // pieces that can attack you
         double pieceValueAbandoned(Move move); // value of pieces you are no longer defending
+
+        void updateKingValue(int player);
 
         //board data member for passing AI board to Manager class
         Board Brd;

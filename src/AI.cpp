@@ -13,6 +13,11 @@ AI::AI(Board B, int turnFuture, int pmrPlyr, int look, int turns)
 {
     boardOriginal = B.chessBoard;
     Brd = B;
+
+    /*if(pmrPlyr == 0)
+        updateKingValue(1);
+    else
+        updateKingValue(0);*/
     
     turnsAhead = turnFuture;
     lookAhead = look;
@@ -45,20 +50,22 @@ AI::AI(Board B, int turnFuture, int pmrPlyr, int look, int turns)
     primaryPlayer = pmrPlyr;
 }
 
-Move AI::overallAlgorithm()
+Move AI::overallAlgorithm(int player)
 {
+
+    cout << "player " << player << endl;
     // instantiate a manager and pass it the correct board
     Manager mnger;
     mnger.setBoard(Brd);
 
-    if(mnger.kingInCheck() == 2)
+    if(mnger.kingInCheck(player))
     {
         cout << "king in check" << endl;
-        return getOutOfCheck();
+        return getOutOfCheck(player);
     }
     else
     {
-        //cout << "play move" << endl;
+        cout << "play move" << endl;
         return playMove();
     }
 
@@ -69,22 +76,59 @@ Move AI::overallAlgorithm()
       }*/
 }
 
-Move AI::getOutOfCheck()
+Move AI::getOutOfCheck(int player)
 {  
+    cout << "inside getOutofCheck" << endl;
     vector<Move> escapeMoves;
     Move dummyMove;
+    cout << "player: " << player << endl;
+    findMoves(player);
+    cout << "moves size: " << moves.size() << endl;
 
-    for(int i=0; i<moves.size(); i++)
+    if(player == primaryPlayer)
     {
-        Manager mnger;
-        mnger.setBoard(Brd);
 
-        mnger.move(moves[i].startRow, moves[i].startCol, moves[i].endRow, moves[i].endCol); 
-        if(mnger.kingInCheck() != 2)
+        for(int i=0; i<moves.size(); i++)
         {
-            escapeMoves.push_back(moves[i]);
+            //cout << "inside for" << endl;
+            Manager mnger;
+            mnger.setBoard(Brd);
+
+            //cout << "just set board" << endl;
+
+            mnger.move(moves[i].startRow, moves[i].startCol, moves[i].endRow, moves[i].endCol); 
+            //cout << "before if" << endl;
+            if(!mnger.kingInCheck(player))
+            {
+                escapeMoves.push_back(moves[i]);
+                cout << moves[i].startRow << moves[i].startCol << moves[i].endRow << moves[i].endCol << endl;
+            }
+            //cout << "after if" << endl;
         }
     }
+    else
+    {
+        for(int i=0; i<humanMoves.size(); i++)
+        {
+            //cout << "inside for" << endl;
+            Manager mnger;
+            mnger.setBoard(Brd);
+
+            //cout << "just set board" << endl;
+
+            mnger.move(humanMoves[i].startRow, humanMoves[i].startCol, humanMoves[i].endRow, humanMoves[i].endCol); 
+            //cout << "before if" << endl;
+            if(!mnger.kingInCheck(player))
+            {
+                escapeMoves.push_back(humanMoves[i]);
+                cout << humanMoves[i].startRow << humanMoves[i].startCol << humanMoves[i].endRow << humanMoves[i].endCol << endl;
+            }
+            //cout << "after if" << endl;
+        }
+
+    }
+
+    cout << "escape moves: " << escapeMoves.size() << endl;
 
     //if(escapeMoves.size() == 0)
         //return
@@ -92,19 +136,20 @@ Move AI::getOutOfCheck()
     for(int i=0; i<escapeMoves.size(); i++)
     {
         escapeMoves[i].setMoveValue(
-        CAPTUREVALUE_0 * getCaptureValue(moves[i], 0) + 
-        MOVEABLEVALUE_0 * findMoveableSpaces(escapeMoves[i], 0) + 
-        ATTACKINGVALUE_0 * getAttackingValue(escapeMoves[i], 0) - 
-        ATTACKERSVALUE_0 * numAttackers(escapeMoves[i], 0) + 
-        DEFENDINGVALUE_0 * getDefendingValue(escapeMoves[i], 0));
-        //cout << "\nstarting row/col: " << escapeMoves[i].startRow << " " << escapeMoves[i].startCol << " ending row/col: " << escapeMoves[i].endRow << " " << escapeMoves[i].endCol << endl;
-        //cout << "capture value of move: " << getCaptureValue(escapeMoves[i]) << endl;
-        //cout << "moveable spaces: " << 0.05*findMoveableSpaces(escapeMoves[i]) << endl;
-        //cout << "attack value: " << 0.2*getAttackingValue(escapeMoves[i], 0) << endl;
-        //cout << "numAttackers: " << numAttackers(escapeMoves[i]) << endl;
-        //cout << "defending value: " << 0.2*getDefendingValue(escapeMoves[i]) << endl;
+        CAPTUREVALUE_0 * getCaptureValue(escapeMoves[i], player) + 
+        MOVEABLEVALUE_0 * findMoveableSpaces(escapeMoves[i], player) + 
+        ATTACKINGVALUE_0 *  getAttackingValue(escapeMoves[i], player) - 
+        ATTACKERSVALUE_0 * numAttackers(escapeMoves[i], player) + 
+        DEFENDINGVALUE_0 * getDefendingValue(escapeMoves[i], player));
 
-        //cout << "overall value: " << moves[i].getMoveValue() << endl << endl;
+        cout << "\nstarting row/col: " << escapeMoves[i].startRow << " " << escapeMoves[i].startCol << " ending row/col: " << escapeMoves[i].endRow << " " << escapeMoves[i].endCol << endl;
+        cout << "capture value of move: " << getCaptureValue(escapeMoves[i], player) << endl;
+        cout << "moveable spaces: " << findMoveableSpaces(escapeMoves[i], player) << endl;
+        cout << "attack value: " << getAttackingValue(escapeMoves[i], player) << endl;
+        cout << "numAttackers: " << numAttackers(escapeMoves[i], player) << endl;
+        cout << "defending value: " << getDefendingValue(escapeMoves[i], player) << endl;
+
+        cout << "overall value: " << escapeMoves[i].getMoveValue() << endl << endl;
     }
 
     Move bestMove = escapeMoves[0];
@@ -594,7 +639,7 @@ Move AI::playMove()
     //cout << "about to exit function, bestMove value is " << bestMove.getMoveValue() << endl;
     //
 
-    /*cout << "best AI move" << endl;
+    cout << "best AI move" << endl;
     cout << "\nstarting row/col: " << bestMove.startRow << " " << bestMove.startCol << " ending row/col: " << bestMove.endRow << " " << bestMove.endCol << endl;
     cout << "capture value of move: " << CAPTUREVALUE_0 * getCaptureValue(bestMove, primaryPlayer) << endl;
     cout << "moveable spaces: " << MOVEABLEVALUE_0 * findMoveableSpaces(bestMove, primaryPlayer) << endl;
@@ -603,7 +648,7 @@ Move AI::playMove()
     cout << "defending value: " << DEFENDINGVALUE_0 * getDefendingValue(bestMove, primaryPlayer) << endl;
     cout << "development value: " << DEVELOPMENTVALUE_0 * getDevelopmentValue(bestMove, primaryPlayer) << endl;
 
-    cout << "overall value: " << bestMove.getMoveValue() << endl << endl;*/
+    cout << "overall value: " << bestMove.getMoveValue() << endl << endl;
 
     // for testing purposes - here on down till the return statement
     Manager mnger;
@@ -652,7 +697,7 @@ Move AI::playMove()
             maxValue = humanMoves[j];
     }
 
-    cout << "Best Human Move in response" << endl;
+    /*cout << "Best Human Move in response" << endl;
 
      cout << "\nstarting row/col: " << maxValue.startRow << " " << maxValue.startCol << " ending row/col: " << maxValue.endRow << " " << maxValue.endCol << endl;
     cout << "capture value of move: " << CAPTUREVALUE_0 * getCaptureValue(maxValue, 1) << endl;
@@ -662,7 +707,7 @@ Move AI::playMove()
     cout << "defending value: " << DEFENDINGVALUE_0 * getDefendingValue(maxValue, 1) << endl;
     cout << "development value: " << DEVELOPMENTVALUE_0 * getDevelopmentValue(maxValue, 1) << endl;
 
-    cout << "overall value: " << maxValue.getMoveValue() << endl << endl;
+    cout << "overall value: " << maxValue.getMoveValue() << endl << endl;*/
 
 
 
@@ -783,7 +828,7 @@ double AI::findGains(int player)
             		//cout << "currently at human move #" << j << endl;
             		
             		Move forwardMove;
-            		forwardMove = forwardAI.overallAlgorithm(); // get move from AI
+            		forwardMove = forwardAI.overallAlgorithm(player); // get move from AI
             		
             		humanMoves[i].setMoveValue(humanMoves[i].getMoveValue() - double(1/double(turnsAhead))*forwardMove.getMoveValue());
 
@@ -800,3 +845,22 @@ double AI::findGains(int player)
     }
 
 }
+
+void AI::updateKingValue(int player)
+{
+    double val = turn * .07;
+
+    for(int r = 0; r < 8; r++)
+    {
+        for(int c = 0; c < 8; c++)
+        {
+             if(Brd.chessBoard[c][r].getChar() == 'K' & player == 1 | Brd.chessBoard[c][r].getChar() == 'k' & player == 0 ) 
+             {
+                 Brd.chessBoard[c][r].setValue(int(val));
+                 cout << "king at position: " << r << c << " and has value: " << Brd.chessBoard[c][r].getValue() << endl;
+                 break;
+             }
+        }
+    }
+}
+

@@ -6,7 +6,7 @@ class Piece{ //base class for chess pieces
 		Piece();
 		void setChar( char);
 		void setPlayer( int);
-		void setValue( int);
+		void setValue(int);
 		char getChar();
 		int getPlayer();
 		int getValue();

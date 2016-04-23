@@ -15,7 +15,7 @@ void Piece::setPlayer( int num){
 	player = num;	
 }
 
-void Piece::setValue( int val){
+void Piece::setValue(int val){
 	value = val;
 }
 

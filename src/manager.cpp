@@ -280,47 +280,50 @@ int Manager::checkKnight( int sourceRow, int sourceColumn, int targetRow, int ta
     
 }
 
-int Manager::kingInCheck() {
-    // returns 1 if player's king in check. returns 2 if AI's king
-
+int Manager::kingInCheck(int player) {
+    // returns 1 if player's king in check
 
     int krow, kcol;
     int i, j;
+    int kingRow, kingCol;
+
+    //cout << "player: " << player << endl;
 
     for (krow = 0; krow < 8; krow++) { // find location of player's king
         for (kcol = 0; kcol < 8; kcol++) {
-            if (board.chessBoard[krow].at(kcol).getChar() == 'k') {
+            if (board.chessBoard[kcol].at(krow).getChar() == 'K' & player == 1 | board.chessBoard[kcol].at(krow).getChar() == 'k' & player == 0 ) {
+                //cout << "found king at " << krow << kcol << endl;
+                kingRow = krow;
+                kingCol = kcol;
                 break;
             }
         }
     }
+
+    //cout << "krow and col" << kingRow << kingCol << endl;
 
     for (i = 0; i < 8; i++) { // check if player's king is in check
         for (j = 0; j < 8; j++) {
-            if (board.chessBoard[i].at(j).getPlayer() == 1) {
-                if (checkMove(i, j, krow, kcol, 1) == 0)
+            if (board.chessBoard[i].at(j).getPlayer() != player) {
+                //cout << "i and j" << i << j << endl;
+                //cout << "player" << player << endl;
+
+                if(checkMove(i, j, kingRow, kingCol, 1) == 0 & player == 0)
+                {
+                    //cout << "first if" << endl;
                     return 1;
+                }
+                    
+                if(checkMove(i, j, kingRow, kingCol, 0) == 0 & player == 1)
+                {
+                    //cout << "second if" << endl;
+                    return 1;
+                }
             }
         }
     }
 
-    for (krow = 0; krow < 8; krow++) { // find location of AI's king
-        for (kcol = 0; kcol < 8; kcol++) {
-            if (board.chessBoard[krow].at(kcol).getChar() == 'K') {
-                break;
-            }
-        }
-    }
-
-    for (i = 0; i < 8; i++) { // check if AI's king is in check
-        for (j = 0; j < 8; j++) {
-            if (board.chessBoard[i].at(j).getPlayer() == 0) {
-                if (checkMove(i, j, krow, kcol, 0) == 0)
-                    return 2;
-            }
-        }
-    }
-
+   
     return 0;
 
 }
@@ -380,7 +383,7 @@ void Manager::play()
                 //cout << "AI has been constructed, play move function being called" << endl;
                 //AI_1.findMoves(board);
                 //AI_1.dispValidMoves();
-                AI_move = AI_1.overallAlgorithm();
+                AI_move = AI_1.overallAlgorithm(0);
                 cout << "move passed to manager correctly" << endl;
                 //AI_move = AI_1.playMove();
 
@@ -462,11 +465,11 @@ void Manager::AIplay()
             {
                 //cout << "AI about to be constructed" << endl;
 
-                AI AI_1(board, 1, 1, 1, turn);
+                AI AI_1(board, 1, 1, 3, turn);
                 //cout << "AI has been constructed, play move function being called" << endl;
                 //AI_1.findMoves(board);
                 //AI_1.dispValidMoves();
-                AI_move = AI_1.overallAlgorithm();
+                AI_move = AI_1.overallAlgorithm(1);
                 cout << "move passed to manager correctly" << endl;
                 //AI_move = AI_1.playMove();
 
@@ -483,7 +486,7 @@ void Manager::AIplay()
                 //cout << "AI has been constructed, play move function being called" << endl;
                 //AI_1.findMoves(board);
                 //AI_1.dispValidMoves();
-                AI_move = AI_1.overallAlgorithm();
+                AI_move = AI_1.overallAlgorithm(0);
                 cout << "move passed to manager correctly" << endl;
                 //AI_move = AI_1.playMove();
 
