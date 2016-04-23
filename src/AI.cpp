@@ -20,7 +20,7 @@ AI::AI(Board B, int turnFuture, int pmrPlyr, int look, int turns)
     turn = turns;
     
     CAPTUREVALUE_0 = 2.6;
-    ATTACKINGVALUE_0 = 1;
+    ATTACKINGVALUE_0 = .5;
     DEFENDINGVALUE_0 = 0.1;
     MOVEABLEVALUE_0 = 0.1;
     DEVELOPMENTVALUE_0 = 1.2;
@@ -31,8 +31,8 @@ AI::AI(Board B, int turnFuture, int pmrPlyr, int look, int turns)
 	
 	////////////////////////
 	
-	CAPTUREVALUE_1 = 2.6;
-    ATTACKINGVALUE_1 = 1;
+	CAPTUREVALUE_1 = 3.5;
+    ATTACKINGVALUE_1 = .5;
     DEFENDINGVALUE_1 = 0.1;
     MOVEABLEVALUE_1 = 0.1;
     DEVELOPMENTVALUE_1 = 1;
@@ -655,7 +655,7 @@ Move AI::playMove()
     cout << "Best Human Move in response" << endl;
 
      cout << "\nstarting row/col: " << maxValue.startRow << " " << maxValue.startCol << " ending row/col: " << maxValue.endRow << " " << maxValue.endCol << endl;
-    cout << "capture value of move: " << /*CAPTUREVALUE_0 **/ getCaptureValue(maxValue, 1) << endl;
+    cout << "capture value of move: " << CAPTUREVALUE_0 * getCaptureValue(maxValue, 1) << endl;
     cout << "moveable spaces: " << MOVEABLEVALUE_0 * findMoveableSpaces(maxValue, 1) << endl;
     cout << "attack value: " << ATTACKINGVALUE_0*  getAttackingValue(maxValue, 1) << endl;
     cout << "numAttackers: " << ATTACKERSVALUE_0 * numAttackers(maxValue, 1) << endl;
