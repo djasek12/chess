@@ -438,97 +438,84 @@ double AI::numAttackers(Move move, int player)
     return numAttackers * double(move.getPiece().getValue())/2;
 }
 
-double AI::pieceValueAbandoned(Move move)
-{
-}
-
 int AI::getPressureValue(Move move, int player)
 {
-	int kingMovesOld = 0;
-	int kingMovesNew = 0;
-	Manager mnger;
-	
-	if (player == primaryPlayer)
-    	mnger.setBoard(Brd);
+    int kingMovesOld = 0;
+    int kingMovesNew = 0;
+    Manager mnger;
+
+    if (player == primaryPlayer)
+        mnger.setBoard(Brd);
     else
-    	mnger.setBoard(temp);
-    
-	
-	for (int i = 0; i < 8; i++)
-	{
-		for (int j = 0; j < 8; j++)
-		{
-			if ((mnger.board.chessBoard[i][j].getChar() == 'K' && player == 0) || (mnger.board.chessBoard[i][j].getChar() == 'k' && player == 1))
-			{
-				for (int row = 0; row < 8; row++)
-				{
-					for (int col = 0; col < 8; col++)
-					{
-						if (player == 0)
-							if (mnger.checkMove(i, j, row, col, 1) == 0)
-							{
-								kingMovesOld++;
-							}
-						else
-							if (mnger.checkMove(i, j, row, col, 0) == 0)
-							{
-								kingMovesOld++;
-							}
-					}
-				}
-			}
-		}
-	}
-	
-	mnger.move(move.startRow, move.startCol, move.endRow, move.endCol);
-	
-	for (int i = 0; i < 8; i++)
-	{
-		for (int j = 0; j < 8; j++)
-		{
-			if ((mnger.board.chessBoard[i][j].getChar() == 'K' && player == 0) || (mnger.board.chessBoard[i][j].getChar() == 'k' && player == 1))
-			{
-				for (int row = 0; row < 8; row++)
-				{
-					for (int col = 0; col < 8; col++)
-					{
-						if (player == 0)
-							if (mnger.checkMove(i, j, row, col, 1) == 0)
-							{
-								kingMovesNew++;
-							}
-						else
-							if (mnger.checkMove(i, j, row, col, 0) == 0)
-							{
-								kingMovesNew++;
-							}
-					}
-				}
-			}
-		}
-	}
-	
-	return (kingMovesOld - kingMovesNew);
+        mnger.setBoard(temp);
+
+
+    for (int i = 0; i < 8; i++)
+    {
+        for (int j = 0; j < 8; j++)
+        {
+            if ((mnger.board.chessBoard[i][j].getChar() == 'K' && player == 0) || (mnger.board.chessBoard[i][j].getChar() == 'k' && player == 1))
+            {
+                for (int row = 0; row < 8; row++)
+                {
+                    for (int col = 0; col < 8; col++)
+                    {
+                        if (player == 0)
+                            if (mnger.checkMove(i, j, row, col, 1) == 0)
+                            {
+                                kingMovesOld++;
+                            }
+                            else
+                                if (mnger.checkMove(i, j, row, col, 0) == 0)
+                                {
+                                    kingMovesOld++;
+                                }
+                    }
+                }
+            }
+        }
+    }
+
+    mnger.move(move.startRow, move.startCol, move.endRow, move.endCol);
+
+    for (int i = 0; i < 8; i++)
+    {
+        for (int j = 0; j < 8; j++)
+        {
+            if ((mnger.board.chessBoard[i][j].getChar() == 'K' && player == 0) || (mnger.board.chessBoard[i][j].getChar() == 'k' && player == 1))
+            {
+                for (int row = 0; row < 8; row++)
+                {
+                    for (int col = 0; col < 8; col++)
+                    {
+                        if (player == 0)
+                            if (mnger.checkMove(i, j, row, col, 1) == 0)
+                            {
+                                kingMovesNew++;
+                            }
+                            else
+                                if (mnger.checkMove(i, j, row, col, 0) == 0)
+                                {
+                                    kingMovesNew++;
+                                }
+                    }
+                }
+            }
+        }
+    }
+
+    return (kingMovesOld - kingMovesNew);
 }
 
 int AI::randomMove()
 {
     srand(time(NULL));
     int moveIndex = rand()%moves.size();
-    //cout << "moveIndex: " << moveIndex << endl;
     return moveIndex;
 }
 
 Move AI::playMove()
-{
-    //cout << "Inside playMove()" << endl;
-    //findMoves();
-    //cout << "Calling dispValidMoves()" << endl;
-    //dispValidMoves();
-    //cout << "calling randomMove()" << endl;
-    //return moves[randomMove()];
-    //cout << "found moves of 1" << endl;
-    
+{     
     findGains();
 
     Move bestMove = moves[0];
@@ -537,87 +524,16 @@ Move AI::playMove()
         if(bestMove.getMoveValue() < moves[i].getMoveValue())
             bestMove = moves[i];
     }
-    //cout << "about to exit function, bestMove value is " << bestMove.getMoveValue() << endl;
-    //
 
     cout << "best AI move" << endl;
-    cout << "\nstarting row/col: " << bestMove.startRow << " " << bestMove.startCol << " ending row/col: " << bestMove.endRow << " " << bestMove.endCol << endl;
-    cout << "capture value of move: " << CAPTUREVALUE_0 * getCaptureValue(bestMove, primaryPlayer) << endl;
-    cout << "moveable spaces: " << MOVEABLEVALUE_0 * findMoveableSpaces(bestMove, primaryPlayer) << endl;
-    cout << "attack value: " << ATTACKINGVALUE_0*  getAttackingValue(bestMove, primaryPlayer) << endl;
-    cout << "numAttackers: " << ATTACKERSVALUE_0 * numAttackers(bestMove, primaryPlayer) << endl;
-    cout << "defending value: " << DEFENDINGVALUE_0 * getDefendingValue(bestMove, primaryPlayer) << endl;
-    cout << "development value: " << DEVELOPMENTVALUE_0 * getDevelopmentValue(bestMove, primaryPlayer) << endl;
-
-    cout << "overall value: " << bestMove.getMoveValue() << endl << endl;
-
-    // for testing purposes - here on down till the return statement
-    Manager mnger;
-    mnger.setBoard(Brd);
-    mnger.move(bestMove.startRow, bestMove.startCol, bestMove.endRow, bestMove.endCol); // make the move
-    temp = mnger.board;
-
-    // find and assign human move values
-    humanMoves.clear();
-    if(primaryPlayer == 0)
-        findMoves(1);
-    else
-        findMoves(0);
-
-    for(int j=0; j<humanMoves.size(); j++)
-    {
-        humanMoves[j].setMoveValue(
-                CAPTUREVALUE_1 * getCaptureValue(humanMoves[j], 1) + 
-                MOVEABLEVALUE_1 * findMoveableSpaces(humanMoves[j], 1) + 
-                ATTACKINGVALUE_1 * getAttackingValue(humanMoves[j], 1) - 
-                ATTACKERSVALUE_1 * numAttackers(humanMoves[j], 1) + 
-                DEFENDINGVALUE_1 * getDefendingValue(humanMoves[j], 1) + 
-                DEVELOPMENTVALUE_1 * getDevelopmentValue(humanMoves[j], 1) +
-                PRESSUREVALUE_1 * getPressureValue(humanMoves[j], 1));
-
-                 /*cout << "\nstarting row/col: " << humanMoves[j].startRow << " " << humanMoves[j].startCol << " ending row/col: " << humanMoves[j].endRow << " " << humanMoves[j].endCol << endl;
-                cout << "capture value of move: " << CAPTUREVALUE_0 * getCaptureValue(humanMoves[j], 1) << endl;
-                cout << "moveable spaces: " << MOVEABLEVALUE_0 * findMoveableSpaces(humanMoves[j], 1) << endl;
-                cout << "attack value: " << ATTACKINGVALUE_0*  getAttackingValue(humanMoves[j], 1) << endl;
-                cout << "numAttackers: " << ATTACKERSVALUE_0 * numAttackers(humanMoves[j], 1) << endl;
-                cout << "defending value: " << DEFENDINGVALUE_0 * getDefendingValue(humanMoves[j], 1) << endl;
-                cout << "development value: " << DEVELOPMENTVALUE_0 * getDevelopmentValue(humanMoves[j], 1) << endl;
-
-                cout << "overall value: " << humanMoves[j].getMoveValue() << endl << endl;*/
-
-
-        //cout << "calculating human move #" << j << endl;
-    }   
-
-    Board forwardBoard;
-
-    Move maxValue = humanMoves[0];
-    for(int j=1; j<humanMoves.size(); j++)
-    {
-        if(humanMoves[j].getMoveValue() > maxValue.getMoveValue())
-            maxValue = humanMoves[j];
-    }
-
-    /*cout << "Best Human Move in response" << endl;
-
-     cout << "\nstarting row/col: " << maxValue.startRow << " " << maxValue.startCol << " ending row/col: " << maxValue.endRow << " " << maxValue.endCol << endl;
-    cout << "capture value of move: " << CAPTUREVALUE_0 * getCaptureValue(maxValue, 1) << endl;
-    cout << "moveable spaces: " << MOVEABLEVALUE_0 * findMoveableSpaces(maxValue, 1) << endl;
-    cout << "attack value: " << ATTACKINGVALUE_0*  getAttackingValue(maxValue, 1) << endl;
-    cout << "numAttackers: " << ATTACKERSVALUE_0 * numAttackers(maxValue, 1) << endl;
-    cout << "defending value: " << DEFENDINGVALUE_0 * getDefendingValue(maxValue, 1) << endl;
-    cout << "development value: " << DEVELOPMENTVALUE_0 * getDevelopmentValue(maxValue, 1) << endl;
-
-    cout << "overall value: " << maxValue.getMoveValue() << endl << endl;*/
-
-
+    dispMoveValue(bestMove, primaryPlayer);
 
     return bestMove;
 }
 
 double AI::findGains()
 {
-    cout << "turns Ahead: " << turnsAhead << endl;
+    cout << "first turns Ahead: " << turnsAhead << endl;
     // find AI moves and assign values
     findMoves(primaryPlayer);
     for(int i=0; i<moves.size(); i++)
@@ -634,6 +550,7 @@ double AI::findGains()
 
     for(int i=0; i<moves.size(); i++) // each AI move
     {
+        cout << "second turns Ahead: " << turnsAhead << endl;
         //if(turnsAhead == 1)
         //{
         //cout << "\nAI move" << endl;
@@ -696,9 +613,9 @@ double AI::findGains()
             //}
         }
 
-        cout << "original value: " << moves[i].getMoveValue() << " response: " << maxValue.getMoveValue();
+        //cout << "original value: " << moves[i].getMoveValue() << " response: " << maxValue.getMoveValue();
         moves[i].setMoveValue(moves[i].getMoveValue() - maxValue.getMoveValue());
-        cout << " final value: " << moves[i].getMoveValue() << endl; 
+        //cout << " final value: " << moves[i].getMoveValue() << endl; 
     }
 
 }
