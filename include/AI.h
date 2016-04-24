@@ -32,7 +32,7 @@ class AI
         Move getOutOfCheck(int player); // gets AI out of check
         void dispMoveValue(Move mv, int player); // displays value of a move
 
-        double findGains(int player); // calculates value of a move - 0 is AI, 1 is player
+        double findGains(); // calculates value of a move - 0 is AI, 1 is player
 
         // findGains functions
         double getCaptureValue(Move move, int player);

@@ -527,18 +527,9 @@ Move AI::playMove()
     //dispValidMoves();
     //cout << "calling randomMove()" << endl;
     //return moves[randomMove()];
-    if(primaryPlayer == 0)
-    {
-        findGains(0);
-    //cout << "found moves of 0" << endl;
-        findGains(1);
-    }
-    else
-    {
-        findGains(1);
-        findGains(0);
-    }
     //cout << "found moves of 1" << endl;
+    
+    findGains();
 
     Move bestMove = moves[0];
     for(int i=1; i<moves.size(); i++)
@@ -624,111 +615,90 @@ Move AI::playMove()
     return bestMove;
 }
 
-double AI::findGains(int player)
+double AI::findGains()
 {
-    if(player == primaryPlayer)
+    cout << "turns Ahead: " << turnsAhead << endl;
+    // find AI moves and assign values
+    findMoves(primaryPlayer);
+    for(int i=0; i<moves.size(); i++)
     {
-        findMoves(primaryPlayer);
+        moves[i].setMoveValue(
+                CAPTUREVALUE_0 * getCaptureValue(moves[i], primaryPlayer) + 
+                MOVEABLEVALUE_0 * findMoveableSpaces(moves[i], primaryPlayer) + 
+                ATTACKINGVALUE_0 * getAttackingValue(moves[i], primaryPlayer) - 
+                ATTACKERSVALUE_0 * numAttackers(moves[i], primaryPlayer) + 
+                DEFENDINGVALUE_0 * getDefendingValue(moves[i], primaryPlayer) + 
+                DEVELOPMENTVALUE_0 * getDevelopmentValue(moves[i], primaryPlayer) +
+                PRESSUREVALUE_0 * getPressureValue(moves[i], primaryPlayer));
+    }   
 
-        for(int i=0; i<moves.size(); i++)
+    for(int i=0; i<moves.size(); i++) // each AI move
+    {
+        //if(turnsAhead == 1)
+        //{
+        //cout << "\nAI move" << endl;
+        //dispMoveValue(moves[i], primaryPlayer);
+        //}
+
+        Manager mnger;
+        mnger.setBoard(Brd);
+        mnger.move(moves[i].startRow, moves[i].startCol, moves[i].endRow, moves[i].endCol); // make the move
+        temp = mnger.board;
+
+        // find and assign human move values
+        humanMoves.clear();
+        findMoves(otherPlayer);
+
+        for(int j=0; j<humanMoves.size(); j++)
         {
-            moves[i].setMoveValue(
-            CAPTUREVALUE_0 * getCaptureValue(moves[i], player) + 
-            MOVEABLEVALUE_0 * findMoveableSpaces(moves[i], player) + 
-            ATTACKINGVALUE_0 * getAttackingValue(moves[i], player) - 
-            ATTACKERSVALUE_0 * numAttackers(moves[i], player) + 
-            DEFENDINGVALUE_0 * getDefendingValue(moves[i], player) + 
-            DEVELOPMENTVALUE_0 * getDevelopmentValue(moves[i], player) +
-            PRESSUREVALUE_0 * getPressureValue(moves[i], player));
-
-            //if(turnsAhead == 1)
-                //cout << "AI move value: " << moves[i].value << endl; 
+            humanMoves[j].setMoveValue(
+                    CAPTUREVALUE_1 * getCaptureValue(humanMoves[j], otherPlayer) + 
+                    MOVEABLEVALUE_1 * findMoveableSpaces(humanMoves[j], otherPlayer) + 
+                    ATTACKINGVALUE_1 * getAttackingValue(humanMoves[j], otherPlayer) - 
+                    ATTACKERSVALUE_1 * numAttackers(humanMoves[j], otherPlayer) + 
+                    DEFENDINGVALUE_1 * getDefendingValue(humanMoves[j], otherPlayer) + 
+                    DEVELOPMENTVALUE_1 * getDevelopmentValue(humanMoves[j], otherPlayer) +
+                    PRESSUREVALUE_1 * getPressureValue(humanMoves[j], otherPlayer));
         }   
 
-    }
+        Board forwardBoard;
 
-    else
-    {
-        //cout << "inside else" << endl;
-        for(int i=0; i<moves.size(); i++) // each AI move
+        Move maxValue = humanMoves[0];
+        for(int j=1; j<humanMoves.size(); j++)
         {
-            //if(turnsAhead == 1)
-            //{
-                cout << "AI move" << endl;
-                dispMoveValue(moves[i], primaryPlayer);
-            //}
-
-            Manager mnger;
-            mnger.setBoard(Brd);
-            mnger.move(moves[i].startRow, moves[i].startCol, moves[i].endRow, moves[i].endCol); // make the move
-            temp = mnger.board;
-            
-            // find and assign human move values
-            humanMoves.clear();
-            if(primaryPlayer == 0)
-                findMoves(1);
-            else
-                findMoves(0);
-
-            for(int j=0; j<humanMoves.size(); j++)
-            {
-                humanMoves[j].setMoveValue(
-                CAPTUREVALUE_1 * getCaptureValue(humanMoves[j], player) + 
-                MOVEABLEVALUE_1 * findMoveableSpaces(humanMoves[j], player) + 
-                ATTACKINGVALUE_1 * getAttackingValue(humanMoves[j], player) - 
-                ATTACKERSVALUE_1 * numAttackers(humanMoves[j], player) + 
-                DEFENDINGVALUE_1 * getDefendingValue(humanMoves[j], player) + 
-                DEVELOPMENTVALUE_1 * getDevelopmentValue(humanMoves[j], player) +
-                PRESSUREVALUE_1 * getPressureValue(humanMoves[j], player));
-             
-            }   
-
-            Board forwardBoard;
-
-            Move maxValue = humanMoves[0];
-            for(int j=1; j<humanMoves.size(); j++)
-            {
-                if(humanMoves[j].getMoveValue() > maxValue.getMoveValue())
-                    maxValue = humanMoves[j];
-            }
-
-            //if(turnsAhead == 1)
-            //{
-                cout << "Max human move" << endl;
-                dispMoveValue(maxValue, otherPlayer);
-            //}
-
-            if (turnsAhead < lookAhead)
-            {
-                cout << "inside recursive block" << endl;
-            	//for (int j = 0; j < humanMoves.size(); j++) // for each human move, make the move
-            	//{
-            		Manager forwardManager;
-            		forwardManager.setBoard(temp);
-            		forwardManager.move(maxValue.startRow, maxValue.startCol, maxValue.endRow, maxValue.endCol);
-            		forwardBoard = forwardManager.board;
-            		
-            		AI forwardAI(forwardBoard, ++turnsAhead, primaryPlayer, lookAhead, turn); // call another AI
-            		
-            		//cout << "looking " << turnsAhead << " ahead" << endl;
-            		//cout << "currently at AI move #" << i << endl;
-            		//cout << "currently at human move #" << j << endl;
-            		
-            		Move forwardMove;
-            		forwardMove = forwardAI.overallAlgorithm(player); // get move from AI
-            		
-            		humanMoves[i].setMoveValue(humanMoves[i].getMoveValue() - double(1/double(turnsAhead))*forwardMove.getMoveValue());
-
-            	//}
-            }
-
-            cout << "original value: " << moves[i].getMoveValue() << " response: " << maxValue.getMoveValue();
-            //cout << "max human move value: " << maxValue.getMoveValue() << endl;
-            //cout << "start: " << maxValue.startRow << maxValue.startCol << endl;
-            //cout << "end: " << maxValue.endRow << maxValue.endCol << endl;
-            moves[i].setMoveValue(moves[i].getMoveValue() - maxValue.getMoveValue());
-             cout << " final value: " << moves[i].getMoveValue() << endl; 
+            if(humanMoves[j].getMoveValue() > maxValue.getMoveValue())
+                maxValue = humanMoves[j];
         }
+
+        //if(turnsAhead == 1)
+        //{
+        //cout << "Max human move" << endl;
+        //dispMoveValue(maxValue, otherPlayer);
+        //}
+
+        if (turnsAhead < lookAhead)
+        {
+            cout << "inside recursive block" << endl;
+            //for (int j = 0; j < humanMoves.size(); j++) // for each human move, make the move
+            //{
+            Manager forwardManager;
+            forwardManager.setBoard(temp);
+            forwardManager.move(maxValue.startRow, maxValue.startCol, maxValue.endRow, maxValue.endCol);
+            forwardBoard = forwardManager.board;
+
+            AI forwardAI(forwardBoard, ++turnsAhead, primaryPlayer, lookAhead, turn); // call another AI
+
+            Move forwardMove;
+            forwardMove = forwardAI.overallAlgorithm(primaryPlayer); // get move from AI
+
+            humanMoves[i].setMoveValue(humanMoves[i].getMoveValue() - double(1/double(turnsAhead))*forwardMove.getMoveValue());
+
+            //}
+        }
+
+        cout << "original value: " << moves[i].getMoveValue() << " response: " << maxValue.getMoveValue();
+        moves[i].setMoveValue(moves[i].getMoveValue() - maxValue.getMoveValue());
+        cout << " final value: " << moves[i].getMoveValue() << endl; 
     }
 
 }
@@ -755,7 +725,7 @@ void AI::updateKingValue(int player)
 
 void AI::dispMoveValue(Move mv, int player)
 {
-    cout << "\nstarting row/col: " << mv.startRow << " " << mv.startCol << " ending row/col: " << mv.endRow << " " << mv.endCol << endl;
+    cout << "starting row/col: " << mv.startRow << " " << mv.startCol << " ending row/col: " << mv.endRow << " " << mv.endCol << endl;
     if(player==0)
     {
         cout << "capture value of move: " << CAPTUREVALUE_0 * getCaptureValue(mv, player) << endl;
