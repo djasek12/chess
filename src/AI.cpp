@@ -128,8 +128,13 @@ Move AI::getOutOfCheck(int player)
     cout << "escape moves: " << escapeMoves.size() << endl;
 
     // possibly change this for a checkmate function?
-    //if(escapeMoves.size() == 0)
-        //return
+    if(escapeMoves.size() == 0)
+    {
+        Manager mnger;
+        mnger.setBoard(Brd);
+        dummyMove.startRow = -1;
+        return dummyMove;
+    }
 
     // set escape moves values
     for(int i=0; i<escapeMoves.size(); i++)
@@ -445,15 +450,17 @@ int AI::getPressureValue(Move move, int player)
                     for (int col = 0; col < 8; col++)
                     {
                         if (player == 0)
+                        {
                             if (mnger.checkMove(i, j, row, col, 1) == 0)
                             {
                                 kingMovesOld++;
                             }
-                            else
-                                if (mnger.checkMove(i, j, row, col, 0) == 0)
-                                {
-                                    kingMovesOld++;
-                                }
+                        }
+                        else
+                            if (mnger.checkMove(i, j, row, col, 0) == 0)
+                            {
+                                kingMovesOld++;
+                            }
                     }
                 }
             }
@@ -474,15 +481,17 @@ int AI::getPressureValue(Move move, int player)
                     for (int col = 0; col < 8; col++)
                     {
                         if (player == 0)
+                        {
                             if (mnger.checkMove(i, j, row, col, 1) == 0)
                             {
                                 kingMovesNew++;
                             }
-                            else
-                                if (mnger.checkMove(i, j, row, col, 0) == 0)
-                                {
-                                    kingMovesNew++;
-                                }
+                        }
+                        else
+                            if (mnger.checkMove(i, j, row, col, 0) == 0)
+                            {
+                                kingMovesNew++;
+                            }
                     }
                 }
             }
@@ -540,10 +549,10 @@ double AI::findGains()
 
     for(int i=0; i<moves.size(); i++) // loop through each AI move
     {
-        //cout << "second turns Ahead: " << turnsAhead << endl;
+        cout << "second turns Ahead: " << turnsAhead << endl;
 
         cout << "\nAI move" << endl;
-        dispMoveValue(moves[i], primaryPlayer);
+        //dispMoveValue(moves[i], primaryPlayer);
 
         // set board and make the move
         Manager mnger;
@@ -576,8 +585,8 @@ double AI::findGains()
                 maxValue = humanMoves[j];
         }
 
-        cout << "Max human move" << endl;
-        dispMoveValue(maxValue, otherPlayer);
+        //cout << "Max human move" << endl;
+        //dispMoveValue(maxValue, otherPlayer);
 
         // recursive bit
         if (turnsAhead < lookAhead)

@@ -379,7 +379,7 @@ void Manager::play()
             {
                 //cout << "AI about to be constructed" << endl;
 
-                AI AI_1(board, 1, 0, 4, turn);
+                AI AI_1(board, 1, 0, 2, turn);
                 //cout << "AI has been constructed, play move function being called" << endl;
                 //AI_1.findMoves(board);
                 //AI_1.dispValidMoves();
@@ -392,15 +392,24 @@ void Manager::play()
                 break;
             }
         }
-        if(currentPlayer == 1){
+        if(currentPlayer == 1)
+        {
             move( game.getFromX(), game.getFromY(), game.getToX(), game.getToY() );
             string encoded = translateMove( game.getFromX(), game.getFromY(), game.getToX(), game.getToY() );
             saveLog( filename, encoded);
-        }else{
+        }
+        else if(AI_move.startRow != -1) // not in checkmate
+        {
             move(AI_move.startRow, AI_move.startCol, AI_move.endRow, AI_move.endCol);
             string encoded = translateMove(AI_move.startRow, AI_move.startCol, AI_move.endRow, AI_move.endCol);
             saveLog( filename, encoded);
-        }   
+        } 
+        else
+        {
+            cout << "Checkmate!" << endl;
+            break;
+        }
+              
     }
 
 }
