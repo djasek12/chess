@@ -92,3 +92,5 @@
     Danny - 0.5 working on AI
 4/23
     Danny and Billy - 2.75 hours fixing inCheck functions, working on AI endgame
+4/25
+    Danny - 1.5 hours cleaning up code in AI

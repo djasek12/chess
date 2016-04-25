@@ -15,18 +15,19 @@ using namespace std;
 // constructor that takes in a board
 AI::AI(Board B, int turnFuture, int pmrPlyr, int look, int turns)
 {
+    // set data members
     Brd = B;
-
     turnsAhead = turnFuture;
     lookAhead = look;
-
     turn = turns;
 
+    // change king value based on turns
     if(pmrPlyr == 0)
         updateKingValue(1);
     else
         updateKingValue(0);
 
+    // constant weights for move calculation functions
     CAPTUREVALUE_0 = 2.6;
     ATTACKINGVALUE_0 = .5;
     DEFENDINGVALUE_0 = 0.1;
@@ -49,7 +50,7 @@ AI::AI(Board B, int turnFuture, int pmrPlyr, int look, int turns)
     ATTACKERSVALUE_1 = 1.2;
     ABANDONVALUE_1 = 0.0;
 
-
+    // sets primaryPlayer and otherPlayer variables
     primaryPlayer = pmrPlyr;
     if(primaryPlayer==0)
         otherPlayer = 1;
@@ -57,53 +58,57 @@ AI::AI(Board B, int turnFuture, int pmrPlyr, int look, int turns)
         otherPlayer = 0;
 }
 
+// overall algorithm that returns an AI move
 Move AI::overallAlgorithm(int player)
 {
-
-    //cout << "player " << player << endl;
-
     // instantiate a manager and pass it the correct board
     Manager mnger;
     mnger.setBoard(Brd);
 
+    // if the king is in check, return a move that gets out of it
     if(mnger.kingInCheck(player))
     {
         cout << "KING IN CHECK" << endl;
         return getOutOfCheck(player);
     }
-    else
+    else // play a regular move
     {
-        //cout << "play move" << endl;
         return playMove();
     }
 }
 
+// gets out of check
 Move AI::getOutOfCheck(int player)
 {  
     cout << "inside getOutofCheck" << endl;
+
     vector<Move> escapeMoves;
     Move dummyMove;
+
     cout << "player: " << player << endl;
+
     findMoves(player);
+
     cout << "moves size: " << moves.size() << endl;
 
+    // if the primary player is in check, update the moves array with possible moves
     if(player == primaryPlayer)
     {
-
         for(int i=0; i<moves.size(); i++)
         {
             Manager mnger;
             mnger.setBoard(Brd);
 
+            // make a move
             mnger.move(moves[i].startRow, moves[i].startCol, moves[i].endRow, moves[i].endCol); 
-            if(!mnger.kingInCheck(player))
+            if(!mnger.kingInCheck(player)) // if the player is no longer in check, add it to the escape moves vector
             {
                 escapeMoves.push_back(moves[i]);
                 cout << moves[i].startRow << moves[i].startCol << moves[i].endRow << moves[i].endCol << endl;
             }
         }
     }
-    else
+    else // otherwise, update the humanMoves array
     {
         for(int i=0; i<humanMoves.size(); i++)
         {
@@ -122,9 +127,11 @@ Move AI::getOutOfCheck(int player)
 
     cout << "escape moves: " << escapeMoves.size() << endl;
 
+    // possibly change this for a checkmate function?
     //if(escapeMoves.size() == 0)
         //return
 
+    // set escape moves values
     for(int i=0; i<escapeMoves.size(); i++)
     {
         escapeMoves[i].setMoveValue(
@@ -133,17 +140,9 @@ Move AI::getOutOfCheck(int player)
         ATTACKINGVALUE_0 *  getAttackingValue(escapeMoves[i], player) - 
         ATTACKERSVALUE_0 * numAttackers(escapeMoves[i], player) + 
         DEFENDINGVALUE_0 * getDefendingValue(escapeMoves[i], player));
-
-        cout << "\nstarting row/col: " << escapeMoves[i].startRow << " " << escapeMoves[i].startCol << " ending row/col: " << escapeMoves[i].endRow << " " << escapeMoves[i].endCol << endl;
-        cout << "capture value of move: " << getCaptureValue(escapeMoves[i], player) << endl;
-        cout << "moveable spaces: " << findMoveableSpaces(escapeMoves[i], player) << endl;
-        cout << "attack value: " << getAttackingValue(escapeMoves[i], player) << endl;
-        cout << "numAttackers: " << numAttackers(escapeMoves[i], player) << endl;
-        cout << "defending value: " << getDefendingValue(escapeMoves[i], player) << endl;
-
-        cout << "overall value: " << escapeMoves[i].getMoveValue() << endl << endl;
     }
 
+    // find best escape move
     Move bestMove = escapeMoves[0];
     for(int i=1; i<escapeMoves.size(); i++)
     {
@@ -151,9 +150,9 @@ Move AI::getOutOfCheck(int player)
             bestMove = escapeMoves[i];
     }
 
+    // play this move
     return bestMove;
 }
-
 
 void AI::findMoves(int player)
 {
@@ -550,12 +549,10 @@ double AI::findGains()
 
     for(int i=0; i<moves.size(); i++) // each AI move
     {
-        cout << "second turns Ahead: " << turnsAhead << endl;
-        //if(turnsAhead == 1)
-        //{
-        //cout << "\nAI move" << endl;
-        //dispMoveValue(moves[i], primaryPlayer);
-        //}
+        //cout << "second turns Ahead: " << turnsAhead << endl;
+
+        cout << "\nAI move" << endl;
+        dispMoveValue(moves[i], primaryPlayer);
 
         Manager mnger;
         mnger.setBoard(Brd);
@@ -587,17 +584,12 @@ double AI::findGains()
                 maxValue = humanMoves[j];
         }
 
-        //if(turnsAhead == 1)
-        //{
-        //cout << "Max human move" << endl;
-        //dispMoveValue(maxValue, otherPlayer);
-        //}
+        cout << "Max human move" << endl;
+        dispMoveValue(maxValue, otherPlayer);
 
         if (turnsAhead < lookAhead)
         {
             cout << "inside recursive block" << endl;
-            //for (int j = 0; j < humanMoves.size(); j++) // for each human move, make the move
-            //{
             Manager forwardManager;
             forwardManager.setBoard(temp);
             forwardManager.move(maxValue.startRow, maxValue.startCol, maxValue.endRow, maxValue.endCol);
@@ -609,8 +601,6 @@ double AI::findGains()
             forwardMove = forwardAI.overallAlgorithm(primaryPlayer); // get move from AI
 
             humanMoves[i].setMoveValue(humanMoves[i].getMoveValue() - double(1/double(turnsAhead))*forwardMove.getMoveValue());
-
-            //}
         }
 
         //cout << "original value: " << moves[i].getMoveValue() << " response: " << maxValue.getMoveValue();
@@ -643,7 +633,7 @@ void AI::updateKingValue(int player)
 void AI::dispMoveValue(Move mv, int player)
 {
     cout << "starting row/col: " << mv.startRow << " " << mv.startCol << " ending row/col: " << mv.endRow << " " << mv.endCol << endl;
-    if(player==0)
+    /*if(player==0)
     {
         cout << "capture value of move: " << CAPTUREVALUE_0 * getCaptureValue(mv, player) << endl;
         cout << "moveable spaces: " << MOVEABLEVALUE_0 * findMoveableSpaces(mv, player) << endl;
@@ -662,5 +652,5 @@ void AI::dispMoveValue(Move mv, int player)
         cout << "pressure value: " << PRESSUREVALUE_1 * getPressureValue(mv, player);
     }
 
-    cout << "\noverall value: " << mv.getMoveValue() << endl << endl;
+    cout << "\noverall value: " << mv.getMoveValue() << endl << endl;*/
 }
