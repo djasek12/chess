@@ -154,6 +154,7 @@ Move AI::getOutOfCheck(int player)
     return bestMove;
 }
 
+//Given a player, finds all possible moves for that player, and adds them to a moves vector
 void AI::findMoves(int player)
 {
     // loop through each space in board vector
@@ -161,76 +162,65 @@ void AI::findMoves(int player)
     {
         for(int col=0; col<8; col++)
         {
-        	if (player == primaryPlayer)
-        	{
-            	if(Brd.chessBoard[col][row].getChar() != 32) // piece isn't null 
-            	{
-                	if(Brd.chessBoard[col][row].getPlayer() == player) // is on correct team
-                	{
-                    	for(int r=0; r<8; r++) // loop through all of spaces on board again to check for valid moves
-                    	{
-                        	for(int c=0; c<8; c++)
-                        	{
-                            	Manager mnger;
-                            	mnger.setBoard(Brd); // need to pass AI board to Manager
-                            	if(mnger.checkMove(row, col, r, c, player) == 0)
-                            	{
-                                		Move testMove(Brd.chessBoard[col][row], row, col, r, c);
-                                   		moves.push_back(testMove);
-                            	}
-                        	}
-                    	}
-                	}
-           		}
-           	}
-           	else
-           	{
-           		if(temp.chessBoard[col][row].getChar() != 32)
-           		{
-           			if (temp.chessBoard[col][row].getPlayer() == player)
-           			{
-           				for (int r = 0; r < 8; r++)
-           				{
-           					for (int c = 0; c < 8; c++)
-           					{
-           						Manager mnger;
-           						mnger.setBoard(temp);
-           						if (mnger.checkMove(row, col, r, c, player) == 0)
-           						{
-           							Move testMove(temp.chessBoard[col][row], row, col, r, c);
-           							humanMoves.push_back(testMove);
-           						}
-           					}
-           				}
-           			}
-           		}
-           	}
+            if (player == primaryPlayer) // will add to moves
+            {
+                if(Brd.chessBoard[col][row].getChar() != 32) // piece isn't null 
+                {
+                    if(Brd.chessBoard[col][row].getPlayer() == player) // is on correct team
+                    {
+                        for(int r=0; r<8; r++) // loop through all of spaces on board again to check for valid moves
+                        {
+                            for(int c=0; c<8; c++)
+                            {
+                                Manager mnger;
+                                mnger.setBoard(Brd); // need to pass AI board to Manager
+                                if(mnger.checkMove(row, col, r, c, player) == 0) // is valid move
+                                {
+                                    Move testMove(Brd.chessBoard[col][row], row, col, r, c); // make a move and add it to the vector
+                                    moves.push_back(testMove);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            else // add to humanMoves
+            {
+                if(temp.chessBoard[col][row].getChar() != 32)
+                {
+                    if (temp.chessBoard[col][row].getPlayer() == player)
+                    {
+                        for (int r = 0; r < 8; r++)
+                        {
+                            for (int c = 0; c < 8; c++)
+                            {
+                                Manager mnger;
+                                mnger.setBoard(temp);
+                                if (mnger.checkMove(row, col, r, c, player) == 0)
+                                {
+                                    Move testMove(temp.chessBoard[col][row], row, col, r, c);
+                                    humanMoves.push_back(testMove);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }
 
-void AI::dispValidMoves()
-{
-    cout << "number of moves: " << moves.size() << endl;
-    /*for(int i=0; i<moves.size(); i++)
-    {
-        moves[i].Display();
-        cout << "capture value: " << getCaptureValue(moves[i]) << endl;
-        cout << "moveable spaces: " << findMoveableSpaces(moves[i]) << endl;
-
-    }*/
-}
 
 //look at move destination on board and find value of piece there
 double AI::getCaptureValue(Move move, int player)
 {
-	Piece capturedPiece;
-	
+    Piece capturedPiece;
+
     if(player == primaryPlayer)
-    	capturedPiece = Brd.chessBoard[move.endCol][move.endRow];
+        capturedPiece = Brd.chessBoard[move.endCol][move.endRow]; // primaryPlayer's chess board
     else
-    	capturedPiece = temp.chessBoard[move.endCol][move.endRow];
-    	
+        capturedPiece = temp.chessBoard[move.endCol][move.endRow]; // otherPlayer's chess board
+
     if(capturedPiece.getChar() != 32) // not null
     {
         return capturedPiece.getValue();
@@ -239,37 +229,38 @@ double AI::getCaptureValue(Move move, int player)
         return 0; 
 }
 
+// awards points from moving pieces (especially pawns) out of first 2 rows
 int AI::getDevelopmentValue(Move move, int player) //needs to be fixed for human
 {
     int develop = 0;
 
     Manager mnger;  // would like to be able to get rid of this
-    if (player == primaryPlayer)
-    	mnger.setBoard(Brd);
+    if (player == primaryPlayer) // sends apprpriate board to mamanger
+        mnger.setBoard(Brd);
     else
-    	mnger.setBoard(temp);
-	
-	if (primaryPlayer == 0) //?
-	{
-    	if(move.startRow < 2 & move.endRow >= 2)
-    		if (move.piece.getChar() == 'p')
-        		develop = 1.5;
-        	else
-        		develop = 1;
+        mnger.setBoard(temp);
+
+    if (primaryPlayer == 0) //?
+    {
+        if(move.startRow < 2 & move.endRow >= 2) // red player
+            if (move.piece.getChar() == 'p')
+                develop = 1.5;
+            else
+                develop = 1;
     }
     else
     {
-    	if (move.startRow > 5 & move.endRow <= 5)
-    		if (move.piece.getChar() == 'P')
-    			develop = 1.5;
-    		else 
-    			develop = 1;
+        if (move.startRow > 5 & move.endRow <= 5) // blue player
+            if (move.piece.getChar() == 'P')
+                develop = 1.5;
+            else 
+                develop = 1;
     }
 
     return develop;
 }
 
-
+// awards points for defending one of your own pieces or having pieces defending you
 double AI::getDefendingValue(Move move, int player) //needs to be fixed for human
 {
     double youDefend = 0; // sum of values of pieces you are defending
@@ -288,11 +279,11 @@ double AI::getDefendingValue(Move move, int player) //needs to be fixed for huma
     {
         for(int c = 0; c < 8; c++)
         {
-            if(mnger.board.chessBoard[c][r].getPlayer() == player & mnger.board.chessBoard[c][r].getValue() != 1000)
+            if(mnger.board.chessBoard[c][r].getPlayer() == player & tolower(mnger.board.chessBoard[c][r].getChar()) != 'k') // your own piece, but not the king (no point in defending the king)
             {
-                if(r != move.endRow | c != move.endCol)
+                if(r != move.endRow | c != move.endCol) // don't defend yourself
                 {
-                    if(mnger.checkMove2(move.endRow, move.endCol, r, c, player) == 2)
+                    if(mnger.checkMove2(move.endRow, move.endCol, r, c, player) == 2) // you can move there
                     {
                         youDefend += mnger.board.chessBoard[c][r].getValue(); 
                     }
@@ -303,6 +294,7 @@ double AI::getDefendingValue(Move move, int player) //needs to be fixed for huma
 
     //cout << "you defend: " << youDefend <<endl;
 
+    // gets pieces that can defend you
     for(int r = 0; r < 8; r++)
     {
         for(int c = 0; c < 8; c++)
@@ -325,6 +317,7 @@ double AI::getDefendingValue(Move move, int player) //needs to be fixed for huma
     return youDefend + defendYou; 
 }
 
+// returns difference in number of moveable spaces and number of moves you have for this turn
 int AI::findMoveableSpaces(Move move, int player) //needs to be fixed for human
 {
     int moveableSpaces = 0;
@@ -336,21 +329,22 @@ int AI::findMoveableSpaces(Move move, int player) //needs to be fixed for human
 
     mnger.move(move.startRow, move.startCol, move.endRow, move.endCol); // need to execute move on board so manager can parse it
 
-
+    // each space on board
     for(int row=0; row<8; row++)
     {
         for(int col=0; col<8; col++)
         {
 
-            if(mnger.board.chessBoard[col][row].getPlayer() == player)
+            if(mnger.board.chessBoard[col][row].getPlayer() == player) // is your pieces
             {
+                // check all other spaces for possible moves
                 for(int r=0; r<8; r++)
                 {
                     for(int c=0; c<8; c++)
                     {
                         if(mnger.checkMove(row, col, r, c, player) == 0)
                         {
-                            moveableSpaces++;
+                            moveableSpaces++; // increment counter
                         }
 
                     }
@@ -364,6 +358,7 @@ int AI::findMoveableSpaces(Move move, int player) //needs to be fixed for human
 
 }
 
+// sums values of pieces you can attack after a certain move
 double AI::getAttackingValue(Move move, int player) //needs to be fixed for human
 {
     int attackValue = 0;
@@ -381,13 +376,12 @@ double AI::getAttackingValue(Move move, int player) //needs to be fixed for huma
         {
             if(move.startRow != r | move.startCol != c) // can't go back and capture itself
             {
-                if(mnger.checkMove(move.endRow, move.endCol, r, c, player) == 0)
+                if(mnger.checkMove(move.endRow, move.endCol, r, c, player) == 0) // valid mvoe
                 {
                     int value = mnger.board.chessBoard[c][r].getValue();
                     if(value > 0)
                     {
                         attackValue += value;
-                        //cout << "Possible attacking move: row, column, value: "  << r << c << value << endl;
                     }
                 }
             }
@@ -397,52 +391,43 @@ double AI::getAttackingValue(Move move, int player) //needs to be fixed for huma
     return attackValue;
 }
 
+// sums number of pieces that can attack you after a move multiplied by your piece value/2
 double AI::numAttackers(Move move, int player)
 {
     double numAttackers = 0;
     Manager mnger;  // would like to be able to get rid of this
     if (player == primaryPlayer)
-    	mnger.setBoard(Brd);
+        mnger.setBoard(Brd);
     else
-    	mnger.setBoard(temp);
-    	
+        mnger.setBoard(temp);
+
     mnger.move(move.startRow, move.startCol, move.endRow, move.endCol); // need to execute move on board so manager can parse it
-   
+
     for(int r = 0; r < 8; r++)
     {
         for(int c = 0; c < 8; c++)
         {
-        	if (player == 0)
-        	{
-            	if(mnger.board.chessBoard[c][r].getPlayer() == 1)
-            	{
-                	if(mnger.checkMove(r, c, move.endRow, move.endCol, 1) == 0)
-                	{
-                    	numAttackers++;
-                	}
-            	}
-            }
-            else
+            if(mnger.board.chessBoard[c][r].getPlayer() == otherPlayer)
             {
-            	if (mnger.board.chessBoard[c][r].getPlayer() == 0)
-            	{
-            		if (mnger.checkMove(r, c, move.endRow, move.endCol, 0) == 0)
-            		{
-            			numAttackers++;
-            		}
-            	}
+                if(mnger.checkMove(r, c, move.endRow, move.endCol, otherPlayer) == 0)
+                {
+                    numAttackers++;
+                }
             }
+
         }
     }
     return numAttackers * double(move.getPiece().getValue())/2;
 }
 
+// returns difference in number of kings moves it can make after the move and before the move - helps to end game
 int AI::getPressureValue(Move move, int player)
 {
     int kingMovesOld = 0;
     int kingMovesNew = 0;
     Manager mnger;
 
+    // set board
     if (player == primaryPlayer)
         mnger.setBoard(Brd);
     else
@@ -453,7 +438,7 @@ int AI::getPressureValue(Move move, int player)
     {
         for (int j = 0; j < 8; j++)
         {
-            if ((mnger.board.chessBoard[i][j].getChar() == 'K' && player == 0) || (mnger.board.chessBoard[i][j].getChar() == 'k' && player == 1))
+            if ((mnger.board.chessBoard[i][j].getChar() == 'K' && player == 0) || (mnger.board.chessBoard[i][j].getChar() == 'k' && player == 1)) // king
             {
                 for (int row = 0; row < 8; row++)
                 {
@@ -475,8 +460,9 @@ int AI::getPressureValue(Move move, int player)
         }
     }
 
-    mnger.move(move.startRow, move.startCol, move.endRow, move.endCol);
+    mnger.move(move.startRow, move.startCol, move.endRow, move.endCol); // make the move
 
+    // find new number of moves
     for (int i = 0; i < 8; i++)
     {
         for (int j = 0; j < 8; j++)
@@ -506,6 +492,7 @@ int AI::getPressureValue(Move move, int player)
     return (kingMovesOld - kingMovesNew);
 }
 
+// simple AI that makes a random move
 int AI::randomMove()
 {
     srand(time(NULL));
@@ -513,10 +500,12 @@ int AI::randomMove()
     return moveIndex;
 }
 
+// returns a move
 Move AI::playMove()
 {     
-    findGains();
+    findGains(); // finds moves and their values
 
+    // finds best move
     Move bestMove = moves[0];
     for(int i=1; i<moves.size(); i++)
     {
@@ -530,9 +519,11 @@ Move AI::playMove()
     return bestMove;
 }
 
+// recursive function that finds and assigns move values
 double AI::findGains()
 {
     cout << "first turns Ahead: " << turnsAhead << endl;
+
     // find AI moves and assign values
     findMoves(primaryPlayer);
     for(int i=0; i<moves.size(); i++)
@@ -547,13 +538,14 @@ double AI::findGains()
                 PRESSUREVALUE_0 * getPressureValue(moves[i], primaryPlayer));
     }   
 
-    for(int i=0; i<moves.size(); i++) // each AI move
+    for(int i=0; i<moves.size(); i++) // loop through each AI move
     {
         //cout << "second turns Ahead: " << turnsAhead << endl;
 
         cout << "\nAI move" << endl;
         dispMoveValue(moves[i], primaryPlayer);
 
+        // set board and make the move
         Manager mnger;
         mnger.setBoard(Brd);
         mnger.move(moves[i].startRow, moves[i].startCol, moves[i].endRow, moves[i].endCol); // make the move
@@ -562,7 +554,6 @@ double AI::findGains()
         // find and assign human move values
         humanMoves.clear();
         findMoves(otherPlayer);
-
         for(int j=0; j<humanMoves.size(); j++)
         {
             humanMoves[j].setMoveValue(
@@ -577,6 +568,7 @@ double AI::findGains()
 
         Board forwardBoard;
 
+        // find best human move
         Move maxValue = humanMoves[0];
         for(int j=1; j<humanMoves.size(); j++)
         {
@@ -587,9 +579,12 @@ double AI::findGains()
         cout << "Max human move" << endl;
         dispMoveValue(maxValue, otherPlayer);
 
+        // recursive bit
         if (turnsAhead < lookAhead)
         {
             cout << "inside recursive block" << endl;
+
+            // makes a new manager, and plays this AI move
             Manager forwardManager;
             forwardManager.setBoard(temp);
             forwardManager.move(maxValue.startRow, maxValue.startCol, maxValue.endRow, maxValue.endCol);
@@ -610,12 +605,14 @@ double AI::findGains()
 
 }
 
+// increase value of king as game progresses
 void AI::updateKingValue(int player)
 {
     double val = double(turn) * .5;
 
     cout << "turn: " << turn << endl;
 
+    // find king and update its value
     for(int r = 0; r < 8; r++)
     {
         for(int c = 0; c < 8; c++)
@@ -630,10 +627,11 @@ void AI::updateKingValue(int player)
     }
 }
 
+// displays the value of a given move given a certain player
 void AI::dispMoveValue(Move mv, int player)
 {
     cout << "starting row/col: " << mv.startRow << " " << mv.startCol << " ending row/col: " << mv.endRow << " " << mv.endCol << endl;
-    /*if(player==0)
+    if(player==0)
     {
         cout << "capture value of move: " << CAPTUREVALUE_0 * getCaptureValue(mv, player) << endl;
         cout << "moveable spaces: " << MOVEABLEVALUE_0 * findMoveableSpaces(mv, player) << endl;
@@ -652,5 +650,5 @@ void AI::dispMoveValue(Move mv, int player)
         cout << "pressure value: " << PRESSUREVALUE_1 * getPressureValue(mv, player);
     }
 
-    cout << "\noverall value: " << mv.getMoveValue() << endl << endl;*/
+    cout << "\noverall value: " << mv.getMoveValue() << endl << endl;
 }
