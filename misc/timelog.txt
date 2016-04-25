@@ -78,6 +78,7 @@
     Danny - 0.5 working on AI in lab
 4/13
 	Billy - 2.15 hours refining AI
+    Alex - 1 hour working on Save/load savestates
 4/1
     Danny - 1.6 hours fixing up code, starting on recursion
 4/15
