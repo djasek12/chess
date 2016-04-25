@@ -32,10 +32,10 @@ AI::AI(Board B, int turnFuture, int pmrPlyr, int look, int turns)
     ATTACKINGVALUE_0 = .5;
     DEFENDINGVALUE_0 = 0.1;
     MOVEABLEVALUE_0 = 0.1;
-    DEVELOPMENTVALUE_0 = 1.2;
+    DEVELOPMENTVALUE_0 = 1.7;
     PRESSUREVALUE_0 = (0.07 * turn);
 
-    ATTACKERSVALUE_0 = 2;
+    ATTACKERSVALUE_0 = 3;
     ABANDONVALUE_0 = 0.0;
 
     ////////////////////////
@@ -47,7 +47,7 @@ AI::AI(Board B, int turnFuture, int pmrPlyr, int look, int turns)
     DEVELOPMENTVALUE_1 = 1;
     PRESSUREVALUE_1 = 0.1;
 
-    ATTACKERSVALUE_1 = 1.2;
+    ATTACKERSVALUE_1 = 3;
     ABANDONVALUE_1 = 0.0;
 
     // sets primaryPlayer and otherPlayer variables
@@ -412,16 +412,29 @@ double AI::numAttackers(Move move, int player)
     {
         for(int c = 0; c < 8; c++)
         {
-            if(mnger.board.chessBoard[c][r].getPlayer() == otherPlayer)
+            if(player == 0)
             {
-                if(mnger.checkMove(r, c, move.endRow, move.endCol, otherPlayer) == 0)
+                if(mnger.board.chessBoard[c][r].getPlayer() == 1)
                 {
-                    numAttackers++;
+                    if(mnger.checkMove(r, c, move.endRow, move.endCol, 1) == 0)
+                    {
+                        numAttackers++;
+                    }
                 }
+
             }
+            else
+                if(mnger.board.chessBoard[c][r].getPlayer() == 0)
+                {
+                    if(mnger.checkMove(r, c, move.endRow, move.endCol, 0) == 0)
+                    {
+                        numAttackers++;
+                    }
+                }
 
         }
     }
+    //cout << "numAttackers: " << numAttackers << endl;
     return numAttackers * double(move.getPiece().getValue())/2;
 }
 
@@ -522,8 +535,8 @@ Move AI::playMove()
             bestMove = moves[i];
     }
 
-    cout << "best AI move" << endl;
-    dispMoveValue(bestMove, primaryPlayer);
+    //cout << "best AI move" << endl;
+    //dispMoveValue(bestMove, primaryPlayer);
 
     return bestMove;
 }
@@ -551,10 +564,10 @@ double AI::findGains()
 
         for(int i=0; i<moves.size(); i++) // loop through each AI move
         {
-            cout << "in " << i << "th move, turns ahead: " << turnsAhead << endl;
+            cout << "in " << i << "th original move, turns ahead: " << turnsAhead << endl;
 
-            //cout << "\nAI move" << endl;
-            //dispMoveValue(moves[i], primaryPlayer);
+            cout << "\nAI move" << endl;
+            dispMoveValue(moves[i], primaryPlayer);
 
             // set board and make the move
             Manager mnger;
@@ -591,8 +604,8 @@ double AI::findGains()
             forwardManager.move(maxValue.startRow, maxValue.startCol, maxValue.endRow, maxValue.endCol);
             forwardBoard = forwardManager.board;
 
-            //cout << "Max human move" << endl;
-            //dispMoveValue(maxValue, otherPlayer);
+            cout << "Max human move" << endl;
+            dispMoveValue(maxValue, otherPlayer);
 
             // recursive bit
             if (turnsAhead < lookAhead)
@@ -609,8 +622,11 @@ double AI::findGains()
 
             //cout << "original value: " << moves[i].getMoveValue() << " response: " << maxValue.getMoveValue();
             moves[i].setMoveValue(moves[i].getMoveValue() - maxValue.getMoveValue()); // update AI move value w/new human move value
-            cout << "move returned" << endl;
-            //cout << " final value: " << moves[i].getMoveValue() << endl; 
+            //cout << "move returned" << endl;
+            //cout << " final value: " << moves[i].getMoveValue() << endl;
+            //
+            //cout << "\nAI move" << endl;
+            //dispMoveValue(moves[i], primaryPlayer);
         }
     }
 
@@ -634,23 +650,25 @@ double AI::findGains()
         }
 
 
-        cout << "moves size: " << moves.size() << endl;
+        //cout << "moves size: " << moves.size() << endl;
         // only find the BEST move and make it
         Move maxValueMove = moves[0];
 
-        cout << "set initial max" << endl;
+        //cout << "set initial max" << endl;
         for(int j=1; j<moves.size(); j++)
         {
             if(moves[j].getMoveValue() > maxValueMove.getMoveValue())
                 maxValueMove = moves[j];
         }
+        cout << "\n Recursive Best AI move" << endl;
+        dispMoveValue(maxValueMove, primaryPlayer);
 
         Manager mnger;
         mnger.setBoard(Brd);
         mnger.move(maxValueMove.startRow, maxValueMove.startCol, maxValueMove.endRow, maxValueMove.endCol); // make the move
         temp = mnger.board;
 
-        cout << "made best ai move" << endl;
+        //cout << "made best ai move" << endl;
 
         // find best human move and make it
         humanMoves.clear();
@@ -674,6 +692,8 @@ double AI::findGains()
             if(humanMoves[j].getMoveValue() > maxValue.getMoveValue())
                 maxValue = humanMoves[j];
         }
+        cout << "\nRecursive Best Human move" << endl;
+        dispMoveValue(maxValue, primaryPlayer);
 
         Manager forwardManager;
         Board forwardBoard;
@@ -687,7 +707,7 @@ double AI::findGains()
         // recursive bit
         if (turnsAhead < lookAhead)
         {
-            cout << "inside recursive block" << endl;
+            //cout << "inside recursive block" << endl;
             
             AI forwardAI(forwardBoard, turnsAhead+1, primaryPlayer, lookAhead, turn); // call another AI
             Move forwardMove = forwardAI.overallAlgorithm(primaryPlayer); // get move from AI
@@ -697,7 +717,7 @@ double AI::findGains()
 
         //cout << "original value: " << moves[i].getMoveValue() << " response: " << maxValue.getMoveValue();
         maxValueMove.setMoveValue(maxValueMove.getMoveValue() - maxValue.getMoveValue());
-        cout << "move returned" << endl;
+        //cout << "move returned" << endl;
         //cout << " final value: " << moves[i].getMoveValue() << endl; 
 
 
@@ -710,7 +730,7 @@ void AI::updateKingValue(int player)
 {
     double val = double(turn) * .5;
 
-    cout << "turn: " << turn << endl;
+    //cout << "turn: " << turn << endl;
 
     // find king and update its value
     for(int r = 0; r < 8; r++)
@@ -720,7 +740,7 @@ void AI::updateKingValue(int player)
              if(Brd.chessBoard[c][r].getChar() == 'K' & player == 1 | Brd.chessBoard[c][r].getChar() == 'k' & player == 0 ) 
              {
                  Brd.chessBoard[c][r].setValue(3+val);
-                 cout << "king at position: " << r << c << " and has value: " << Brd.chessBoard[c][r].getValue() << endl;
+                 //cout << "king at position: " << r << c << " and has value: " << Brd.chessBoard[c][r].getValue() << endl;
                  break;
              }
         }
