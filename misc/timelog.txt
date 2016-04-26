@@ -99,3 +99,5 @@
     Danny - 0.35 hours cleaning up code in AI
 4/25
     Billy and Danny - 0.5 hours working on AI endgame
+4/25
+    Danny - 1.25 hours redoing AI recursion

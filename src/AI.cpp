@@ -32,7 +32,7 @@ AI::AI(Board B, int turnFuture, int pmrPlyr, int look, int turns)
     ATTACKINGVALUE_0 = .5;
     DEFENDINGVALUE_0 = 0.1;
     MOVEABLEVALUE_0 = 0.1;
-    DEVELOPMENTVALUE_0 = 1.7;
+    DEVELOPMENTVALUE_0 = 3/turn;
     PRESSUREVALUE_0 = (0.07 * turn);
 
     ATTACKERSVALUE_0 = 3;
@@ -44,7 +44,7 @@ AI::AI(Board B, int turnFuture, int pmrPlyr, int look, int turns)
     ATTACKINGVALUE_1 = .5;
     DEFENDINGVALUE_1 = 0.1;
     MOVEABLEVALUE_1 = 0.1;
-    DEVELOPMENTVALUE_1 = 1;
+    DEVELOPMENTVALUE_1 = 3;
     PRESSUREVALUE_1 = 0.1;
 
     ATTACKERSVALUE_1 = 3;
@@ -249,7 +249,7 @@ int AI::getDevelopmentValue(Move move, int player) //needs to be fixed for human
     {
         if(move.startRow < 2 & move.endRow >= 2) // red player
             if (move.piece.getChar() == 'p')
-                develop = 1.5;
+                develop = 3*(move.endRow-move.startRow);
             else
                 develop = 1;
     }
@@ -257,7 +257,7 @@ int AI::getDevelopmentValue(Move move, int player) //needs to be fixed for human
     {
         if (move.startRow > 5 & move.endRow <= 5) // blue player
             if (move.piece.getChar() == 'P')
-                develop = 1.5;
+                develop = 3*(move.startRow-move.endRow);
             else 
                 develop = 1;
     }
@@ -739,7 +739,7 @@ void AI::updateKingValue(int player)
         {
              if(Brd.chessBoard[c][r].getChar() == 'K' & player == 1 | Brd.chessBoard[c][r].getChar() == 'k' & player == 0 ) 
              {
-                 Brd.chessBoard[c][r].setValue(3+val);
+                 Brd.chessBoard[c][r].setValue(10+val);
                  //cout << "king at position: " << r << c << " and has value: " << Brd.chessBoard[c][r].getValue() << endl;
                  break;
              }
