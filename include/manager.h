@@ -29,6 +29,7 @@ class Manager{
         int checkKnight( int, int, int, int, int);
         int checkKing( int, int, int, int, int);
         int kingInCheck(int player);
+	int checkmate(int player);
         //save and load for log
         int startGame();
         string translateMove(int, int, int, int);

@@ -366,6 +366,9 @@ void Manager::play()
 
             if(currentPlayer == 1)
             {
+		if (kingInCheck(currentPlayer) == 1 )
+			cout << "Your king is in check!" << endl;
+		checkmate(currentPlayer);
                 game.getCoordinates();
                 
                 if(checkMove( game.getFromX(), game.getFromY(), game.getToX(), game.getToY(), currentPlayer) == 0){
@@ -587,5 +590,76 @@ int Manager::checkMove2( int sourceRow, int sourceColumn, int targetRow, int tar
     else if( checkPlayer( sourceRow, sourceColumn, targetRow, targetColumn, curPlayer) == 0)
     {
         return 2; //player not valid
+    }
+}
+
+int Manager:: checkmate(int curPlayer) { // to see if player 1 checkmate, put in 1. 0 for 0
+    
+    int enemy = 1 - curPlayer;
+    
+    
+    if (kingInCheck(curPlayer)) {
+        
+        int krow, kcol;
+        int i, j, l, k;
+        
+        for (i = 0; i < 8; i++) { // find location of king
+            for (j = 0; j < 8; j++) {
+                if (board.chessBoard[j].at(i).getChar() == 'k' - curPlayer * 32) { // similiar to node instantiation
+                    krow = i;
+                    kcol = j;
+                    i = 8;
+                    break;
+                }
+            }
+        }
+        for (i = -1; i < 2; i++) { // checks columns left, same, and right of king location
+            for (j = 0; j < 2; j++) { // flips between krow - 1 and krow + 1
+                Manager temp; // temporary board to move king and see if once hes moved he becomes out of check
+                temp.setBoard(board);
+                
+                if (temp.checkMove( krow, kcol, krow - 1 + j*2, kcol +
+                                   i, curPlayer) == 0) { // checks if king can move there
+                    temp.move(krow, kcol, krow - 1 + j*2, kcol + i); // if so, moves him on temporary board
+                    if (temp.kingInCheck(curPlayer) == 0) // checks if he's still in check
+                        return 0;
+                }
+            }
+        }
+        
+        Manager temp1;
+        temp1.setBoard(board);
+        
+        for (i = 0; i < 2; i++) { // this for loop checks the spots directly left and right of king, in same row
+            if (temp1.checkMove( krow, kcol, krow, kcol - 1 + 2*i,
+                                curPlayer) == 0) {
+                temp1.move(krow, kcol, krow, kcol - 1 + 2*i);
+                if (temp1.kingInCheck(curPlayer) == 0)
+                    return 0;
+            }
+        }
+        
+        // this for loop checks for same team pieces, and sees if it can make any move and get king out of check
+        for (i = 0; i < 8; i++) { // finds same team pieces
+            for (j = 0; j < 8; j++) {
+                if (board.chessBoard[j].at(i).getPlayer() == curPlayer) {
+                    for (l = 0; l < 8; l++) { // sees if pieces can block check
+                        for (k = 0; k < 8; k++) {
+                            if (checkMove( i, j, l, k, curPlayer) == 0) {
+                                Manager temp1;
+                                temp1.setBoard(board);
+                                temp1.move(i, j, l, k);
+                                if (temp1.kingInCheck(curPlayer) == 0)
+                                    return 0;
+                            }
+                        }
+                    }
+                }
+            }
+        /
+        // if function reaches this, king in checkmate
+        cout <<
+        "CHECKMATE\nCHECKMATE\nCHECKMATE\nCHECKMATE\nCHECKMATE\nCHECKMATE\nCHECKMATE\n";
+        return 1;
     }
 }
