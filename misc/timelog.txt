@@ -64,7 +64,8 @@
 
 4/3
 	Billy - 0.5 hours modifying the board.display to give the players unique colors for enhanced readability - I couldn't tell between 'p' and 'P'
-
+4/5
+    Michael - 3 hours styling 
 4/7
     Alex- 2.5  hours reworking file structure and adding logs
 
@@ -74,6 +75,8 @@
     Danny - 1.1 hours working on smaller AI functions
 4/10
     Billy and Danny - 3.7 hours working on AI
+4/10
+    Michael - 5 hours check()
 4/11
     Danny - 0.5 working on AI in lab
 4/13
@@ -87,8 +90,11 @@
     Danny and Billy - 2 hours getting recursion working - trying to get AIs to play eachother
 4/18
     Danny and Billy - .5 hours getting AI's to play eachother 
+    Michael - 5 hours check() checkmate()
 4/22
     Danny - 1.7 hours debugging AI
+4/22 
+    Michael - 7 hours castling, program order
 4/23
     Danny - 0.5 working on AI
 4/23
@@ -101,3 +107,5 @@
     Billy and Danny - 0.5 hours working on AI endgame
 4/25
     Danny - 1.25 hours redoing AI recursion
+4/25
+    Michael - 3 hours checkmate()
