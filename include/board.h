@@ -24,7 +24,7 @@ class Board{
 		void writeToFile();
 		vector< vector < Piece> > nullBoard;	
 		vector< vector < Piece> > chessBoard;
-	
+        vector< vector < Piece> > queenBoard;	
 	private:
 		int dim;
 };
