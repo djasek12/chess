@@ -352,6 +352,8 @@ void Manager::play()
 	int turn = 0;
     while(1)
     {
+        //look to swap pawns with queens
+        checkSwap(); 
         currentPlayer = 1 - currentPlayer; //flip between 0 and 1
         board.display();
 		turn++;
@@ -587,5 +589,25 @@ int Manager::checkMove2( int sourceRow, int sourceColumn, int targetRow, int tar
     else if( checkPlayer( sourceRow, sourceColumn, targetRow, targetColumn, curPlayer) == 0)
     {
         return 2; //player not valid
+    }
+}
+
+void Manager::checkSwap(){
+    for( int column = 0; column < 8; column++){
+        if (board.chessBoard[column].at(0).getChar() == 'P'){
+            for( int i = 0; i < 8; i++){
+                if (board.queenBoard[0].at(i).getChar() == 'Q' ){
+                    swap( board.chessBoard[column].at(0), board.queenBoard[0].at(i) );
+                    return;
+                }
+            }
+        }else if( board.chessBoard[column].at(7).getChar() == 'p'){
+            for( int i = 0; i < 8; i++){
+                if (board.queenBoard[1].at(i).getChar() == 'q' ){
+                    swap( board.chessBoard[column].at(7), board.queenBoard[1].at(i) );
+                    return;
+                }
+            }
+        }
     }
 }
