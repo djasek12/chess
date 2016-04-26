@@ -145,6 +145,29 @@ void Board::initPieces(){
 	tempVector.push_back(Null95); tempVector.push_back(Null96);
 	nullBoard.push_back( tempVector);
 	tempVector.clear();
+
+    Queen Queen1(1), Queen2(1), Queen3(1), Queen4(1);
+    Queen Queen5(1), Queen6(1), Queen7(1), Queen8(1);
+
+    Queen Queen11(0), Queen12(0) , Queen13(0), Queen14(0);
+    Queen Queen15(0), Queen16(0) , Queen17(0), Queen18(0);
+    
+    tempVector.push_back(Queen1); tempVector.push_back(Queen2);
+    tempVector.push_back(Queen3); tempVector.push_back(Queen4);
+    tempVector.push_back(Queen5); tempVector.push_back(Queen6);
+    tempVector.push_back(Queen7); tempVector.push_back(Queen8);
+    queenBoard.push_back(tempVector);
+    tempVector.clear();
+    
+    tempVector.push_back(Queen11); tempVector.push_back(Queen12);
+    tempVector.push_back(Queen13); tempVector.push_back(Queen14);
+    tempVector.push_back(Queen15); tempVector.push_back(Queen16);
+    tempVector.push_back(Queen17); tempVector.push_back(Queen18);
+    queenBoard.push_back(tempVector);
+    tempVector.clear();
+
+
+
 }
 
 

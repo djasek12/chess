@@ -352,6 +352,8 @@ void Manager::play()
 	int turn = 0;
     while(1)
     {
+        //look to swap pawns with queens
+        checkSwap(); 
         currentPlayer = 1 - currentPlayer; //flip between 0 and 1
         board.display();
 		turn++;
@@ -661,5 +663,26 @@ int Manager:: checkmate(int curPlayer) { // to see if player 1 checkmate, put in
         cout <<
         "CHECKMATE\nCHECKMATE\nCHECKMATE\nCHECKMATE\nCHECKMATE\nCHECKMATE\nCHECKMATE\n";
         return 1;
+}
+
+=======
+void Manager::checkSwap(){
+    for( int column = 0; column < 8; column++){
+        if (board.chessBoard[column].at(0).getChar() == 'P'){
+            for( int i = 0; i < 8; i++){
+                if (board.queenBoard[0].at(i).getChar() == 'Q' ){
+                    swap( board.chessBoard[column].at(0), board.queenBoard[0].at(i) );
+                    return;
+                }
+            }
+        }else if( board.chessBoard[column].at(7).getChar() == 'p'){
+            for( int i = 0; i < 8; i++){
+                if (board.queenBoard[1].at(i).getChar() == 'q' ){
+                    swap( board.chessBoard[column].at(7), board.queenBoard[1].at(i) );
+                    return;
+                }
+            }
+        }
+>>>>>>> f85707692a1104d9922cc446e49d032d1a552238
     }
 }
