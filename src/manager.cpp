@@ -53,6 +53,8 @@ int Manager::checkMove( int sourceRow, int sourceColumn, int targetRow, int targ
         return 2; //player not valid
     }else if( checkSpecific( sourceRow, sourceColumn, targetRow, targetColumn, curPlayer) == 0){
         return 3;
+    } else if(checkSpecific( sourceRow, sourceColumn, targetRow, targetColumn, curPlayer) == 2) {
+        return 4;
     }
     
        
@@ -259,9 +261,58 @@ int Manager::checkQueen( int sourceRow, int sourceColumn, int targetRow, int tar
 }
 
 int Manager::checkKing( int sourceRow, int sourceColumn, int targetRow, int targetColumn, int curPlayer){
-    if( abs(targetRow-sourceRow) > 1 || abs(targetColumn - sourceColumn) > 1 ){ //if move is longer than 1 space
-        return 0;
+    if (curPlayer == 1 ) {
+        if (abs(targetRow-sourceRow) == 0 && (targetColumn - sourceColumn) == -2) {
+            if (board.chessBoard[3].at(7).getChar() != 'K') {
+                return 0; }
+            if (board.chessBoard[0].at(7).getChar() != 'C') {
+                return 0; }
+            if (board.chessBoard[1].at(7).getPlayer() != 2 || board.chessBoard[2].at(7).getPlayer() != 2) {
+                return 0; }
+            return 2; // returns 2 if castling is valid
+            
+        } else if(abs(targetRow-sourceRow) == 0 && (targetColumn - sourceColumn) == 2) {
+            if (board.chessBoard[3].at(7).getChar() != 'K') {
+                return 0; }
+            if (board.chessBoard[7].at(7).getChar() != 'C') {
+                return 0;}
+            if (board.chessBoard[4].at(7).getPlayer() != 2 || board.chessBoard[5].at(7).getPlayer() != 2 ||
+                board.chessBoard[6].at(7).getPlayer() != 2) {
+                return 0;}
+            
+            return 2; // returns 2 if castling is valid
+            
+        } else if( abs(targetRow-sourceRow) > 1 || abs(targetColumn - sourceColumn) > 1 ){ //if move is longer than 1 space
+            return 0;
+        }
+    } else if (curPlayer == 0) {
+    
+        if (abs(targetRow-sourceRow) == 0 && (targetColumn - sourceColumn) == -2) {
+            if (board.chessBoard[3].at(0).getChar() != 'k') {
+                return 0;}
+            if (board.chessBoard[0].at(0).getChar() != 'c') {
+                return 0; }
+            if (board.chessBoard[1].at(0).getPlayer() != 2 || board.chessBoard[2].at(0).getPlayer() != 2) {
+                return 0; }
+            return 2; // returns 2 if castling is valid
+            
+        } else if(abs(targetRow-sourceRow) == 0 && (targetColumn - sourceColumn) == 2) {
+            if (board.chessBoard[3].at(0).getChar() != 'k') {
+                return 0;}
+            if (board.chessBoard[7].at(0).getChar() != 'c') {
+                return 0;}
+            if (board.chessBoard[4].at(0).getPlayer() != 2 || board.chessBoard[5].at(0).getPlayer() != 2 ||
+                board.chessBoard[6].at(0).getPlayer() != 2) {
+                return 0;}
+            
+            return 2; // returns 2 if castling is valid
+            
+        } else if( abs(targetRow-sourceRow) > 1 || abs(targetColumn - sourceColumn) > 1 ){ //if move is longer than 1 space
+            return 0;
+        }
+    
     }
+    
     //if prog. reaches this point, then move is valid
     return 1;
 }
@@ -329,7 +380,7 @@ int Manager::kingInCheck(int player) {
 }
 
 void Manager::play()
-{ 
+{
     string filename;
     int status = startGame();
     int currentPlayer = 0;
@@ -346,78 +397,92 @@ void Manager::play()
         cout << "Please enter a name of the file to save to: ";
         cin >> filename;
     }else{
-        //eror 
+        //eror
     }
     
-	int turn = 0;
+    int turn = 0;
     while(1)
     {
-        //look to swap pawns with queens
-        checkSwap(); 
         currentPlayer = 1 - currentPlayer; //flip between 0 and 1
         board.display();
-		turn++;
-		
+        turn++;
+        
         Move AI_move;
-
+        int castling;
         while(1)
         {
+            castling = 0;
             //print which player
             if(currentPlayer == 1 ) cout << "Player: BLUE" << endl;
-            if(currentPlayer == 0 ) cout << "Player: red" << endl; 
-
-            if(currentPlayer == 1)
-            {
-		if (kingInCheck(currentPlayer) == 1 )
-			cout << "Your king is in check!" << endl;
-		checkmate(currentPlayer);
+            if(currentPlayer == 0 ) cout << "Player: red" << endl;
+            
+            if(currentPlayer == 1) {
+                if (kingInCheck(currentPlayer) == 1 )
+                    cout << "Your king is in check!" << endl;
+                checkmate(currentPlayer);
                 game.getCoordinates();
                 
                 if(checkMove( game.getFromX(), game.getFromY(), game.getToX(), game.getToY(), currentPlayer) == 0){
                     break;
-
+                } else if (checkMove( game.getFromX(), game.getFromY(), game.getToX(), game.getToY(), currentPlayer) == 4) {
+                    castling = 1;
+                    break;
+                
                 }else{
                     cout << "Move is not valid!" << endl;
-                }   
+                }
             }
             else // AI
             {
                 //cout << "AI about to be constructed" << endl;
-
-                AI AI_1(board, 1, 0, 2, turn);
+                
+                AI AI_1(board, 1, 0, 3, turn);
                 //cout << "AI has been constructed, play move function being called" << endl;
                 //AI_1.findMoves(board);
                 //AI_1.dispValidMoves();
                 AI_move = AI_1.overallAlgorithm(0);
                 cout << "move passed to manager correctly" << endl;
                 //AI_move = AI_1.playMove();
-
+                
                 //cout << "capture value of move: " << AI_1.getCaptureValue(AI_move) << endl;;
-
+                
                 break;
             }
         }
         if(currentPlayer == 1)
         {
+            if (castling) {
+                move( game.getFromX(), game.getFromY(), game.getToX(), game.getToY() );
+                if (game.getToY() == 1) {
+                     move(7, 0, 7, 2);
+                }
+                else if (game.getToY() == 5) {
+                    move(7, 7, 7, 4);
+                }
+                string encoded = translateMove( game.getFromX(), game.getFromY(), game.getToX(), game.getToY() );
+                saveLog( filename, encoded);
+            } else {
             move( game.getFromX(), game.getFromY(), game.getToX(), game.getToY() );
             string encoded = translateMove( game.getFromX(), game.getFromY(), game.getToX(), game.getToY() );
             saveLog( filename, encoded);
+            }
         }
         else if(AI_move.startRow != -1) // not in checkmate
         {
             move(AI_move.startRow, AI_move.startCol, AI_move.endRow, AI_move.endCol);
             string encoded = translateMove(AI_move.startRow, AI_move.startCol, AI_move.endRow, AI_move.endCol);
             saveLog( filename, encoded);
-        } 
+        }
         else
         {
             cout << "Checkmate!" << endl;
             break;
         }
-              
+        
     }
-
+    
 }
+
 
 void Manager::AIplay()
 { 
