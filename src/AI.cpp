@@ -230,8 +230,13 @@ double AI::getCaptureValue(Move move, int player)
     {
         return capturedPiece.getValue();
     }
-    else
-        return 0; 
+    else if(tolower(move.getPiece().getChar() == 'p'))
+    {
+        if(move.endRow == 7 | move.endRow == 0)
+            return 10; // large value for converting a pawn to a queen
+    }
+    
+    return 0; 
 }
 
 // awards points from moving pieces (especially pawns) out of first 2 rows
@@ -392,7 +397,7 @@ double AI::getAttackingValue(Move move, int player) //needs to be fixed for huma
             }
         }
     }
-
+    return 0;
     return attackValue;
 }
 
@@ -550,6 +555,7 @@ double AI::findGains()
 
         // find AI moves and assign values
         findMoves(primaryPlayer);
+        //cout << "moves size: " << moves.size() << endl;
         for(int i=0; i<moves.size(); i++)
         {
             moves[i].setMoveValue(
