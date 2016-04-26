@@ -658,15 +658,15 @@ int Manager:: checkmate(int curPlayer) { // to see if player 1 checkmate, put in
                     }
                 }
             }
-        /
+        
         // if function reaches this, king in checkmate
         cout <<
         "CHECKMATE\nCHECKMATE\nCHECKMATE\nCHECKMATE\nCHECKMATE\nCHECKMATE\nCHECKMATE\n";
         return 1;
-}
+    }
+}}
 
-=======
-void Manager::checkSwap(){
+void Manager::checkSwap() {
     for( int column = 0; column < 8; column++){
         if (board.chessBoard[column].at(0).getChar() == 'P'){
             for( int i = 0; i < 8; i++){
@@ -683,6 +683,7 @@ void Manager::checkSwap(){
                 }
             }
         }
->>>>>>> f85707692a1104d9922cc446e49d032d1a552238
     }
 }
+
+
