@@ -110,4 +110,4 @@
 4/25
     Michael - 3 hours checkmate()
 4/26
-    Danny - 1.5 hour AI
+    Danny - 1.75 hour AI
