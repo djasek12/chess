@@ -109,3 +109,5 @@
     Danny - 1.25 hours redoing AI recursion
 4/25
     Michael - 3 hours checkmate()
+4/26
+    Danny - 1 hour AI
