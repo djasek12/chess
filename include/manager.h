@@ -37,7 +37,7 @@ class Manager{
         void saveLog(string, string); //filename and move made
         int loadLog(string); //return the number of lines
         void setBoard(Board);
-        void checkSwap();
+        int checkSwap();
         //public data members
 		Board board;
 		Game game;

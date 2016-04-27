@@ -340,7 +340,7 @@ int Manager::kingInCheck(int player) {
     int i, j;
     int kingRow, kingCol;
 
-    //cout << "player: " << player << endl;
+    ///cout << "player: " << player << endl;
 
     for (krow = 0; krow < 8; krow++) { // find location of player's king
         for (kcol = 0; kcol < 8; kcol++) {
@@ -502,6 +502,9 @@ void Manager::play()
             } else {
                 move( game.getFromX(), game.getFromY(), game.getToX(), game.getToY() );
                 string encoded = translateMove( game.getFromX(), game.getFromY(), game.getToX(), game.getToY() );
+                int swapVal = checkSwap();
+                if (swapVal ==1 ) encoded += 'Q';
+                else if (swapVal == 2) encoded += 'q';
                 saveLog( filename, encoded);
             }
         }
@@ -509,6 +512,9 @@ void Manager::play()
         {
             move(AI_move.startRow, AI_move.startCol, AI_move.endRow, AI_move.endCol);
             string encoded = translateMove(AI_move.startRow, AI_move.startCol, AI_move.endRow, AI_move.endCol);
+            int swapVal = checkSwap();
+            if (swapVal ==1 ) encoded += 'Q';
+            else if (swapVal == 2) encoded += 'q';
             saveLog( filename, encoded);
         }
         else
@@ -668,12 +674,24 @@ int Manager::loadLog(string filename){
     loadfile.open(filename.c_str(), ios_base::in);
     int count = 0;
     while( getline( loadfile, line )){
-        int fromX = int(line[0]) - '0';
-        int fromY = int(line[1]) - '0';
-        int toX = int(line[2]) - '0';
-        int toY = int(line[3]) - '0';
-        move(fromX, fromY, toX, toY);
+        if (line.length() == 4){
+            int fromX = int(line[0]) - '0';
+            int fromY = int(line[1]) - '0';
+            int toX = int(line[2]) - '0';
+            int toY = int(line[3]) - '0';
+            move(fromX, fromY, toX, toY);
+            count++;
+        
+        }else if (line.length() == 5){
+            int fromX = int(line[0]) - '0';
+            int fromY = int(line[1]) - '0';
+            int toX = int(line[2]) - '0';
+            int toY = int(line[3]) - '0';
+            char rep = char(line[4]);
+            move(fromX, fromY, toX, toY);
+            board.chessBoard[toY].at(toX).setChar(rep);
         count++;
+        }   
     }  
     return count;
 }
@@ -775,24 +793,31 @@ int Manager:: checkmate(int curPlayer) { // to see if player 1 checkmate, put in
     return 0;
 }
 
-void Manager::checkSwap() {
+int Manager::checkSwap() {
     for( int column = 0; column < 8; column++){
         if (board.chessBoard[column].at(0).getChar() == 'P'){
-            for( int i = 0; i < 8; i++){
+           board.chessBoard[column].at(0).setChar('Q');
+           return 1;
+           /*for( int i = 0; i < 8; i++){
                 if (board.queenBoard[0].at(i).getChar() == 'Q' ){
                     swap( board.chessBoard[column].at(0), board.queenBoard[0].at(i) );
                     return;
                 }
-            }
+            }*/
         }else if( board.chessBoard[column].at(7).getChar() == 'p'){
+           board.chessBoard[column].at(7).setChar('q');
+           return 2;
+        }
+            /*
             for( int i = 0; i < 8; i++){
                 if (board.queenBoard[1].at(i).getChar() == 'q' ){
                     swap( board.chessBoard[column].at(7), board.queenBoard[1].at(i) );
                     return;
                 }
             }
-        }
+        }*/
     }
+    return 0;
 }
 
 
