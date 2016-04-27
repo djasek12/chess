@@ -58,7 +58,7 @@ Castle::Castle(int num){
 Bishop::Bishop(int num){
 	setPlayer(num);
 	setChar('b' - num * 32);
-	setValue( 3);
+	setValue( 3.5);
 }
 
 King::King(int num){
