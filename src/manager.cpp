@@ -409,25 +409,64 @@ void Manager::play()
         
         Move AI_move;
         int castling;
+        int out_check;
         while(1)
         {
             castling = 0;
+            out_check = 0;
             //print which player
             if(currentPlayer == 1 ) cout << "Player: BLUE" << endl;
             if(currentPlayer == 0 ) cout << "Player: red" << endl;
             
+            if (end()) {
+                return;
+            }
+            
             if(currentPlayer == 1) {
-                if (kingInCheck(currentPlayer) == 1 )
+                if (kingInCheck(currentPlayer) == 1 ){
                     cout << "Your king is in check!" << endl;
+                    
+                    checkmate(currentPlayer);
+                    
+                    while(1) {
+                        game.getCoordinates();
+                        
+                        
+                        if(checkMove( game.getFromX(), game.getFromY(), game.getToX(), game.getToY(), currentPlayer) == 0){
+                            Manager temp1;
+                            temp1.setBoard(board);
+                            
+                            temp1.move(game.getFromX(), game.getFromY(), game.getToX(), game.getToY());
+                            if (temp1.kingInCheck(currentPlayer) != 0) {
+                                cout << "This move does not get you out of check, move is not valid!" << endl;
+                            } else if (temp1.kingInCheck(currentPlayer) == 0) {
+                                out_check = 1;
+                                break;
+                            }
+                            
+                        }
+                        
+                        else{
+                            cout << "Move is not valid!" << endl;
+                        }
+                    }
+                    
+                }
+                
+                if (out_check) {
+                    break;
+                }
+                
                 checkmate(currentPlayer);
                 game.getCoordinates();
                 
                 if(checkMove( game.getFromX(), game.getFromY(), game.getToX(), game.getToY(), currentPlayer) == 0){
+                    
                     break;
                 } else if (checkMove( game.getFromX(), game.getFromY(), game.getToX(), game.getToY(), currentPlayer) == 4) {
                     castling = 1;
                     break;
-                
+                    
                 }else{
                     cout << "Move is not valid!" << endl;
                 }
@@ -454,7 +493,7 @@ void Manager::play()
             if (castling) {
                 move( game.getFromX(), game.getFromY(), game.getToX(), game.getToY() );
                 if (game.getToY() == 1) {
-                     move(7, 0, 7, 2);
+                    move(7, 0, 7, 2);
                 }
                 else if (game.getToY() == 5) {
                     move(7, 7, 7, 4);
@@ -462,9 +501,9 @@ void Manager::play()
                 string encoded = translateMove( game.getFromX(), game.getFromY(), game.getToX(), game.getToY() );
                 saveLog( filename, encoded);
             } else {
-            move( game.getFromX(), game.getFromY(), game.getToX(), game.getToY() );
-            string encoded = translateMove( game.getFromX(), game.getFromY(), game.getToX(), game.getToY() );
-            saveLog( filename, encoded);
+                move( game.getFromX(), game.getFromY(), game.getToX(), game.getToY() );
+                string encoded = translateMove( game.getFromX(), game.getFromY(), game.getToX(), game.getToY() );
+                saveLog( filename, encoded);
             }
         }
         else if(AI_move.startRow != -1) // not in checkmate
@@ -482,7 +521,6 @@ void Manager::play()
     }
     
 }
-
 
 void Manager::AIplay()
 { 
@@ -752,3 +790,37 @@ void Manager::checkSwap() {
 }
 
 
+int Manager:: end() {
+    int red = 0, blue = 0;
+    int i, j;
+    for (i = 0; i < 8; i++) { // find location of king
+        for (j = 0; j < 8; j++) {
+            if (board.chessBoard[j].at(i).getChar() == 'K') {
+               blue = 1;
+                i = 8;
+                break;
+            }
+        }
+    }
+    
+    if (blue == 0) {
+        cout << "Red team wins!" << endl;
+        return 1;
+    }
+    for (i = 0; i < 8; i++) { // find location of king
+        for (j = 0; j < 8; j++) {
+            if (board.chessBoard[j].at(i).getChar() == 'k') { 
+                red = 1;
+                i = 8;
+                break;
+            }
+        }
+    }
+    
+    if (red == 0) {
+        cout << "Blue team wins!" << endl;
+        return 2;
+    }
+    
+    return 0;
+}
