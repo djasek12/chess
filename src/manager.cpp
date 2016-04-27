@@ -701,12 +701,10 @@ int Manager::checkMove2( int sourceRow, int sourceColumn, int targetRow, int tar
 int Manager:: checkmate(int curPlayer) { // to see if player 1 checkmate, put in 1. 0 for 0
     
     int enemy = 1 - curPlayer;
-    
+    int krow, kcol;
+    int i, j, l, k;
     
     if (kingInCheck(curPlayer)) {
-        
-        int krow, kcol;
-        int i, j, l, k;
         
         for (i = 0; i < 8; i++) { // find location of king
             for (j = 0; j < 8; j++) {
@@ -726,8 +724,8 @@ int Manager:: checkmate(int curPlayer) { // to see if player 1 checkmate, put in
                 if (temp.checkMove( krow, kcol, krow - 1 + j*2, kcol +
                                    i, curPlayer) == 0) { // checks if king can move there
                     temp.move(krow, kcol, krow - 1 + j*2, kcol + i); // if so, moves him on temporary board
-                    if (temp.kingInCheck(curPlayer) == 0) // checks if he's still in check
-                        return 0;
+                    if (temp.kingInCheck(curPlayer) == 0) { // checks if he's still in check {
+                        return 0; }
                 }
             }
         }
@@ -739,8 +737,9 @@ int Manager:: checkmate(int curPlayer) { // to see if player 1 checkmate, put in
             if (temp1.checkMove( krow, kcol, krow, kcol - 1 + 2*i,
                                 curPlayer) == 0) {
                 temp1.move(krow, kcol, krow, kcol - 1 + 2*i);
-                if (temp1.kingInCheck(curPlayer) == 0)
+                if (temp1.kingInCheck(curPlayer) == 0) {
                     return 0;
+                }
             }
         }
         
@@ -754,20 +753,25 @@ int Manager:: checkmate(int curPlayer) { // to see if player 1 checkmate, put in
                                 Manager temp1;
                                 temp1.setBoard(board);
                                 temp1.move(i, j, l, k);
-                                if (temp1.kingInCheck(curPlayer) == 0)
-                                    return 0;
+                                if (temp1.kingInCheck(curPlayer) == 0) {
+				    return 0;
+                                }
                             }
                         }
                     }
                 }
             }
+            
+            
+        }
         
-        // if function reaches this, king in checkmate
-        cout <<
-        "CHECKMATE\nCHECKMATE\nCHECKMATE\nCHECKMATE\nCHECKMATE\nCHECKMATE\nCHECKMATE\n";
-        return 1;
+     // if function reaches this, king in checkmate
+    return 1;
+
     }
-}}
+    
+    return 0;
+}
 
 void Manager::checkSwap() {
     for( int column = 0; column < 8; column++){
@@ -795,21 +799,27 @@ int Manager:: end() {
     int i, j;
     for (i = 0; i < 8; i++) { // find location of king
         for (j = 0; j < 8; j++) {
-            if (board.chessBoard[j].at(i).getChar() == 'K') {
-               blue = 1;
-                i = 8;
-                break;
-            }
+            //   if (board.chessBoard[j].at(i).getChar() == 'K') { // similiar to node instantiation
+            //     blue = 1;
+            //   i = 8;
+            // break;
+            //}
         }
     }
     
     if (blue == 0) {
-        cout << "Red team wins!" << endl;
+        //   cout << "Red team wins!" << endl;
+        // return 1;
+    }
+    
+    if (checkmate(1) == 1) {
+        cout << "CHECKMATE! You lost! " << endl;
         return 1;
     }
+    
     for (i = 0; i < 8; i++) { // find location of king
         for (j = 0; j < 8; j++) {
-            if (board.chessBoard[j].at(i).getChar() == 'k') { 
+            if (board.chessBoard[j].at(i).getChar() == 'k') { // similiar to node instantiation
                 red = 1;
                 i = 8;
                 break;
@@ -824,3 +834,4 @@ int Manager:: end() {
     
     return 0;
 }
+
