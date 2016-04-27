@@ -263,7 +263,7 @@ int Manager::checkQueen( int sourceRow, int sourceColumn, int targetRow, int tar
 
 //check if move is appropriatte for king
 int Manager::checkKing( int sourceRow, int sourceColumn, int targetRow, int targetColumn, int curPlayer){
-    if (curPlayer == 1 ) {
+    if (curPlayer == 1 ) { //
         if (abs(targetRow-sourceRow) == 0 && (targetColumn - sourceColumn) == -2) {
             if (board.chessBoard[3].at(7).getChar() != 'K') {
                 return 0; }
@@ -411,7 +411,7 @@ void Manager::play()
         int out_check;
         while(1)
         {
-            castling = 0;
+            castling = 0; // if castling, = 1
             out_check = 0;
             //print which player
             if(currentPlayer == 1 ) cout << "Player: BLUE" << endl;
@@ -427,13 +427,13 @@ void Manager::play()
                     
                     checkmate(currentPlayer);
                     
-                    while(1) {
+                    while(1) { // while loops prevents you from making a move that doesnt take you out of check
                         game.getCoordinates();
                         
                         
                         if(checkMove( game.getFromX(), game.getFromY(), game.getToX(), game.getToY(), currentPlayer) == 0){
                             Manager temp1;
-                            temp1.setBoard(board);
+                            temp1.setBoard(board); // creates separate board to see if potential move gets user out of check
                             
                             temp1.move(game.getFromX(), game.getFromY(), game.getToX(), game.getToY());
                             if (temp1.kingInCheck(currentPlayer) != 0) {
@@ -452,7 +452,7 @@ void Manager::play()
                     
                 }
                 
-                if (out_check) {
+                if (out_check) { // if move you were in check, and move got you out of check, break out of this while loop
                     break;
                 }
                 
@@ -489,7 +489,7 @@ void Manager::play()
         }
         if(currentPlayer == 1)
         {
-            if (castling) {
+            if (castling) { // enables the castling move
                 move( game.getFromX(), game.getFromY(), game.getToX(), game.getToY() );
                 if (game.getToY() == 1) {
                     move(7, 0, 7, 2);
@@ -824,20 +824,6 @@ int Manager::checkSwap() {
 int Manager:: end() {
     int red = 0, blue = 0;
     int i, j;
-    for (i = 0; i < 8; i++) { // find location of king
-        for (j = 0; j < 8; j++) {
-            //   if (board.chessBoard[j].at(i).getChar() == 'K') { // similiar to node instantiation
-            //     blue = 1;
-            //   i = 8;
-            // break;
-            //}
-        }
-    }
-    
-    if (blue == 0) {
-        //   cout << "Red team wins!" << endl;
-        // return 1;
-    }
     
     if (checkmate(1) == 1) {
         cout << "CHECKMATE! You lost! " << endl;

@@ -116,3 +116,5 @@
 
 4/27
     Alex - 1 hour testing, fixing queen swap
+4/27
+    Burke - 2 hours testings and adding comments
