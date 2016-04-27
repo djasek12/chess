@@ -57,7 +57,14 @@ int Manager::checkMove( int sourceRow, int sourceColumn, int targetRow, int targ
     } else if(checkSpecific( sourceRow, sourceColumn, targetRow, targetColumn, curPlayer) == 2) {
         return 4;
     }
-    
+
+    Manager mnger;
+    mnger.setBoard(board);
+    mnger.move(sourceRow, sourceColumn, targetRow, targetColumn);
+    if(mnger.kingInCheck(curPlayer))
+        return 5; // can't move into check
+    else
+        return 0;
        
 }
 
