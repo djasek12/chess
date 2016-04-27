@@ -18,10 +18,10 @@ class AI
     public:
         AI(Board b, int turnFuture, int primaryPlayer, int look, int turn); // AI constructor
 
-        Move overallAlgorithm(int player); // parent function
+        Move overallAlgorithm(int player, int turnsAhead); // parent function
         void findMoves(int player); // find valid moves for AI
         void dispValidMoves();
-        Move playMove(); // returns best AI move
+        Move playMove(int turnsAhead); // returns best AI move
         int randomMove(); // really simple AI - returns random integer index in moves vector
 
     private:
@@ -74,6 +74,8 @@ class AI
         int otherPlayer;
         int lookAhead; // max turnsAhead
         int turn;
+
+        Move maxValueMove;
 };
 
 #endif

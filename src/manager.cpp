@@ -486,7 +486,7 @@ void Manager::play()
                 //cout << "AI has been constructed, play move function being called" << endl;
                 //AI_1.findMoves(board);
                 //AI_1.dispValidMoves();
-                AI_move = AI_1.overallAlgorithm(0);
+                AI_move = AI_1.overallAlgorithm(0, 1);
                 cout << "move passed to manager correctly" << endl;
                 //AI_move = AI_1.playMove();
                 
@@ -600,7 +600,7 @@ void Manager::AIplay()
                 //cout << "AI has been constructed, play move function being called" << endl;
                 //AI_1.findMoves(board);
                 //AI_1.dispValidMoves();
-                AI_move = AI_1.overallAlgorithm(1);
+                AI_move = AI_1.overallAlgorithm(1, 1); // fix this
                 cout << "move passed to manager correctly" << endl;
                 //AI_move = AI_1.playMove();
 
@@ -617,7 +617,7 @@ void Manager::AIplay()
                 //cout << "AI has been constructed, play move function being called" << endl;
                 //AI_1.findMoves(board);
                 //AI_1.dispValidMoves();
-                AI_move = AI_1.overallAlgorithm(0);
+                AI_move = AI_1.overallAlgorithm(0, 1); // not right
                 cout << "move passed to manager correctly" << endl;
                 //AI_move = AI_1.playMove();
 

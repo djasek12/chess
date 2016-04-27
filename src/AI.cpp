@@ -59,7 +59,7 @@ AI::AI(Board B, int turnFuture, int pmrPlyr, int look, int turns)
 }
 
 // overall algorithm that returns an AI move
-Move AI::overallAlgorithm(int player)
+Move AI::overallAlgorithm(int player, int turnsAhead)
 {
     // instantiate a manager and pass it the correct board
     Manager mnger;
@@ -73,7 +73,7 @@ Move AI::overallAlgorithm(int player)
     }
     else // play a regular move
     {
-        return playMove();
+        return playMove(turnsAhead);
     }
 }
 
@@ -546,16 +546,24 @@ int AI::randomMove()
 }
 
 // returns a move
-Move AI::playMove()
+Move AI::playMove(int turnsAhead)
 {     
     findGains(); // finds moves and their values
+    Move bestMove;
 
-    // finds best move
-    Move bestMove = moves[0];
-    for(int i=1; i<moves.size(); i++)
+    if(turnsAhead == 1)
     {
-        if(bestMove.getMoveValue() < moves[i].getMoveValue())
-            bestMove = moves[i];
+        // finds best move
+        bestMove = moves[0];
+        for(int i=1; i<moves.size(); i++)
+        {
+            if(bestMove.getMoveValue() < moves[i].getMoveValue())
+                bestMove = moves[i];
+        }
+    }
+    else
+    {
+        bestMove = maxValueMove;
     }
 
     //cout << "best AI move" << endl;
@@ -638,7 +646,7 @@ double AI::findGains()
 
                 // call a new AI on board with both AI and human move made, and get a mvoe back
                 AI forwardAI(forwardBoard, turnsAhead+1, primaryPlayer, lookAhead, turn);
-                Move forwardMove = forwardAI.overallAlgorithm(primaryPlayer);
+                Move forwardMove = forwardAI.overallAlgorithm(primaryPlayer, turnsAhead);
                 
                 // update value of max human move appropriatley
                 maxValue.setMoveValue(maxValue.getMoveValue() - double(1/double(turnsAhead))*forwardMove.getMoveValue());
@@ -676,7 +684,7 @@ double AI::findGains()
 
         //cout << "moves size: " << moves.size() << endl;
         // only find the BEST move and make it
-        Move maxValueMove = moves[0];
+        maxValueMove = moves[0];
 
         //cout << "set initial max" << endl;
         for(int j=1; j<moves.size(); j++)
@@ -729,7 +737,7 @@ double AI::findGains()
             //cout << "inside recursive block" << endl;
             
             AI forwardAI(forwardBoard, turnsAhead+1, primaryPlayer, lookAhead, turn); // call another AI
-            Move forwardMove = forwardAI.overallAlgorithm(primaryPlayer); // get move from AI
+            Move forwardMove = forwardAI.overallAlgorithm(primaryPlayer, turnsAhead); // get move from AI
 
             maxValue.setMoveValue(maxValue.getMoveValue() - double(1/double(turnsAhead))*forwardMove.getMoveValue());
         }
