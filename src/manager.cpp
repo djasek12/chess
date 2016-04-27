@@ -11,6 +11,7 @@ Manager::Manager(){
 
 }
 
+/*Moves pieces, either for a capture or a normal move*/
 void Manager::move( int sourceRow, int sourceColumn, int targetRow, int targetColumn ){ //actually moves pieces
 	//determine if piece is being captured
 	int captureStatus = 0; //0 signifies not a capturing move, etc...
@@ -84,10 +85,7 @@ int Manager::checkBounds( int sourceRow, int sourceColumn, int targetRow, int ta
 /*Return 1 for valid, 0 otherwise */
 int Manager::checkPlayer( int sourceRow, int sourceColumn, int targetRow, int targetColumn, int curPlayer){
     //check if curPlayer matches source piece 
-    if( board.chessBoard[sourceColumn].at(sourceRow).getPlayer() != curPlayer){
-        //cout << "not moving own player!: current player is " << curPlayer << " and your player is " << board.chessBoard[sourceColumn].at(sourceRow).getPlayer() << endl;
-        //cout << "character of the piece is: " << board.chessBoard[sourceColumn].at(sourceRow).getChar() << endl;
-        //board.display(); 
+    if( board.chessBoard[sourceColumn].at(sourceRow).getPlayer() != curPlayer){ 
         return 0;
     }else if( board.chessBoard[sourceColumn].at(sourceRow).getPlayer() == board.chessBoard[targetColumn].at(targetRow).getPlayer()){
         //cout << "attacking own player!" << endl;
@@ -180,6 +178,7 @@ int Manager::checkPawn( int sourceRow, int sourceColumn, int targetRow, int targ
     return 1;
 }
 
+//check if appropriatte situation for castling
 int Manager::checkCastle( int sourceRow, int sourceColumn, int targetRow, int targetColumn, int curPlayer){
     //make sure that move is either entirely vertical or entirely horizontal
     int rowDif = targetRow - sourceRow;
@@ -218,6 +217,7 @@ int Manager::checkCastle( int sourceRow, int sourceColumn, int targetRow, int ta
     return 1;
 }
 
+//check if move is appropriatte for bishop
 int Manager::checkBishop( int sourceRow, int sourceColumn, int targetRow, int targetColumn, int curPlayer){
     int rowDif = targetRow - sourceRow;
     int colDif = targetColumn - sourceColumn;
@@ -255,11 +255,13 @@ int Manager::checkBishop( int sourceRow, int sourceColumn, int targetRow, int ta
     return 1;
 }
 
+//Queen moves are just either castle or bishop
 int Manager::checkQueen( int sourceRow, int sourceColumn, int targetRow, int targetColumn, int curPlayer){
     return (checkBishop(sourceRow, sourceColumn, targetRow, targetColumn, curPlayer) ||  
             checkCastle( sourceRow, sourceColumn, targetRow, targetColumn, curPlayer));
 }
 
+//check if move is appropriatte for king
 int Manager::checkKing( int sourceRow, int sourceColumn, int targetRow, int targetColumn, int curPlayer){
     if (curPlayer == 1 ) {
         if (abs(targetRow-sourceRow) == 0 && (targetColumn - sourceColumn) == -2) {
@@ -317,7 +319,6 @@ int Manager::checkKing( int sourceRow, int sourceColumn, int targetRow, int targ
     return 1;
 }
 
-// get rid of curPlayer parameter?
 int Manager::checkKnight( int sourceRow, int sourceColumn, int targetRow, int targetColumn, int curPlayer){
     int rowDif = abs(targetRow-sourceRow);
     int colDif = abs(targetColumn-sourceColumn);
@@ -331,6 +332,7 @@ int Manager::checkKnight( int sourceRow, int sourceColumn, int targetRow, int ta
     
 }
 
+//checks if king is in check
 int Manager::kingInCheck(int player) {
     // returns 1 if player's king in check
 
@@ -356,18 +358,14 @@ int Manager::kingInCheck(int player) {
     for (i = 0; i < 8; i++) { // check if player's king is in check
         for (j = 0; j < 8; j++) {
             if (board.chessBoard[j].at(i).getPlayer() != player) {
-                //cout << "i and j" << i << j << endl;
-                //cout << "player" << player << endl;
 
                 if(checkMove(i, j, kingRow, kingCol, 1) == 0 & player == 0)
                 {
-                    //cout << "first if" << endl;
                     return 1;
                 }
                     
                 if(checkMove(i, j, kingRow, kingCol, 0) == 0 & player == 1)
                 {
-                    //cout << "second if" << endl;
                     return 1;
                 }
             }
@@ -379,6 +377,7 @@ int Manager::kingInCheck(int player) {
 
 }
 
+/*controls the actual game, user always goes first*/
 void Manager::play()
 {
     string filename;
@@ -522,6 +521,7 @@ void Manager::play()
     
 }
 
+//Allows two AI's to play each other
 void Manager::AIplay()
 { 
     string filename;
@@ -619,7 +619,7 @@ void Manager::AIplay()
 
 }
 
-
+//translate move from board coordinates to game coordinates
 string Manager::translateMove( int fromX, int fromY, int toX, int toY ){
     fromX += '0';
     fromY += '0';
@@ -650,6 +650,7 @@ int Manager::startGame(){
     }
 }
 
+//save game to file
 void Manager::saveLog(string filename, string move){
     ofstream savefile;
     filename.insert(0, "logs/");
@@ -659,6 +660,7 @@ void Manager::saveLog(string filename, string move){
 
 }
 
+//load game from file
 int Manager::loadLog(string filename){
     ifstream loadfile;
     string line;
