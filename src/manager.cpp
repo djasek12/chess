@@ -355,7 +355,7 @@ int Manager::kingInCheck(int player) {
 
     for (i = 0; i < 8; i++) { // check if player's king is in check
         for (j = 0; j < 8; j++) {
-            if (board.chessBoard[i].at(j).getPlayer() != player) {
+            if (board.chessBoard[j].at(i).getPlayer() != player) {
                 //cout << "i and j" << i << j << endl;
                 //cout << "player" << player << endl;
 
@@ -475,7 +475,7 @@ void Manager::play()
             {
                 //cout << "AI about to be constructed" << endl;
                 
-                AI AI_1(board, 1, 0, 3, turn);
+                AI AI_1(board, 1, 0, 1, turn);
                 //cout << "AI has been constructed, play move function being called" << endl;
                 //AI_1.findMoves(board);
                 //AI_1.dispValidMoves();
