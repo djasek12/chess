@@ -253,18 +253,37 @@ int AI::getDevelopmentValue(Move move, int player) //needs to be fixed for human
     if (primaryPlayer == 0) //?
     {
         if(move.startRow < 2 & move.endRow >= 2) // red player
+        {
             if (move.piece.getChar() == 'p')
-                develop = 2 + .1*(move.endRow-move.startRow);
+                develop += 2 + .1*(move.endRow-move.startRow);
             else
-                develop = 2;
+                develop += 2;
+        }
+        
+        if(turn > 50)
+        {
+            if(move.piece.getChar() == 'p')
+                develop += 2;
+        }
+
     }
+
     else
     {
         if (move.startRow > 5 & move.endRow <= 5) // blue player
+        {
             if (move.piece.getChar() == 'P')
-                develop = 2+ .1*(move.startRow-move.endRow);
+                develop += 2 + .1*(move.startRow-move.endRow);
             else 
-                develop = 2;
+                develop += 2;
+        }
+
+        if(turn > 50)
+        {
+            if(move.piece.getChar() == 'P')
+                develop += 2;
+        }
+
     }
 
     return develop;
@@ -666,7 +685,7 @@ double AI::findGains()
                 maxValueMove = moves[j];
         }
         cout << "\n Recursive Best AI move" << endl;
-        //dispMoveValue(maxValueMove, primaryPlayer);
+        dispMoveValue(maxValueMove, primaryPlayer);
 
         Manager mnger;
         mnger.setBoard(Brd);
@@ -696,16 +715,13 @@ double AI::findGains()
                 maxValue = humanMoves[j];
         }
         cout << "\nRecursive Best Human move" << endl;
-        //dispMoveValue(maxValue, primaryPlayer);
+        dispMoveValue(maxValue, primaryPlayer);
 
         Manager forwardManager;
         Board forwardBoard;
         forwardManager.setBoard(temp);
         forwardManager.move(maxValue.startRow, maxValue.startCol, maxValue.endRow, maxValue.endCol);
         forwardBoard = forwardManager.board;
-
-        //cout << "Max human move" << endl;
-        //dispMoveValue(maxValue, otherPlayer);
 
         // recursive bit
         if (turnsAhead < lookAhead)
@@ -740,12 +756,17 @@ void AI::updateKingValue(int player)
     {
         for(int c = 0; c < 8; c++)
         {
-             if(Brd.chessBoard[c][r].getChar() == 'K' & player == 1 | Brd.chessBoard[c][r].getChar() == 'k' & player == 0 ) 
-             {
-                 Brd.chessBoard[c][r].setValue(10+val);
-                 //cout << "king at position: " << r << c << " and has value: " << Brd.chessBoard[c][r].getValue() << endl;
-                 break;
-             }
+            if(Brd.chessBoard[c][r].getChar() == 'K' & player == 1 | Brd.chessBoard[c][r].getChar() == 'k' & player == 0 ) 
+            {
+                if(val < 10)
+                    Brd.chessBoard[c][r].setValue(5+val);
+                else
+                    Brd.chessBoard[c][r].setValue(15);
+
+
+                //cout << "king at position: " << r << c << " and has value: " << Brd.chessBoard[c][r].getValue() << endl;
+                break;
+            }
         }
     }
 }
