@@ -45,6 +45,7 @@ void Manager::move( int sourceRow, int sourceColumn, int targetRow, int targetCo
     0: Valid Move, 1: Move coordinates out of bounds 
     2: Source piece player different from player with turn, attacked same team
     3: Move not valid
+    4: castling valid
 */
 int Manager::checkMove( int sourceRow, int sourceColumn, int targetRow, int targetColumn, int curPlayer){
     //cout << "current player" << curPlayer << endl;
@@ -55,7 +56,7 @@ int Manager::checkMove( int sourceRow, int sourceColumn, int targetRow, int targ
     }else if( checkSpecific( sourceRow, sourceColumn, targetRow, targetColumn, curPlayer) == 0){
         return 3;
     } else if(checkSpecific( sourceRow, sourceColumn, targetRow, targetColumn, curPlayer) == 2) {
-        return 4;
+        return 4; // for castling
     }
 
     Manager mnger;
@@ -272,21 +273,21 @@ int Manager::checkQueen( int sourceRow, int sourceColumn, int targetRow, int tar
 int Manager::checkKing( int sourceRow, int sourceColumn, int targetRow, int targetColumn, int curPlayer){
     if (curPlayer == 1 ) { //
         if (abs(targetRow-sourceRow) == 0 && (targetColumn - sourceColumn) == -2) {
-            if (board.chessBoard[3].at(7).getChar() != 'K') {
+            if (board.chessBoard[3].at(7).getChar() != 'K') { // if king in original spot
                 return 0; }
-            if (board.chessBoard[0].at(7).getChar() != 'C') {
+            if (board.chessBoard[0].at(7).getChar() != 'C') { // castle in original spot
                 return 0; }
-            if (board.chessBoard[1].at(7).getPlayer() != 2 || board.chessBoard[2].at(7).getPlayer() != 2) {
+            if (board.chessBoard[1].at(7).getPlayer() != 2 || board.chessBoard[2].at(7).getPlayer() != 2) { // space between castle and king empty
                 return 0; }
             return 2; // returns 2 if castling is valid
             
         } else if(abs(targetRow-sourceRow) == 0 && (targetColumn - sourceColumn) == 2) {
-            if (board.chessBoard[3].at(7).getChar() != 'K') {
+            if (board.chessBoard[3].at(7).getChar() != 'K') { // king original spot
                 return 0; }
-            if (board.chessBoard[7].at(7).getChar() != 'C') {
+            if (board.chessBoard[7].at(7).getChar() != 'C') { // castle original spot
                 return 0;}
             if (board.chessBoard[4].at(7).getPlayer() != 2 || board.chessBoard[5].at(7).getPlayer() != 2 ||
-                board.chessBoard[6].at(7).getPlayer() != 2) {
+                board.chessBoard[6].at(7).getPlayer() != 2) { // space between empty
                 return 0;}
             
             return 2; // returns 2 if castling is valid
@@ -294,7 +295,7 @@ int Manager::checkKing( int sourceRow, int sourceColumn, int targetRow, int targ
         } else if( abs(targetRow-sourceRow) > 1 || abs(targetColumn - sourceColumn) > 1 ){ //if move is longer than 1 space
             return 0;
         }
-    } else if (curPlayer == 0) {
+    } else if (curPlayer == 0) { // same as above but coded for AI 
     
         if (abs(targetRow-sourceRow) == 0 && (targetColumn - sourceColumn) == -2) {
             if (board.chessBoard[3].at(0).getChar() != 'k') {
