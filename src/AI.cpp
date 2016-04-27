@@ -28,11 +28,11 @@ AI::AI(Board B, int turnFuture, int pmrPlyr, int look, int turns)
         updateKingValue(0);
 
     // constant weights for move calculation functions
-    CAPTUREVALUE_0 = 2.6;
-    ATTACKINGVALUE_0 = .5;
-    DEFENDINGVALUE_0 = 0.1;
+    CAPTUREVALUE_0 = 3.5;
+    ATTACKINGVALUE_0 = .3;
+    DEFENDINGVALUE_0 = 0.03;
     MOVEABLEVALUE_0 = 0.1;
-    DEVELOPMENTVALUE_0 = 3/turn;
+    DEVELOPMENTVALUE_0 = 1+(4/turn);
     PRESSUREVALUE_0 = (0.07 * turn);
 
     ATTACKERSVALUE_0 = 3;
@@ -41,11 +41,11 @@ AI::AI(Board B, int turnFuture, int pmrPlyr, int look, int turns)
     ////////////////////////
 
     CAPTUREVALUE_1 = 3.5;
-    ATTACKINGVALUE_1 = .5;
-    DEFENDINGVALUE_1 = 0.1;
+    ATTACKINGVALUE_1 = .3;
+    DEFENDINGVALUE_1 = 0.03;
     MOVEABLEVALUE_1 = 0.1;
-    DEVELOPMENTVALUE_1 = 3;
-    PRESSUREVALUE_1 = 0.1;
+    DEVELOPMENTVALUE_1 = 1+(4/turn);
+    PRESSUREVALUE_1 = (0.7*turn);
 
     ATTACKERSVALUE_1 = 3;
     ABANDONVALUE_1 = 0.0;
@@ -254,17 +254,17 @@ int AI::getDevelopmentValue(Move move, int player) //needs to be fixed for human
     {
         if(move.startRow < 2 & move.endRow >= 2) // red player
             if (move.piece.getChar() == 'p')
-                develop = 3*(move.endRow-move.startRow);
+                develop = 2 + .1*(move.endRow-move.startRow);
             else
-                develop = 1;
+                develop = 2;
     }
     else
     {
         if (move.startRow > 5 & move.endRow <= 5) // blue player
             if (move.piece.getChar() == 'P')
-                develop = 3*(move.startRow-move.endRow);
+                develop = 2+ .1*(move.startRow-move.endRow);
             else 
-                develop = 1;
+                develop = 2;
     }
 
     return develop;
@@ -397,7 +397,6 @@ double AI::getAttackingValue(Move move, int player) //needs to be fixed for huma
             }
         }
     }
-    return 0;
     return attackValue;
 }
 
@@ -667,14 +666,12 @@ double AI::findGains()
                 maxValueMove = moves[j];
         }
         cout << "\n Recursive Best AI move" << endl;
-        dispMoveValue(maxValueMove, primaryPlayer);
+        //dispMoveValue(maxValueMove, primaryPlayer);
 
         Manager mnger;
         mnger.setBoard(Brd);
         mnger.move(maxValueMove.startRow, maxValueMove.startCol, maxValueMove.endRow, maxValueMove.endCol); // make the move
         temp = mnger.board;
-
-        //cout << "made best ai move" << endl;
 
         // find best human move and make it
         humanMoves.clear();
@@ -699,7 +696,7 @@ double AI::findGains()
                 maxValue = humanMoves[j];
         }
         cout << "\nRecursive Best Human move" << endl;
-        dispMoveValue(maxValue, primaryPlayer);
+        //dispMoveValue(maxValue, primaryPlayer);
 
         Manager forwardManager;
         Board forwardBoard;
@@ -756,6 +753,7 @@ void AI::updateKingValue(int player)
 // displays the value of a given move given a certain player
 void AI::dispMoveValue(Move mv, int player)
 {
+    cout << "Piece: " << mv.getPiece().getChar() << endl;
     cout << "starting row/col: " << mv.startRow << " " << mv.startCol << " ending row/col: " << mv.endRow << " " << mv.endCol << endl;
     if(player==0)
     {
@@ -764,7 +762,8 @@ void AI::dispMoveValue(Move mv, int player)
         cout << "attack value: " << ATTACKINGVALUE_0 * getAttackingValue(mv, player) << endl;
         cout << "numAttackers: " << ATTACKERSVALUE_0 * numAttackers(mv, player) << endl;
         cout << "defending value: " << DEFENDINGVALUE_0 * getDefendingValue(mv, player) << endl;
-        cout << "pressure value: " << PRESSUREVALUE_0 * getPressureValue(mv, player);
+        cout << "pressure value: " << PRESSUREVALUE_0 * getPressureValue(mv, player) << endl;
+        cout << "development value: " << DEVELOPMENTVALUE_0 * getDevelopmentValue(mv, player);
     }
     else
     {
@@ -773,7 +772,8 @@ void AI::dispMoveValue(Move mv, int player)
         cout << "attack value: " << ATTACKINGVALUE_1 * getAttackingValue(mv, player) << endl;
         cout << "numAttackers: " << ATTACKERSVALUE_1 * numAttackers(mv, player) << endl;
         cout << "defending value: " << DEFENDINGVALUE_1 * getDefendingValue(mv, player) << endl;
-        cout << "pressure value: " << PRESSUREVALUE_1 * getPressureValue(mv, player);
+        cout << "pressure value: " << PRESSUREVALUE_1 * getPressureValue(mv, player) << endl;
+        cout << "development value: " << DEVELOPMENTVALUE_1 * getDevelopmentValue(mv, player);
     }
 
     cout << "\noverall value: " << mv.getMoveValue() << endl << endl;
