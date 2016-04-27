@@ -58,7 +58,7 @@ Castle::Castle(int num){
 Bishop::Bishop(int num){
 	setPlayer(num);
 	setChar('b' - num * 32);
-	setValue( 3);
+	setValue( 3.5);
 }
 
 King::King(int num){
@@ -72,113 +72,5 @@ Queen::Queen(int num){
 	setChar('q' - num * 32);
 	setValue( 9);
 }
-
-/*int Pawn::validMove(int sCol, int sRow, int mCol, int mRow) {
-    
-    if (chessBoard[sCol].at(sRow).getPlayer() == 2) {
-        cout << "Selected location is vacant " << endl;
-        return 2;
-    }
-    
-    if (chessBoard[sCol].at(sRow).getPlayer() == x) { x == same Player Value as Moving Piece
-        cout << "Selected location contains a piece of yours " << endl;
-        return 2;
-    }
-    
-    if (chessBoard[sCol].at(sRow).getPlayer() == 0 && sRow == 2) {
-        if (sCol == mCol) { // suggested move is in same column as
-            if
-        }
-        
-    } 
-    
-    return 0;
-    
-}
-
-int Knight::validMove(int sCol, int sRow, int mCol, int mRow) {
-    
-    
-     if (chessBoard[sCol].at(sRow).getPlayer() == 2) {
-     cout << "Selected location is vacant " << endl;
-     return 2;
-     }
-     
-     if (chessBoard[sCol].at(sRow).getPlayer() == x) { x == same Player Value as Moving Piece
-     cout << "Selected location contains a piece of yours " << endl;
-     return 2;
-     }
-     
-    return 0;
-    
-}
-
-int Castle::validMove(int sCol, int sRow, int mCol, int mRow) {
-    
-     if (chessBoard[sCol].at(sRow).getPlayer() == 2) {
-     cout << "Selected location is vacant " << endl;
-     return 2;
-     }
-     
-     if (chessBoard[sCol].at(sRow).getPlayer() == x) { x == same Player Value as Moving Piece
-     cout << "Selected location contains a piece of yours " << endl;
-     return 2;
-     }
-
-    return 0;
-    
-}
-
-int Bishop::validMove(int sCol, int sRow, int mCol, int mRow) {
-    
-    
-     if (chessBoard[sCol].at(sRow).getPlayer() == 2) {
-     cout << "Selected location is vacant " << endl;
-     return 2;
-     }
-     
-     if (chessBoard[sCol].at(sRow).getPlayer() == x) { x == same Player Value as Moving Piece
-     cout << "Selected location contains a piece of yours " << endl;
-     return 2;
-     }
-     
-    return 0;
-    
-}
-
-int King::validMove(int sCol, int sRow, int mCol, int mRow) {
-    
-    
-     if (chessBoard[sCol].at(sRow).getPlayer() == 2) {
-     cout << "Selected location is vacant " << endl;
-     return 2;
-     }
-     
-     if (chessBoard[sCol].at(sRow).getPlayer() == x) { x == same Player Value as Moving Piece
-     cout << "Selected location contains a piece of yours " << endl;
-     return 2;
-     }
-     
-    return 0;
-    
-}
-
-int Queen::validMove(int sCol, int sRow, int mCol, int mRow) {
-    
-    
-     if (chessBoard[sCol].at(sRow).getPlayer() == 2) {
-     cout << "Selected location is vacant " << endl;
-     return 2;
-     }
-     
-     if (chessBoard[sCol].at(sRow).getPlayer() == x) { x == same Player Value as Moving Piece
-     cout << "Selected location contains a piece of yours " << endl;
-     return 2;
-     }
-     
-    return 0;
-    
-}
-*/
 
 
