@@ -1,6 +1,9 @@
 /*Includes*/
 #include "../include/board.h"
 
+// sets piece values, including value, player and character
+
+// default piece
 Piece::Piece(){
     repChar= 'x';
     player = 3;

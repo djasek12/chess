@@ -118,3 +118,6 @@
     Alex - 1 hour testing, fixing queen swap
 4/27
     Burke - 2 hours testings and adding comments
+4/27
+    Billy and Danny - 2 hours testing AI
+    Danny - 1 hour fixing and playing AI

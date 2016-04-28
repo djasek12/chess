@@ -3,16 +3,12 @@
 
 using namespace std;
 
-int main(){
-	Manager gameManager; //instantiates game, board, etc. 
-//	gameManager.AIplay();
-  gameManager.play();
-	
-    /*AI AI_1(gameBoard);
-    AI_1.findMoves(gameBoard);
-    AI_1.dispValidMoves();*/
+// Driver program for entire game
 
-    //gameManager.AI_1.dispValidMoves();
+int main(){
+
+	Manager gameManager; //instantiates game, board, etc. 
+        gameManager.play();
 
 	return 0;
 }
