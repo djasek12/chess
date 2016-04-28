@@ -6,6 +6,8 @@
 //#include "Move.h"
 //#include "game.h"
 
+// class that manages making moves and general gameflow
+
 class Manager{
 
         friend class AI;

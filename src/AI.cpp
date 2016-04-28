@@ -68,7 +68,7 @@ Move AI::overallAlgorithm(int player, int turnsAhead)
     // if the king is in check, return a move that gets out of it
     if(mnger.kingInCheck(player))
     {
-        cout << "KING IN CHECK" << endl;
+        //cout << "KING IN CHECK" << endl;
         return getOutOfCheck(player);
     }
     else // play a regular move
@@ -80,16 +80,16 @@ Move AI::overallAlgorithm(int player, int turnsAhead)
 // gets out of check
 Move AI::getOutOfCheck(int player)
 {  
-    cout << "inside getOutofCheck" << endl;
+    //cout << "inside getOutofCheck" << endl;
 
     vector<Move> escapeMoves;
     Move dummyMove;
 
-    cout << "player: " << player << endl;
+    //cout << "player: " << player << endl;
 
     findMoves(player);
 
-    cout << "moves size: " << moves.size() << endl;
+    //cout << "moves size: " << moves.size() << endl;
 
     // if the primary player is in check, update the moves array with possible moves
     if(player == primaryPlayer)
@@ -104,7 +104,7 @@ Move AI::getOutOfCheck(int player)
             if(!mnger.kingInCheck(player)) // if the player is no longer in check, add it to the escape moves vector
             {
                 escapeMoves.push_back(moves[i]);
-                cout << moves[i].startRow << moves[i].startCol << moves[i].endRow << moves[i].endCol << endl;
+                //cout << moves[i].startRow << moves[i].startCol << moves[i].endRow << moves[i].endCol << endl;
             }
         }
     }
@@ -119,13 +119,13 @@ Move AI::getOutOfCheck(int player)
             if(!mnger.kingInCheck(player))
             {
                 escapeMoves.push_back(humanMoves[i]);
-                cout << humanMoves[i].startRow << humanMoves[i].startCol << humanMoves[i].endRow << humanMoves[i].endCol << endl;
+                //cout << humanMoves[i].startRow << humanMoves[i].startCol << humanMoves[i].endRow << humanMoves[i].endCol << endl;
             }
         }
 
     }
 
-    cout << "escape moves: " << escapeMoves.size() << endl;
+    //cout << "escape moves: " << escapeMoves.size() << endl;
 
     // possibly change this for a checkmate function?
     if(escapeMoves.size() == 0)
@@ -578,7 +578,7 @@ double AI::findGains()
     if(turnsAhead == 1)
     {
         Move maxValue; // best human move
-        cout << "finding initial moves: turns Ahead = 1" << endl;
+        //cout << "finding initial moves: turns Ahead = 1" << endl;
 
         // find AI moves and assign values
         findMoves(primaryPlayer);
@@ -597,10 +597,10 @@ double AI::findGains()
 
         for(int i=0; i<moves.size(); i++) // loop through each AI move
         {
-            cout << "in " << i << "th original move, turns ahead: " << turnsAhead << endl;
+            //cout << "in " << i << "th original move, turns ahead: " << turnsAhead << endl;
 
-            cout << "\nAI move" << endl;
-            dispMoveValue(moves[i], primaryPlayer);
+            //cout << "\nAI move" << endl;
+            //dispMoveValue(moves[i], primaryPlayer);
 
             // set board and make the move
             Manager mnger;
@@ -641,13 +641,13 @@ double AI::findGains()
                 forwardManager.move(maxValue.startRow, maxValue.startCol, maxValue.endRow, maxValue.endCol);
                 forwardBoard = forwardManager.board;
 
-                cout << "Max human move" << endl;
-                dispMoveValue(maxValue, otherPlayer);
+                //cout << "Max human move" << endl;
+                //dispMoveValue(maxValue, otherPlayer);
 
                 // recursive bit
                 if (turnsAhead < lookAhead)
                 {
-                    cout << "inside recursive block" << endl;
+                    //cout << "inside recursive block" << endl;
 
                     // call a new AI on board with both AI and human move made, and get a mvoe back
                     AI forwardAI(forwardBoard, turnsAhead+1, primaryPlayer, lookAhead, turn);
@@ -676,7 +676,7 @@ double AI::findGains()
 
     if(turnsAhead > 1) // greater than 1 level deep in recursion
     {
-        cout << "inside turnsAhead > 1 block" << endl;
+        //cout << "inside turnsAhead > 1 block" << endl;
 
         Move maxValueMove; // best AI move
         Move maxValue; // best Human move
@@ -707,8 +707,8 @@ double AI::findGains()
                 if(moves[j].getMoveValue() > maxValueMove.getMoveValue())
                     maxValueMove = moves[j];
             }
-            cout << "\n Recursive Best AI move" << endl;
-            dispMoveValue(maxValueMove, primaryPlayer);
+            //cout << "\n Recursive Best AI move" << endl;
+            //dispMoveValue(maxValueMove, primaryPlayer);
 
             Manager mnger;
             mnger.setBoard(Brd);
@@ -741,8 +741,8 @@ double AI::findGains()
                     if(humanMoves[j].getMoveValue() > maxValue.getMoveValue())
                         maxValue = humanMoves[j];
                 }
-                cout << "\nRecursive Best Human move" << endl;
-                dispMoveValue(maxValue, primaryPlayer);
+                //cout << "\nRecursive Best Human move" << endl;
+                //dispMoveValue(maxValue, primaryPlayer);
 
                 Manager forwardManager;
                 Board forwardBoard;

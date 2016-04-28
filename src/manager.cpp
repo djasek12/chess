@@ -438,7 +438,6 @@ void Manager::play()
                     while(1) { // while loops prevents you from making a move that doesnt take you out of check
                         game.getCoordinates();
                         
-                        
                         if(checkMove( game.getFromX(), game.getFromY(), game.getToX(), game.getToY(), currentPlayer) == 0){
                             Manager temp1;
                             temp1.setBoard(board); // creates separate board to see if potential move gets user out of check
@@ -486,8 +485,9 @@ void Manager::play()
                 //cout << "AI has been constructed, play move function being called" << endl;
                 //AI_1.findMoves(board);
                 //AI_1.dispValidMoves();
+                cout << "Calculating AI move..." << endl;
                 AI_move = AI_1.overallAlgorithm(0, 1);
-                cout << "move passed to manager correctly" << endl;
+                //cout << "move passed to manager correctly" << endl;
                 //AI_move = AI_1.playMove();
                 
                 //cout << "capture value of move: " << AI_1.getCaptureValue(AI_move) << endl;;

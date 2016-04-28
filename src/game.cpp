@@ -2,6 +2,8 @@
 #include "../include/board.h"
 #include <string>
 
+// implementation for moving pieces around the 2-d board vector and related items
+
 Game::Game(){
 	//default constructor
 }

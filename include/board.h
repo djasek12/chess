@@ -11,6 +11,8 @@
 #include "game.h"
 #include "Move.h"
 //#include "AI.h"
+//
+// class for the vector of pieces that represented the board
 
 using namespace std;
 
