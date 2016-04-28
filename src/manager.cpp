@@ -499,13 +499,15 @@ void Manager::play()
         {
             if (castling) { // enables the castling move
                 move( game.getFromX(), game.getFromY(), game.getToX(), game.getToY() );
+                string encoded = translateMove( game.getFromX(), game.getFromY(), game.getToX(), game.getToY() );
                 if (game.getToY() == 1) {
                     move(7, 0, 7, 2);
+                    encoded += "7072";
                 }
                 else if (game.getToY() == 5) {
                     move(7, 7, 7, 4);
+                    encoded += "7774";
                 }
-                string encoded = translateMove( game.getFromX(), game.getFromY(), game.getToX(), game.getToY() );
                 saveLog( filename, encoded);
             } else {
                 move( game.getFromX(), game.getFromY(), game.getToX(), game.getToY() );
@@ -683,6 +685,7 @@ int Manager::loadLog(string filename){
     int count = 0;
     while( getline( loadfile, line )){
         if (line.length() == 4){
+            //normal move
             int fromX = int(line[0]) - '0';
             int fromY = int(line[1]) - '0';
             int toX = int(line[2]) - '0';
@@ -691,6 +694,7 @@ int Manager::loadLog(string filename){
             count++;
         
         }else if (line.length() == 5){
+            //queen swap
             int fromX = int(line[0]) - '0';
             int fromY = int(line[1]) - '0';
             int toX = int(line[2]) - '0';
@@ -699,6 +703,18 @@ int Manager::loadLog(string filename){
             move(fromX, fromY, toX, toY);
             board.chessBoard[toY].at(toX).setChar(rep);
         count++;
+        }else if (line.length() == 8){
+            //castling
+            int fromX = int(line[0]) - '0';
+            int fromY = int(line[1]) - '0';
+            int toX = int(line[2]) - '0';
+            int toY = int(line[3]) - '0';
+            move(fromX, fromY, toX, toY);
+            fromX = int(line[4]) - '0';
+            fromY = int(line[5]) - '0';
+            toX = int(line[6]) - '0';
+            toY = int(line[7]) - '0';
+            move(fromX, fromY, toX, toY);
         }   
     }  
     return count;
