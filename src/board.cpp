@@ -186,8 +186,10 @@ void Board::display(){
 				cout << chessBoard[j].at(i).getChar();	
 			cout << "|";
 		}
+        cout <<"  "<< 8 - i << "  ";
 		cout << endl;
 	}
-	cout << endl << endl;
+	cout << endl;
+    cout << "    a  b  c  d  e  f  g  h" << endl << endl;
 }
 
